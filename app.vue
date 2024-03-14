@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <NuxtLayout >
     <NuxtPage />
-  </div>
+  </NuxtLayout>
 </template>
+<script setup>
+import styles from '~/assets/colors.css'
+</script>

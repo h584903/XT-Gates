@@ -1,7 +1,7 @@
 <template>
-  <header />
+  <Header />
+  <sideBar />
   <div class="content">
-    <sideBar />
     <slot />
   </div>
 </template>
