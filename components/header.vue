@@ -1,6 +1,6 @@
 <template>
-  <header class="header">
-    <div class="wrapper">
+  <header>
+    <div class="wrapper"> <!-- Lagt til for å plassere items mer fordelt -->
     </div>
   </header>
 </template>
