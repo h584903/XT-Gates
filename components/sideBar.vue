@@ -3,7 +3,6 @@
     <span>Dashboard</span>
     <span>Project List</span>
     <span>Projects</span>
-
   </div>
 </template>
 
@@ -18,10 +17,10 @@
   margin: 0;
   font-size: 15px;
   position:fixed; /* Beholder posisjonen til sidebaren */
-  min-height: 100vh;
-  z-index: 700;
+  min-height: 100vh; /* Minste størrelsen er på størrelsen med skjermen */
+  z-index: 700; /* Beholder komponenten fremst */
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Fordeler hver item i sidebar nedover */
 }
 
 </style>

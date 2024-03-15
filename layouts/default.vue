@@ -1,11 +1,11 @@
 <template>
   <Header />
   <div class="content">
-    <div class="sidebar_wrapper">
+    <div class="sidebar_wrapper"> <!-- Lagt til for å holde sidebar isolert fra layouten -->
       <sideBar />
     </div>
     <div class="slot_wrapper">
-      <slot />
+      <slot /> <!-- Her ligger siden som hentes fra page mappen -->
     </div>
   </div>
 </template>
@@ -18,11 +18,11 @@ body {
 }
 
 .content {
-    padding-top: var(--headerHeight);
+    padding-top: var(--headerHeight); /* Variablelen ligger i assets/colors.css */
     display: flex; /* Flexbox for the 2 items sidebar, and the rest of the content */
 }
 .slot_wrapper {
-  flex: 5;
+  flex: 5; /* 5/1 fordeling mellom sidebar og slot */
 }
 .sidebar_wrapper {
   flex: 1;
