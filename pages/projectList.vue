@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper-row">
-    <h1>AKTIVE PROSJEKTER</h1>
+    <h1>ACTIVE PROJECTS</h1>
     <div class="projectList">
       <ProjectList />
     </div>
@@ -9,6 +9,7 @@
 <script>
 </script>
 <style scoped>
+/* Style er scoped for å beholde singleFileComponent struktur */
 .wrapper {
   display: flex;
   flex-direction: row;
