@@ -1,11 +1,8 @@
 <script setup>
   import { ref } from 'vue'
   
-  const dates = ref([
-    '2024-03-18',
-    '2024-03-19',
-    '2024-03-28'
-  ])
+  const plannedDate = "2024-03-18"
+  const PODate = "2024-03-19"
 
   const sortDates = () => {
     dates.value.sort((a, b) => new Date(a) - new Date(b))
@@ -14,11 +11,11 @@
 
 <template>
   <!-- Følger prototypen til figma -->
-  <div class="list" v-for="(dateString, index) in dates" :key="inex">
+  <div class="list">
   <span>Example Project</span>
   <ProgressBar />
-  <DateEntry :dateString="dateString"/>
-  <DateEntry :dateString="dateString"/>
+  <DateEntry :dateString = plannedDate />
+  <DateEntry :dateString = PODate />
   <PlanStatus />
   <PersonInCharge />
   </div>
