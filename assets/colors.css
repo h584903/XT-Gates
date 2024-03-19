@@ -1,5 +1,10 @@
 :root {
     --background: #00FFFF;
     --foreground: #232320;
+    --sideBarColor: #dedede; /* Fargen til sidebar */
     --headerHeight: 4.5rem;
+}
+
+body{
+    margin: 0; /*Fikser problemer med at siden har en margin*/
 }
