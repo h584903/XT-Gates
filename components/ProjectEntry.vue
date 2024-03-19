@@ -13,7 +13,7 @@
   <!-- Følger prototypen til figma -->
   <div class="list">
   <span>Example Project</span>
-  <ProgressBar />
+  <ProgressBar :progressNumber="10"/>
   <DateEntry :dateString = plannedDate />
   <DateEntry :dateString = PODate />
   <PlanStatus />
