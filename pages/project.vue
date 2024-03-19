@@ -15,7 +15,7 @@
 <script>
 
 </script>
-<style scoped>
+<style>
 .wrapper {
   display: flex;
   flex-direction: column;

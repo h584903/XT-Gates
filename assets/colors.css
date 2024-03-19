@@ -3,3 +3,6 @@
     --foreground: #232320;
     --headerHeight: 4.5rem;
 }
+body {
+    margin: 0px;
+}
