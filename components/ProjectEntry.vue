@@ -16,7 +16,7 @@
       <span>Example Project</span>
     </div>
     <div class="progressWrapper">
-      <ProgressBar />
+      <ProgressBar :progressNumber="10"/>
     </div>
     <div class="dateWrapper">
       <DateEntry :dateString = plannedDate />
