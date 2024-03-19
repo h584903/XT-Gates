@@ -28,9 +28,7 @@ prosjektliste.push({});
   flex-direction: column;
   width: 80%
 }
-.list-disc {
 
-}
 hr.solid {
   width: 100%;
   border-top: 1px solid grey;
