@@ -1,6 +1,8 @@
 <template>
   <header>
     <div class="wrapper"> <!-- Lagt til for å plassere items mer fordelt -->
+      <Logo/>
+      <CurrentUser />
     </div>
   </header>
 </template>
@@ -23,21 +25,11 @@ header {
 .wrapper { /* Ingenting er fast her, men dette er innstillinger jeg har brukt tidligere som kan være nyttige*/
   margin: 0 auto;
   height: 4.5rem;
-  width: 100%;
+  width: 95%;
   display: flex;
   justify-content:space-between;
   align-items: center;
 }
 
-@media (max-width: 1200px) { /* Hvis support for forskjellig skjermstørrelse er nødvendig */
-
-}
-
-@media (min-width: 1201px) {
-  .wrapper {
-      width: 80%;
-  }
-
-}
-
 </style>
+./Header.vue
