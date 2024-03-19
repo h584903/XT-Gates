@@ -1,20 +1,17 @@
 <template>
-  <!-- Lager en komponent som kan motta en boolsk verdi, og oppretter en sirkel basert på de -->
+  <!-- Lager en komponent som kan motta en boolsk verdi, og oppretter en sirkel basert -->
   <span :class="{ 'statusCircle': true, 'onSchedule': onSchedule, 'error': !onSchedule }"></span>
 </template>
 
 <!-- Default export for enkelt eksportere til andre filer. Sender med en boolsk verdi 
     "onSchedule" som settes til True eller False -->
-<script>
-export default {
-  name: 'circle',
-  props: {
-    onSchedule: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+defineProps ({
+  onSchedule: {
+     type: Boolean,
+     default: false
   }
-}
+})
 </script>
 
 <!-- Oppretter sirkelen -->
@@ -27,7 +24,7 @@ export default {
   border: 2px solid grey;
 }
 /* Hvis den er inProgress, sett fargen til grønn */
-.inProgress {
+.onSchedule {
   background-color:chartreuse;
 }
 /* Hvis den ikke er i progress, sett fargen til gul */
