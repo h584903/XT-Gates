@@ -16,7 +16,7 @@
   <ProgressBar :progressNumber="10"/>
   <DateEntry :dateString = plannedDate />
   <DateEntry :dateString = PODate />
-  <PlanStatus />
+  <PlanStatus/>
   <PersonInCharge />
   </div>
 </template>
