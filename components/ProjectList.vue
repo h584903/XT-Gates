@@ -26,6 +26,10 @@ prosjektliste.push({});
 .list-wrapper {
   display: flex;
   flex-direction: column;
+  width: 80%
+}
+.list-disc {
+
 }
 hr.solid {
   width: 100%;

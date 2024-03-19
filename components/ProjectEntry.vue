@@ -12,18 +12,56 @@
 <template>
   <!-- Følger prototypen til figma -->
   <div class="list">
-  <span>Example Project</span>
-  <ProgressBar :progressNumber="10"/>
-  <DateEntry :dateString = plannedDate />
-  <DateEntry :dateString = PODate />
-  <PlanStatus/>
-  <PersonInCharge />
+    <div class="titleWrapper">
+      <span>Example Project</span>
+    </div>
+    <div class="progressWrapper">
+      <ProgressBar :progressNumber="10"/>
+    </div>
+    <div class="dateWrapper">
+      <DateEntry :dateString = plannedDate />
+    </div>
+    <div class="dateWrapper">
+      <DateEntry :dateString = PODate />
+    </div>
+    <div class="statusWrapper">
+      <PlanStatus />
+    </div>
+    <div class="personWrapper">
+      <PersonInCharge />
+    </div>
   </div>
 </template>
-<style>
+<style scoped>
 
 .list {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.titleWrapper {
+  margin: auto;
+  text-align: center;
+  width: 20%;
+}
+.progressWrapper {
+  margin: auto;
+  text-align: center;
+  width: 50%;
+}
+.dateWrapper {
+  margin: auto;
+  text-align: center;
+  width: 10%;
+}
+.statusWrapper {
+  margin: auto;
+  text-align: center;
+  width: 5%
+}
+.personWrapper {
+  margin: auto;
+  text-align: center;
+  width: 15%
 }
 </style>
