@@ -1,11 +1,14 @@
 <script setup>
+  // Henter ut progressnumber fra kallet av komponenten
   defineProps({
     progressNumber: Number
   });
 </script>
 
 <template>
+  <!--Dette er baren under progress-->
   <div class="bar">
+    <!--Dette er baren for progress som har en dynamisk størrelse med tallet som er hentete-->
     <div class="bar progress" :style="{ width: progressNumber + '%' }"></div>
   </div>
 </template>
@@ -18,6 +21,8 @@
 }
 
 .bar.progress {
+  /*Gjør borderen rund på venstresiden men rett på midten*/
+  /*Dette burde forandres når den blir 100%*/
   border-radius: 13px 0px 0px 13px;
   width: var(--progress);
   background-color: green;
