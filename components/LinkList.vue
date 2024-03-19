@@ -1,5 +1,5 @@
 <template>
-  <div class="ProjectNameList">
+  <div class="ProjectNameList"><!--Liste som displayer navn på aktive prosjekt. Må endres senere.-->
     <NuxtLink to="project_1">Project 1</NuxtLink>
     <NuxtLink to="project_2">Project 2</NuxtLink>
   </div>
@@ -10,7 +10,7 @@
 </script>
 
 <style scoped>
-.ProjectNameList{
+.ProjectNameList{ /*Styling for listen.*/
     display: flex;
     flex-direction: column;
     margin: 0;

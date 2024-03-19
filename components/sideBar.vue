@@ -1,9 +1,9 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar"> <!-- listen over linker-->
     <NuxtLink to="/">Dashboard</NuxtLink>
     <NuxtLink to="/Archive">Archive</NuxtLink>
     <NuxtLink to="/projectList">Active Projects</NuxtLink>
-    <LinkList />
+    <LinkList /> <!--Listen over aktive prosjekter-->
   </div>
 </template>
 
@@ -14,7 +14,7 @@
 <style scoped>
 
 .sidebar {
-  padding: 10px;
+  padding: 10px; /* Omrisset til teksten */
   margin: 0;
   font-size: 25px;
   position:fixed; /* Beholder posisjonen til sidebaren */
@@ -22,7 +22,7 @@
   z-index: 700; /* Beholder komponenten fremst */
   display: flex;
   flex-direction: column; /* Fordeler hver item i sidebar nedover */
-  background-color: #dedede;
+  background-color: var(--sideBarColor);
 }
 
 </style>

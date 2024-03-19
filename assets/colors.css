@@ -1,6 +1,7 @@
 :root {
     --background: #00FFFF;
     --foreground: #232320;
+    --sideBarColor: #dedede; /* Fargen til sidebar */
     --headerHeight: 4.5rem;
 }
 
