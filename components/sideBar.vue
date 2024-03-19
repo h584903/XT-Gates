@@ -1,8 +1,8 @@
 <template>
   <div class="sidebar"> <!-- listen over linker-->
-    <NuxtLink to="/">Dashboard</NuxtLink>
-    <NuxtLink to="/Archive">Archive</NuxtLink>
-    <NuxtLink to="/projectList">Active Projects</NuxtLink>
+    <NuxtLink to="/" class="hoverlink">Dashboard</NuxtLink>
+    <NuxtLink to="/Archive" class="hoverlink">Archive</NuxtLink>
+    <NuxtLink to="/projectList" class="hoverlink">Active Projects</NuxtLink>
     <LinkList /> <!--Listen over aktive prosjekter-->
   </div>
 </template>
@@ -23,6 +23,16 @@
   display: flex;
   flex-direction: column; /* Fordeler hver item i sidebar nedover */
   background-color: var(--sideBarColor);
+}
+
+/* Hover og tekststyling */
+.sidebar a {
+  color: Black;
+  text-decoration: none;
+}
+.sidebar a:hover{
+  color: grey;
+  text-decoration: none;
 }
 
 </style>

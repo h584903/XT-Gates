@@ -10,11 +10,23 @@
 </script>
 
 <style scoped>
-.ProjectNameList{ /*Styling for listen.*/
+
+ /*Styling for listen.*/
+.ProjectNameList{
     display: flex;
     flex-direction: column;
     margin: 0;
     margin-left: 10px;
     font-size: 20px;
+}
+
+/* Hover og tekststyling */
+.ProjectNameList a{
+  text-decoration: none;
+  color: black;
+}
+.ProjectNameList a:hover{
+  text-decoration: none;
+  color: grey;
 }
 </style>
