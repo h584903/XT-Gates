@@ -1,5 +1,7 @@
 <template>
   <div class="list-wrapper">
+    <ListDesc />
+    <hr class="solid">
     <ProjectEntry />
     <hr class="solid">
     <ProjectEntry />
@@ -19,6 +21,10 @@
 .list-wrapper {
   display: flex;
   flex-direction: column;
+  width: 80%
+}
+.list-disc {
+
 }
 hr.solid {
   width: 100%;
