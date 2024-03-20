@@ -7,6 +7,7 @@
   </div>
 </template>
 <script>
+
 </script>
 <style scoped>
 /* Style er scoped for å beholde singleFileComponent struktur */
