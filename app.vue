@@ -4,5 +4,9 @@
   </NuxtLayout>
 </template>
 <script setup>
-  import styles from '~/assets/colors.css';
+
 </script>
+
+<style>
+@import '~/assets/colors.css';
+</style>
