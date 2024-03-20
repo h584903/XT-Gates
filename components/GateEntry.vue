@@ -1,3 +1,7 @@
+<script setup>
+  const plannedDate = "2024-03-18"
+  const completionDate = "2024-03-19"
+</script>
 <template>
   <div class="list">
     <div class="title">
@@ -7,14 +11,16 @@
       <ProgressBar :progressNumber="30" />
     </div>
     <div class="plannedDate">
-      <DateEntry :dateString = "2023-06-22"/>
+      <DateEntry :dateString = plannedDate />
     </div>
     <div class="remaining">
+      <span>test</span>
     </div>
     <div class="daysToEnd">
+      <span>test</span>
     </div>
     <div class="completion">
-      <DateEntry "2025-12-03"/>
+      <DateEntry :dateString = completionDate />
     </div>
   </div>
 </template>
@@ -29,10 +35,10 @@
   width: 20%;
 }
 .progress {
-  width 50%;
+  width: 50%;
 }
 
-.plannetDate {
+.plannedDate {
   width: 10%;
 }
 .remaining {
@@ -42,6 +48,9 @@
   width: 5%;
 }
 .completion {
-width: 10%
+  width: 10%;
 }
 </style>
+<script setup>
+  
+</script>
