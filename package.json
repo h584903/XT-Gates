@@ -13,5 +13,8 @@
     "nuxt": "^3.10.3",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/vue": "^8.0.3"
   }
 }
