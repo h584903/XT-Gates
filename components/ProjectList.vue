@@ -10,25 +10,21 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    type: {
-      type: String,
-      default: "primary"
-    }
-  },
-  computed: {
-    buttonClass() {
-      return `button-${this.type}`;
-    }
-  },
-  methods: {
-    handleClick() {
-      // Emitting a custom event when the button is clicked
-      this.$emit('click');
-    }
-  }
+<script setup>
+import { ref } from 'vue';
+import ProjectEntry from './ProjectEntry.vue';
+
+const prosjektliste = ref([
+  {}, // Initial items
+  {}, // Initial items
+  {}, // Initial items
+  {}  // Initial items
+]);
+
+// Function to add a new item to the list
+const addItemToList = () => {
+  prosjektliste.value.push({}); // Add a new item to the list
+  console.log(prosjektliste.value.length); // Log the length of prosjektliste
 };
 </script>
 
