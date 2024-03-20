@@ -17,7 +17,7 @@
             <span>Plan Status</span>
         </div>
         <div class="PEM">
-            <PersonInCharge />
+            <span>PEM</span>
         </div>
     </div>
 </template>
