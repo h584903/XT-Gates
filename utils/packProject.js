@@ -1,13 +1,15 @@
 export function packProject(title, progress, plannedDate, POdate,
-     status, person) {
+     status, pem, comment) {
 
 const myProject = {
+    ID: 0,
     title: title,
     progress: progress,
     plannedDate: plannedDate,
     POdate: POdate,
     status: status,
-    person: person
+    pem: pem,
+    comment: comment
 };
 
 return myProject;

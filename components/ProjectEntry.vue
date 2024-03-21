@@ -1,37 +1,44 @@
 <script setup>
-  import { ref } from 'vue'
-  
-  const plannedDate = "2024-03-18"
-  const PODate = "2024-03-19"
 
-  const sortDates = () => {
-    dates.value.sort((a, b) => new Date(a) - new Date(b))
+defineProps({
+  entryData: {
+    type: Object,
+    required: true
   }
+})
+
+const sortDates = () => {
+  // Assuming you have dates defined somewhere
+  dates.value.sort((a, b) => new Date(a) - new Date(b));
+};
 </script>
+
 
 <template>
   <!-- Følger prototypen til figma -->
   <div class="list">
     <div class="titleWrapper">
-      <span>Example Project</span>
+      <span>{{ entryData.title }}</span>
     </div>
     <div class="progressWrapper">
-      <ProgressBar :progressNumber="10"/>
+      <ProgressBar :progressNumber="entryData.progress" />
     </div>
     <div class="dateWrapper">
-      <DateEntry :dateString = plannedDate />
+      <DateEntry :dateString = "entryData.plannedDate" />
     </div>
     <div class="dateWrapper">
-      <DateEntry :dateString = PODate />
+      <DateEntry :dateString = "entryData.POdate" />
     </div>
     <div class="statusWrapper">
-      <PlanStatus />
+      <PlanStatus :onSchedule="entryData.status" />
     </div>
     <div class="personWrapper">
-      <PersonInCharge />
+      <PersonInCharge :entryName="entryData.pem"/>  
     </div>
   </div>
 </template>
+
+
 <style scoped>
 
 .list {

@@ -14,15 +14,20 @@
   </div>
 </div>
 </template>
+
+
 <script>
 
 </script>
+
+
 <style scoped>
 .wrapper {
   width: 80%;
   display: flex;
   flex-direction: column;
 }
+
 .title {
   display: flex;
   justify-content: space-between;
