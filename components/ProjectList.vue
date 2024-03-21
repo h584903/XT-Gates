@@ -11,9 +11,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import ProjectEntry from './ProjectEntry.vue';
-import { packProject } from '~/utils/packProject';
 
 const prosjektliste = ref([
   // Generates the list for projects
@@ -23,15 +20,14 @@ const prosjektliste = ref([
 
 // Function to add a new item to the list
 const addItemToList = () => {
-  const project = packProject('',50,'','','','',''); // Generate item to be added to list
+  const project = packProject("Hest",50,"2024-09-14","2024-09-15",true,"Kristoffer Madsen","comment"); // Generate item to be added to list
   prosjektliste.value.push(project); // Add a new item to the list
-  console.log("PASS")
 };
 
 </script>
 
 
-<style>
+<style scoped>
 .list-wrapper {
   display: flex;
   flex-direction: column;

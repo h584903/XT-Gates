@@ -1,6 +1,6 @@
 <template>
   <!-- Lager en komponent som kan motta en boolsk verdi, og oppretter en sirkel basert -->
-  <span :class="{ 'statusCircle': true, 'onSchedule': onSchedule, 'error': !onSchedule }"></span>
+  <span :class="{ 'statusCircle': true, 'onSchedule': onSchedule.valueOf, 'error': !onSchedule }"></span>
 </template>
 
 <!-- Default export for enkelt eksportere til andre filer. Sender med en boolsk verdi 
