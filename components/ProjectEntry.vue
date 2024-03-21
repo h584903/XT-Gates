@@ -30,6 +30,9 @@
     <div class="personWrapper">
       <PersonInCharge />
     </div>
+    <div class="commentWrapper">
+      <Modal/>
+    </div>
   </div>
 </template>
 <style scoped>
