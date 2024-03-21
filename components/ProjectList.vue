@@ -6,26 +6,26 @@
       <ProjectEntry :entryData="entry"/>
       <hr class="solid">
     </div>
-    <button v-on:click="addItemToList">Press me</button>
+    <button @click="addItemToList">Press me</button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import ProjectEntry from './ProjectEntry.vue';
+import { packProject } from '~/utils/packProject';
 
 const prosjektliste = ref([
-  {}, // Initial items
-  {}, // Initial items
-  {}, // Initial items
-  {}  // Initial items
+  // Generates the list for projects
 ]);
+
 
 // Function to add a new item to the list
 const addItemToList = () => {
-  prosjektliste.value.push({}); // Add a new item to the list
-  console.log(prosjektliste.value.length); // Log the length of prosjektliste
+  const project = packProject('',50,'','','','',''); // Generate item to be added to list
+  prosjektliste.value.push(project); // Add a new item to the list
 };
+
 </script>
 
 
