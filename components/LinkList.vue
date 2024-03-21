@@ -1,11 +1,13 @@
 <template>
   <div class="ProjectNameList"><!--Liste som displayer navn på aktive prosjekt. Må endres senere.-->
-    <NuxtLink to="project_1">Project 1</NuxtLink>
-    <NuxtLink to="project_2">Project 2</NuxtLink>
+    <NuxtLink :to="`/projectList/${id}`">Project 1</NuxtLink>
+    <NuxtLink :to="`/projectList/${id}`">Project 2</NuxtLink>
   </div>
 </template>
 
 <script lang="ts" setup>
+// props for å sende id til parameteren
+const id = ref('1');
 
 </script>
 
