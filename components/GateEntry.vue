@@ -27,7 +27,7 @@
   <CollapseTransition>
     <div v-show="isOpen">
       <hr class="solid">
-      This div will open and close smoothly!
+      <GateContent />
     </div>
   </CollapseTransition>
 </template>
@@ -39,6 +39,7 @@
 .list {
   display: flex;
   flex-direction: row;
+  height:40px;
 }
 
 .title {
@@ -62,7 +63,7 @@
   text-align: center;
   width: 5%;
 }
-.daystoEnd {
+.daysToEnd {
   margin: auto;
   text-align: center;
   width: 5%;
