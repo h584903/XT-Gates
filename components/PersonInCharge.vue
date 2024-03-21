@@ -3,11 +3,18 @@
 </template>
 
 <script setup>
-import { abrName } from '~/utils/abrName'; //Importerer funksjonen for å forkorte et navn
+import { defineProps } from 'vue';
 
-const fullName = "Kristoffer Fjeldstad Madsen"; // Må endres til dynamisk senere
-const name = abrName(fullName);
+const props = defineProps({
+  entryName: {
+    type: String,
+    required: true
+  }
+});
+
+const name = abrName(props.entryName)
 </script>
+
 
 <style>
 
