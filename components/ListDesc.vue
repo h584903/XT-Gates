@@ -19,6 +19,9 @@
         <div class="PEM">
             <span>PEM</span>
         </div>
+        <div class="commentWrapper">
+            <span>Comment</span>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -37,7 +40,7 @@
     visibility: hidden;
     margin: auto;
     text-align: center;
-    width: 50%;
+    width: 40%;
 }
 .dateWrapper {
     margin: auto;
@@ -53,5 +56,10 @@
     margin: auto;
     text-align: center;
     width: 15%
+}
+.commentWrapper {
+    margin: auto;
+    text-align: center;
+    width: 10%;
 }
 </style>

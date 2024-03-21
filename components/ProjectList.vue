@@ -31,11 +31,12 @@ const addItemToList = () => {
 .list-wrapper {
   display: flex;
   flex-direction: column;
-  width: 80%
+  width: 90%
 }
 
 hr.solid {
   width: 100%;
   border-top: 1px solid grey;
 }
+
 </style>
