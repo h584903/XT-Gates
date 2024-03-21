@@ -24,18 +24,12 @@
       <DateEntry :dateString = completionDate />
     </div>
   </div>
-  <div class="mb-8">
-    <Transition name="slide-fade">
-      <ul v-show="isOpen" class="list-reset w-48 p-4 bg-grey-light">
-        <li>Example!</li>
-        <li>Example!</li>
-        <li>Example!</li>
-        <li>Example!</li>
-        <li>Example!</li>
-        <li>Example!</li>
-      </ul>
-    </Transition>
-  </div>
+  <CollapseTransition>
+    <div v-show="isOpen">
+      <hr class="solid">
+      This div will open and close smoothly!
+    </div>
+  </CollapseTransition>
 </template>
 <style scoped>
 .mb-8 {
@@ -79,28 +73,9 @@
   width: 10%;
 }
 
-/*
-  Enter and leave animations can use different
-  durations and timing functions.
-*/
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
+hr.solid {
+  width: 100%;
+  border-top: 1px solid grey;
 }
-
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-
-
-.github-corner:hover 
 
 </style>
-<script setup>
-
-</script>
