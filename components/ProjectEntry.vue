@@ -16,7 +16,7 @@
       <span>Example Project</span>
     </div>
     <div class="progressWrapper">
-      <ProgressBar :progressNumber="10"/>
+      <ProgressBar :progressNumber="entryData.progress" />
     </div>
     <div class="dateWrapper">
       <DateEntry :dateString = plannedDate />
@@ -32,6 +32,8 @@
     </div>
   </div>
 </template>
+
+
 <style scoped>
 
 .list {

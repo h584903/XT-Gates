@@ -17,6 +17,7 @@ import { packProject } from '~/utils/packProject';
 
 const prosjektliste = ref([
   // Generates the list for projects
+  
 ]);
 
 
@@ -24,6 +25,7 @@ const prosjektliste = ref([
 const addItemToList = () => {
   const project = packProject('',50,'','','','',''); // Generate item to be added to list
   prosjektliste.value.push(project); // Add a new item to the list
+  console.log("PASS")
 };
 
 </script>
