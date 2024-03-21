@@ -23,6 +23,7 @@
 
 <style scoped>
 .wrapper {
+  width: 80%;
   display: flex;
   flex-direction: column;
 }
