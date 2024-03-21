@@ -1,4 +1,5 @@
 <template>
+  <div> event id: {{ $route.params.id}}
   <div class="wrapper">
     <div class="title">
       <h1>Project Title</h1>
@@ -11,6 +12,7 @@
       <SaveButton />
     </div>
   </div>
+</div>
 </template>
 <script>
 
