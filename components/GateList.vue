@@ -1,5 +1,5 @@
 <template>
-  <div class="list">
+  <div class="gatelist">
     <GateEntry />
     <GateEntry />
     <GateEntry />
@@ -10,7 +10,7 @@
 </template>
 <style scoped>
 
-.list {
+.gatelist {
   display: flex;
   flex-direction: column;
 }
