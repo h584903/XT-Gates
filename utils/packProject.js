@@ -1,8 +1,9 @@
-export function packProject(title, progress, plannedDate, POdate,
+export function packProject(id, title, progress, plannedDate, POdate,
      status, pem, comment) {
 
+    console.log(pem);
 const myProject = {
-    ID: 0,
+    id: id,
     title: title,
     progress: progress,
     plannedDate: plannedDate,
@@ -11,6 +12,7 @@ const myProject = {
     pem: pem,
     comment: comment
 };
+    console.log(myProject);
 
 return myProject;
 }

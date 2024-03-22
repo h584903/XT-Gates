@@ -1,14 +1,13 @@
 <template>
-  <div class="ProjectNameList"><!--Liste som displayer navn på aktive prosjekt. Må endres senere.-->
-    <NuxtLink :to="`/projectList/${id}`">Project 1</NuxtLink>
-    <NuxtLink :to="`/projectList/${id}`">Project 2</NuxtLink>
+  <div class="ProjectNameList" v-for = "entry in store.projects"><!--Liste som displayer navn på aktive prosjekt. Må endres senere.-->
+    <NuxtLink :project="entry" :to="`/projectList/${ entry.id }`">Project {{ entry.id }}</NuxtLink>
   </div>
 </template>
 
-<script lang="ts" setup>
-// props for å sende id til parameteren
-const id = ref('1');
+<script setup>
+  import { useProjectsStore } from '@/stores/projects'
 
+  const store = useProjectsStore();
 </script>
 
 <style scoped>
