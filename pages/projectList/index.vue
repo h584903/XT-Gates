@@ -4,6 +4,7 @@
     <div class="projectList">
       <ProjectList />
     </div>
+    <button style="addprojectbutton" />
   </div>
 </template>
 <script>
@@ -18,6 +19,12 @@
 
 h1 {
   text-decoration: underline;
+}
+
+.addprojectbutton {
+  position: fixed;
+  right: 5%;
+  bottom: 10%;
 }
 
 </style>
