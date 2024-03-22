@@ -3,13 +3,12 @@
     <NuxtLink to="/" class="hoverlink">Dashboard</NuxtLink>
     <NuxtLink to="/Archive" class="hoverlink">Archive</NuxtLink>
     <NuxtLink to="/projectList" class="hoverlink">Active Projects</NuxtLink>
-    <LinkList :id="projectId"/> <!--Listen over aktive prosjekter-->
+    <LinkList /> <!--Listen over aktive prosjekter-->
   </div>
 </template>
 
 <script setup>
   // Må endres til å hente ut en faktisk id som settes til et prosjekt
-  const projectId = ref('1');
 </script>
 
 <style scoped>

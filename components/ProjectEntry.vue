@@ -44,7 +44,7 @@ const sortDates = () => {
       <DateEntry :dateString = "entryData.POdate" />
     </div>
     <div class="statusWrapper">
-      <PlanStatus :onSchedule="entryData.status" />
+      <PlanStatus :onSchedule = "entryData.status" />
     </div>
     <div class="personWrapper">
       <PersonInCharge :entryName="entryData.pem"/>  
