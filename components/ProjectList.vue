@@ -25,7 +25,7 @@ const index = ref(0);
 const addItemToList = () => {
 // Legger til et static object
 const project = 
-  store.addProject("Hest", 50, "2024-09-14", "2024-09-15", true, "Kristoffer Madsen", "comment"); // Generate item to be added to list
+  store.addProject("Project Name", 50, "2024-09-14", "2024-09-15", true, "Kristoffer Madsen", "comment"); // Generate item to be added to list
   index.value++;
 };
 
