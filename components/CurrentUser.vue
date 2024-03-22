@@ -9,7 +9,7 @@
 
     // Logikken for å hente ut brukernavn
     const getUsername  = () => {
-        return "Bob";
+        return "Eirik Sangiorgi Brakstad";
     }
     // Setter username til navnet hentet fra getUsername, for øyeblikket 'Bob'
     username.value = getUsername();
