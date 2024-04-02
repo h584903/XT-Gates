@@ -8,9 +8,10 @@ class projectModel {
     comment: String; /*Kommentar til prosjekt*/
     POdate: Date; /*Dag prosjektet er bestilt ferdig innen*/
     SFdate: Date; /*Dag prosjektet er planlagt ferdig*/
+    archive: boolean; /*Om prosjektet er arkivert skal det ikke vises på prosjektsiden*/
 
 
-    constructor(ID:number, title:String, progress:number, onTime:boolean, PEM:String, comment:String, POdate:Date, SFdate:Date) {
+    constructor(ID:number, title:String, progress:number, onTime:boolean, PEM:String, comment:String, POdate:Date, SFdate:Date, archive:boolean) {
         this.ID = ID;
         this.title = title;
         this.progress = progress;
@@ -19,6 +20,7 @@ class projectModel {
         this.comment = comment;
         this.POdate = POdate;
         this.SFdate = SFdate;
+        this.archive = archive;
     }
 
 }
