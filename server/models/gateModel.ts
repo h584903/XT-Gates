@@ -1,3 +1,10 @@
 class gateModel {
-    
+
+    /*Attributter*/
+
+    constructor() {
+        
+    }
+
+
 }
