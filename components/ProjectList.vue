@@ -6,12 +6,26 @@
     <div v-for="entry in store.projects">
       <ProjectEntry :entryData="entry"/>
       <hr class="solid">
-    </div>
-    <button @click="addItemToList">Press me</button>
+    </div>   
+    <Modal @close="toggleModal" :modalActive="modalActive">
+      <form>
+        <label>Project title: </label>
+        <input type="text"><br>
+        <label>PO-date: </label>
+        <input type="date"><br>
+        <label>Scheduled finish: </label>
+        <input type="date"><br>
+        <label>PEM: </label>
+        <input type="text"><br>
+      </form>
+      <button @click="addItemToList" class="addButton">Create Project</button>
+    </Modal>
+    <button @click="toggleModal" type = "button">Add Project</button>
   </div>
 </template>
 
 <script setup>
+  import Modal from "@/components/ReusableModal.vue"
 
   // importerer prosjekt storeen
   import { useProjectsStore } from '@/stores/projects'
@@ -20,6 +34,12 @@
   const store = useProjectsStore();
 
 const index = ref(0);
+
+// Metode for toggle modalen - settes til false by default
+const modalActive = ref(false);
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+};
 
 // Function to add a new item to the list
 const addItemToList = () => {
@@ -37,6 +57,14 @@ const project =
   display: flex;
   flex-direction: column;
   width: 90%
+}
+.addButton{
+  background-color: rgb(77,77,77);
+  color: white;
+  cursor: pointer;
+  border: none;
+  padding: 10px 10px;
+  font-size: 16px;
 }
 
 hr.solid {
