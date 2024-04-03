@@ -6,7 +6,7 @@
           <!-- Modal content skal her -->
           <slot></slot>
           
-          <button @click="close">Close Modal</button>
+          <button @click="close">Close Window</button>
         </div>
       </div>
     </transition>
@@ -83,9 +83,10 @@ const close = () => {
   padding: 10px 10px;
   border: none;
   font-size: 16px;
-  background-color: crimson;
+  background-color: rgb(77, 77, 77);
   color: white;
   cursor: pointer;
+  margin: 10px;
     }
   }
 }
