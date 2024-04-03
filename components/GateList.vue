@@ -1,4 +1,5 @@
 <template>
+  <ListDescGates/>
   <div class="gatelist">
     <hr class="solid">
     <GateEntry />

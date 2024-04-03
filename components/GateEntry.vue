@@ -23,6 +23,7 @@
     <div class="completion">
       <DateEntry :dateString = completionDate />
     </div>
+  <div class="comment">comment</div>
   </div>
   <CollapseTransition>
     <div v-show="isOpen">
@@ -69,6 +70,11 @@
   width: 5%;
 }
 .completion {
+  margin: auto;
+  text-align: center;
+  width: 10%;
+}
+.comment{
   margin: auto;
   text-align: center;
   width: 10%;
