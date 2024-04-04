@@ -132,7 +132,7 @@ button {
   padding: 10px 10px;
   border: none;
   font-size: 16px;
-  background-color: crimson;
+  background-color: rgb(91, 102, 184);
   color: white;
   cursor: pointer;
 }

@@ -6,7 +6,7 @@
           <!-- Modal content skal her -->
           <slot></slot>
           
-          <button @click="close">Close Modal</button>
+          <button @click="close">Close Window</button>
         </div>
       </div>
     </transition>
@@ -14,7 +14,6 @@
 
 <script setup>
   // Sende med en boolsk variabel
-  import { defineProps } from 'vue'
   const props = defineProps({
     modalActive: {
       type: Boolean,
@@ -83,9 +82,10 @@ const close = () => {
   padding: 10px 10px;
   border: none;
   font-size: 16px;
-  background-color: crimson;
+  background-color: rgb(77, 77, 77);
   color: white;
   cursor: pointer;
+  margin: 10px;
     }
   }
 }

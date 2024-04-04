@@ -1,5 +1,4 @@
 <script setup>
-  import { defineProps } from 'vue'
   // Får komponenten til å ta imot en String for datoen
   const props = defineProps({
     dateString: String

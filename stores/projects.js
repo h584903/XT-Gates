@@ -15,10 +15,19 @@ export const useProjectsStore = defineStore('projects', () => {
 
 	}
 	// Funksjon for å legge til et prosjekt i listen
-	function addProject(id, title, progress, plannedDate, PODate, status, person, comment) {
+
+	async function addProject(id, title, progress, plannedDate, PODate, status, person, comment) {
+
 
 		this.projects.push(packProject(id, title, progress, plannedDate, PODate, status, person, comment))
 		index.value++;
+		const data = await $fetch('/projects', {
+			method: 'GET'
+		});
+
+		console.log("This is the data");
+		console.log(data);
+
 	};
 	return { project, projects, getProjectById, addProject }
 });

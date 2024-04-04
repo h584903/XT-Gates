@@ -6,14 +6,28 @@
     <div v-for="entry in store.projects">
       <ProjectEntry :entryData="entry"/>
       <hr class="solid">
-    </div>
-    <button @click="addItemToList">Press me</button>
+    </div> 
+    <Modal @close="toggleModal" :modalActive="modalActive">
+      <h1>New Project</h1>
+      <form @submit.prevent="submitForm">
+        <label>Project title: </label>
+        <input type="text" id="title" v-model="formData.title" required><br>
+        <label>PO-date: </label>
+        <input type="date" id="PO" v-model="formData.PO" required><br>
+        <label>Scheduled finish: </label>
+        <input type="date" id="SF" v-model="formData.SF" required><br>
+        <label>PEM: </label>
+        <input type="text" id="PEM" v-model="formData.PEM" required><br>
+        <button type="submit" class="addButton">Create Project</button>
+      </form>
+    </Modal>
+    <button @click="toggleModal" type = "button">Add Project</button>
   </div>
 </template>
 
 <script setup>
-
-  // importerer prosjekt storeen
+  import Modal from "@/components/ReusableModal.vue"
+  // importerer prosjekt storen
   import { useProjectsStore } from '@/stores/projects'
   import {useGatesStore} from '@/stores/gates'
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
@@ -21,14 +35,28 @@
   const gateStore = useGatesStore();
 const index = ref(0);
 
-// Function to add a new item to the list
-const addItemToList = () => {
-// Legger til et static object
-const project = 
-  store.addProject(1,"Project Name", 50, "2024-09-14", "2024-09-15", true, "Kristoffer Madsen", "comment"); // Generate item to be added to list
+
+const formData = ref({
+  title: '',
+  PO: '',
+  SF: '',
+  PEM: ''
+})
+
+const submitForm = () => {
+  store.addProject(formData.value.title, 50, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
   index.value++;
-  gateStore.addGate(1,"a",30,"a","s","s",0);
+  console.log(formData.value);
+  toggleModal();
+}
+
+// Metode for toggle modalen - settes til false by default
+const modalActive = ref(false);
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+
 };
+
 
 </script>
 
@@ -38,6 +66,15 @@ const project =
   display: flex;
   flex-direction: column;
   width: 90%
+}
+.addButton{
+  background-color: rgb(77,77,77);
+  color: white;
+  cursor: pointer;
+  border: none;
+  padding: 10px 10px;
+  font-size: 16px;
+  margin: 10px;
 }
 
 hr.solid {

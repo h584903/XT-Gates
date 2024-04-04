@@ -3,13 +3,13 @@
 <template>
   <div class="list">
     <div class="w5">
-      <span>step 1</span>
+      <span>1.1</span>
     </div>
     <div class="w15">
       <span>activity</span>
     </div>
     <div class="w10">
-      <span>person</span>
+      <span>Responsible Role</span>
     </div>
     <div class="w10">
       <DateEntry :dateString = "'2024-05-05'" />
@@ -18,13 +18,19 @@
       <span>Petter Tesdal</span>
     </div>
     <div class="w5">
-      <label class="container">
-        <input type="checkbox">
-        <span class="checkmark"></span>
-      </label>
+      <select name="progress" id="task_progress">
+        <option value="0.0">0%</option>
+        <option value="0.25">25%</option>
+        <option value="0.5">50%</option>
+        <option value="0.75">75%</option>
+        <option value="1.0">100%</option>
+      </select>
     </div>
     <div class="w5">
       <PlanStatus :onSchedule="true" />
+    </div>
+    <div class="w5">
+      <span>10</span>
     </div>
   </div>
 </template>
