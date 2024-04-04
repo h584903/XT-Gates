@@ -70,7 +70,7 @@ onMounted(async () => {
 .semi-footer {
   width: 100%;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 </style>

@@ -19,8 +19,10 @@ export const useProjectsStore = defineStore('projects', () => {
 
 		this.projects.push(packProject(index.value, title, progress, plannedDate, PODate, status, person, comment))
 		index.value++;
+		const data = await $fetch('/projects', {
+			method: 'GET'
+		});
 
-		const data = await useFetch('/test');
 		console.log("This is the data");
 		console.log(data);
 
