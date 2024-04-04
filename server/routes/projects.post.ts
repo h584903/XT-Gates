@@ -6,11 +6,10 @@ export default defineEventHandler(async event => {
 
   try {
     const body = await readBody (event)
-    const requestBody = JSON.parse(body)
-    const { title, progress, plannedDate, POdate, status, PEM, comment} = requestBody;
+    const { title, progress, plannedDate, POdate, status, PEM, comment} = body;
 
     console.log("Attempting to create project in DB..")
-    projects = await connectAndQuery("INSERT INTO projectModel VALUES (9,'TestdalTestdalTestdal',0,1,'" + "John Doe" + "', 'Sample comment','" + "2024-10-05" + "','" + "2024-09-25" + "',0)");
+    projects = await connectAndQuery("INSERT INTO projectModel VALUES (13,'" + title +"',0,1,'" + PEM + "', 'Sample comment','" + POdate + "','" + plannedDate + "',0)");
 
     return {updated: true}
   } catch (error) {

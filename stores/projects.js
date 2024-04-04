@@ -16,43 +16,39 @@ export const useProjectsStore = defineStore('projects', () => {
 
 	}
 	// Funksjon for å legge til et prosjekt i listen
-	async function addProject(title, progress, plannedDate, PODate, status, person, comment) {
-		const requestBody = {
-			title: title,
-			progress: progress,
-			plannedDate: plannedDate,
-			PODate: PODate,
-			status: status,
-			person: person,
-			comment: comment
-		};
+	async function addProject(title, progress, plannedDate, PODate, status, PEM, comment) {
+        const plannedDateString = plannedDate.toISOString();
+        const PODateString = PODate.toISOString();
 
-		try {
-			const response = await $fetch('/projects', {
-				method: 'POST',
-				headers: {
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(requestBody)
-			})
+        const requestBody = {
+            title: title,
+            progress: progress,
+            plannedDate: plannedDateString,
+            PODate: PODateString,
+            status: status,
+            PEM: PEM,
+            comment: comment
+        };
 
-		} catch (error) {
-			return createError({
-				statusCode: 500,
-				statusMessage: 'Internal Server Error',
-				data: 'Failed to create project'
-			})
-		}
+        try {
+            const response = await $fetch('/projects', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
 
-		this.projects.push(packProject(index.value, title, progress, plannedDate, PODate, status, person, comment))
-		index.value++;
-		const data = await $fetch('/projects', {
-			method: 'GET'
-		});
-
-		console.log("This is the data");
-		console.log(data);
-
-	};
+            // Assuming successful response, add project to the store
+            projects.value.push(packProject(index.value, title, progress, plannedDateString, PODateString, status, PEM, comment));
+            index.value++;
+        } catch (error) {
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to create project'
+            });
+        }
+    }
 	return { project, projects, getProjectById, addProject }
 });

@@ -43,9 +43,7 @@ const formData = ref({
 })
 
 const submitForm = () => {
-  store.addProject(formData.value.title, 50, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
-  index.value++;
-  console.log(formData.value);
+  store.addProject(formData.value.title, 0, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
   toggleModal();
 }
 
