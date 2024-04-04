@@ -15,18 +15,19 @@
 
   // importerer prosjekt storeen
   import { useProjectsStore } from '@/stores/projects'
-  
+  import {useGatesStore} from '@/stores/gates'
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
   const store = useProjectsStore();
-
+  const gateStore = useGatesStore();
 const index = ref(0);
 
 // Function to add a new item to the list
 const addItemToList = () => {
 // Legger til et static object
 const project = 
-  store.addProject("Project Name", 50, "2024-09-14", "2024-09-15", true, "Kristoffer Madsen", "comment"); // Generate item to be added to list
+  store.addProject(1,"Project Name", 50, "2024-09-14", "2024-09-15", true, "Kristoffer Madsen", "comment"); // Generate item to be added to list
   index.value++;
+  gateStore.addGate(1,"a",30,"a","s","s",0);
 };
 
 </script>
