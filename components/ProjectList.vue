@@ -29,11 +29,12 @@
   import Modal from "@/components/ReusableModal.vue"
   // importerer prosjekt storen
   import { useProjectsStore } from '@/stores/projects'
-  
+  import {useGatesStore} from '@/stores/gates'
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
   const store = useProjectsStore();
-
+  const gateStore = useGatesStore();
 const index = ref(0);
+
 
 const formData = ref({
   title: '',
@@ -53,6 +54,7 @@ const submitForm = () => {
 const modalActive = ref(false);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
+
 };
 
 
