@@ -30,6 +30,9 @@
   // importerer prosjekt storen
   import { useProjectsStore } from '@/stores/projects'
   import {useGatesStore} from '@/stores/gates'
+  import {  v4 as uuid } from 'uuid'
+  
+  
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
   const store = useProjectsStore();
   const gateStore = useGatesStore();
@@ -44,7 +47,8 @@ const formData = ref({
 })
 
 const submitForm = () => {
-  store.addProject(formData.value.title, 50, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
+  const projectId = uuid();
+  store.addProject(projectId,formData.value.title, 50, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
   index.value++;
   console.log(formData.value);
   toggleModal();
