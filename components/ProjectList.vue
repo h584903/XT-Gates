@@ -6,19 +6,20 @@
     <div v-for="entry in store.projects">
       <ProjectEntry :entryData="entry"/>
       <hr class="solid">
-    </div>   
+    </div> 
     <Modal @close="toggleModal" :modalActive="modalActive">
-      <form>
+      <h1>New Project</h1>
+      <form @submit.prevent="submitForm">
         <label>Project title: </label>
-        <input type="text"><br>
+        <input type="text" id="title" v-model="formData.title" required><br>
         <label>PO-date: </label>
-        <input type="date"><br>
+        <input type="date" id="PO" v-model="formData.PO" required><br>
         <label>Scheduled finish: </label>
-        <input type="date"><br>
+        <input type="date" id="SF" v-model="formData.SF" required><br>
         <label>PEM: </label>
-        <input type="text"><br>
+        <input type="text" id="PEM" v-model="formData.PEM" required><br>
+        <button type="submit" class="addButton">Create Project</button>
       </form>
-      <button @click="addItemToList" class="addButton">Create Project</button>
     </Modal>
     <button @click="toggleModal" type = "button">Add Project</button>
   </div>
@@ -26,8 +27,7 @@
 
 <script setup>
   import Modal from "@/components/ReusableModal.vue"
-
-  // importerer prosjekt storeen
+  // importerer prosjekt storen
   import { useProjectsStore } from '@/stores/projects'
   
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
@@ -35,19 +35,26 @@
 
 const index = ref(0);
 
+const formData = ref({
+  title: '',
+  PO: '',
+  SF: '',
+  PEM: ''
+})
+
+const submitForm = () => {
+  store.addProject(formData.value.title, 50, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
+  index.value++;
+  console.log(formData.value);
+  toggleModal();
+}
+
 // Metode for toggle modalen - settes til false by default
 const modalActive = ref(false);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
 
-// Function to add a new item to the list
-const addItemToList = () => {
-// Legger til et static object
-const project = 
-  store.addProject("Project Name", 50, "2024-09-14", "2024-09-15", true, "Kristoffer Madsen", "comment"); // Generate item to be added to list
-  index.value++;
-};
 
 </script>
 
@@ -65,6 +72,7 @@ const project =
   border: none;
   padding: 10px 10px;
   font-size: 16px;
+  margin: 10px;
 }
 
 hr.solid {
