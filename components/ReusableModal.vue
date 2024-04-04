@@ -14,7 +14,6 @@
 
 <script setup>
   // Sende med en boolsk variabel
-  import { defineProps } from 'vue'
   const props = defineProps({
     modalActive: {
       type: Boolean,
