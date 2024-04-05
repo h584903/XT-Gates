@@ -16,6 +16,7 @@ export const useProjectsStore = defineStore('projects', () => {
 
 	}
 	// Funksjon for å legge til et prosjekt i listen
+<<<<<<< HEAD
 	async function addProject(title, progress, plannedDate, PODate, status, PEM, comment) {
         const plannedDateString = plannedDate.toISOString();
         const PODateString = PODate.toISOString();
@@ -29,6 +30,17 @@ export const useProjectsStore = defineStore('projects', () => {
             PEM: PEM,
             comment: comment
         };
+=======
+
+	async function addProject(id, title, progress, plannedDate, PODate, status, person, comment) {
+
+
+		this.projects.push(packProject(id, title, progress, plannedDate, PODate, status, person, comment))
+		index.value++;
+		const data = await $fetch('/projects', {
+			method: 'GET'
+		});
+>>>>>>> origin/main
 
         try {
             const response = await $fetch('/projects', {
