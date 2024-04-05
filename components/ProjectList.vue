@@ -13,9 +13,9 @@
         <label>Project title: </label>
         <input type="text" id="title" v-model="formData.title" required><br>
         <label>PO-date: </label>
-        <input type="date" id="PO" v-model="formData.PO" required><br>
+        <input type="text" id="PO" v-model="formData.PO" required><br>
         <label>Scheduled finish: </label>
-        <input type="date" id="SF" v-model="formData.SF" required><br>
+        <input type="text" id="SF" v-model="formData.SF" required><br>
         <label>PEM: </label>
         <input type="text" id="PEM" v-model="formData.PEM" required><br>
         <button type="submit" class="addButton">Create Project</button>
@@ -48,7 +48,8 @@ const formData = ref({
 
 const submitForm = () => {
   const projectId = uuid();
-  store.addProject(projectId,formData.value.title, 50, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
+  console.log(formData.value.PO.toString())
+  store.addProject(projectId,formData.value.title, 0, formData.value.SF.toString().replace(/-/g, ''), formData.value.PO.toString().replace(/-/g, ''), true, formData.value.PEM, "comment");
   index.value++;
   console.log(formData.value);
   toggleModal();
