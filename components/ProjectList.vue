@@ -13,9 +13,9 @@
         <label>Project title: </label>
         <input type="text" id="title" v-model="formData.title" required><br>
         <label>PO-date: </label>
-        <input type="date" id="PO" v-model="formData.PO" required><br>
+        <input type="text" id="PO" v-model="formData.PO" required><br>
         <label>Scheduled finish: </label>
-        <input type="date" id="SF" v-model="formData.SF" required><br>
+        <input type="text" id="SF" v-model="formData.SF" required><br>
         <label>PEM: </label>
         <input type="text" id="PEM" v-model="formData.PEM" required><br>
         <button type="submit" class="addButton">Create Project</button>
@@ -30,6 +30,9 @@
   // importerer prosjekt storen
   import { useProjectsStore } from '@/stores/projects'
   import {useGatesStore} from '@/stores/gates'
+  import {  v4 as uuid } from 'uuid'
+  
+  
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
   const store = useProjectsStore();
   const gateStore = useGatesStore();
@@ -44,7 +47,11 @@ const formData = ref({
 })
 
 const submitForm = () => {
-  store.addProject(formData.value.title, 0, formData.value.SF, formData.value.PO, true, formData.value.PEM, "comment");
+  const projectId = uuid();
+  console.log(formData.value.PO.toString())
+  store.addProject(projectId,formData.value.title, 0, formData.value.SF.toString().replace(/-/g, ''), formData.value.PO.toString().replace(/-/g, ''), true, formData.value.PEM, "comment");
+  index.value++;
+  console.log(formData.value);
   toggleModal();
 }
 
