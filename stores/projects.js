@@ -8,7 +8,17 @@ export const useProjectsStore = defineStore('projects', () => {
     const project = ref();
     // listen av prosjekter
     const projects = ref([]);
-    const index = ref (0)
+    projects.value.push({
+        id: 1,
+        title: "Test Project",
+        duration: 50,
+        startDate: "2024-12-12",
+        endDate: "2024-12-12",
+        ownerId: 1,
+        ownerName: "Petter Tesdal",
+        description: "This is a test project"
+    });
+    const index = ref (1)
 
     function getProjectById(projectId) {
         console.log(projectId)
