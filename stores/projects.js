@@ -16,39 +16,22 @@ export const useProjectsStore = defineStore('projects', () => {
 		
 	}
 	// Funksjon for å legge til et prosjekt i listen
-	async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
+	
+	async function addProject(title, progress, plannedDate, PODate, status, person, comment) {
+		this.projects.push(packProject(title, progress, plannedDate, PODate, status, person, comment))
+		index.value++;
 
+		try {
+		const data = await $fetch('/projects', {
+			method: 'GET'
+		});
 
-        const requestBody = {
-			ID: ID,
-            title: title,
-            progress: progress,
-            plannedDate: plannedDate,
-            PODate: PODate,
-            status: status,
-            PEM: PEM,
-            comment: comment
-        };
+		console.log("This is the data");
+		console.log(data);
+	} catch (error) {
 
-        try {
-            const response = await $fetch('/projects', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
-            });
+	}
+	};
 
-            // Assuming successful response, add project to the store
-            
-            index.value++;
-        } catch (error) {
-            return createError({
-                statusCode: 500,
-                statusMessage: 'Internal Server Error',
-                data: 'Failed to create project'
-            });
-        }
-    }
 	return { project, projects, getProjectById, addProject }
 });

@@ -47,7 +47,7 @@ const sortDates = () => {
       <PlanStatus :onSchedule = "entryData.status" />
     </div>
     <div class="personWrapper">
-      <PersonInCharge :entryName="entryData.pem"/>  
+      <PersonInCharge :entryName="entryData.PEM"/>  
     </div>
     <div class="commentWrapper">
       <Modal @close="toggleModal" :modalActive="modalActive"> 
@@ -132,7 +132,7 @@ button {
   padding: 10px 10px;
   border: none;
   font-size: 16px;
-  background-color: rgb(91, 102, 184);
+  background-color: crimson;
   color: white;
   cursor: pointer;
 }

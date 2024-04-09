@@ -1,6 +1,6 @@
 <template>
   <div class="ProjectNameList" v-for = "entry in store.projects"><!--Liste som displayer navn på aktive prosjekt. Må endres senere.-->
-    <NuxtLink :project="entry" :to="`/projectList/${ entry.id }`">Project {{ entry.id }}</NuxtLink>
+    <NuxtLink :project="entry" :to="`/projectList/${ entry.id }`">Project {{ entry.id.slice(0,13) }}</NuxtLink>
   </div>
 </template>
 
