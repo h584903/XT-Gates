@@ -4,23 +4,23 @@ import { defineStore } from "pinia";
 
 
 export const useProjectsStore = defineStore('projects', () => {
-	// denne brukes hvis man vil hente et spesifikt object, må implementere metode for det da
-	const project = ref();
-	// listen av prosjekter
-	const projects = ref([]);
-	const index = ref (0)
-	
-	function getProjectById(projectId) {
-		console.log(projectId)
-		return projects.value.find(project => parseInt(project.id, 10) === projectId);
-		
-	}
-	// Funksjon for å legge til et prosjekt i listen
-	async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
+    // denne brukes hvis man vil hente et spesifikt object, må implementere metode for det da
+    const project = ref();
+    // listen av prosjekter
+    const projects = ref([]);
+    const index = ref (0)
+
+    function getProjectById(projectId) {
+        console.log(projectId)
+        return projects.value.find(project => parseInt(project.id, 10) === projectId);
+
+    }
+    // Funksjon for å legge til et prosjekt i listen
+    async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
 
 
         const requestBody = {
-			ID: ID,
+            ID: ID,
             title: title,
             progress: progress,
             plannedDate: plannedDate,
@@ -40,7 +40,8 @@ export const useProjectsStore = defineStore('projects', () => {
             });
 
             // Assuming successful response, add project to the store
-            
+            this.projects.push(requestBody);
+
             index.value++;
         } catch (error) {
             return createError({
@@ -50,5 +51,5 @@ export const useProjectsStore = defineStore('projects', () => {
             });
         }
     }
-	return { project, projects, getProjectById, addProject }
+    return { project, projects, getProjectById, addProject }
 });
