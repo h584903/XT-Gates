@@ -38,13 +38,13 @@ const sortDates = () => {
       <ProgressBar :progressNumber="entryData.progress" />
     </div>
     <div class="dateWrapper">
-      <DateEntry :dateString = "entryData.plannedDate" />
+      <DateEntry :dateString = "entryData.SFdate" />
     </div>
     <div class="dateWrapper">
       <DateEntry :dateString = "entryData.POdate" />
     </div>
     <div class="statusWrapper">
-      <PlanStatus :onSchedule = "entryData.status" />
+      <PlanStatus :onSchedule = "entryData.onTime" />
     </div>
     <div class="personWrapper">
       <PersonInCharge :entryName="entryData.PEM"/>  
