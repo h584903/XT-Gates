@@ -3,8 +3,8 @@
     <ListDesc/>
     <hr class="solid">
     <!--Oppretter et entry for hvert prosjekt i store.projects-->
-    <div v-for="entry in store.projects">
-      <ProjectEntry :entryData="entry"/>
+    <div v-for="project in projects" :key = project.id>
+      <ProjectEntry :entryData="project"/>
       <hr class="solid">
     </div> 
     <Modal @close="toggleModal" :modalActive="modalActive">
