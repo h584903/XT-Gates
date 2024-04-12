@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     console.log("Starting...");
-    projects = await connectAndQuery("SELECT p.*, g.*, t.* FROM projectModel p LEFT JOIN gateModel g ON p.ID = g.prosjektID LEFT JOIN taskModel t ON g.ID = t.gateID AND p.ID = t.prosjektID ORDER BY p.ID, g.gateNR, t.step;");
+    projects = await connectAndQuery("SELECT * FROM projectModel")
 
     console.log(projects);
   } catch (error) {
