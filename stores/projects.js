@@ -12,9 +12,9 @@ export const useProjectsStore = defineStore('projects', () => {
         id: 0,
         title: "Test Project",
         progress: 50,
-        plannedDate: "2024-12-12",
-        PODate: "2024-12-12",
-        status: 1,
+        SFdate: "2024-12-12",
+        POdate: "2024-12-12",
+        onTime: 1,
         PEM: "Petter Tesdal",
         comment: "This is a test project"
     });
