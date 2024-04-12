@@ -3,7 +3,8 @@ export default defineEventHandler(async event => {
 
   let projects;
   let gates;
-  
+  var ID;
+
   var gateListe: any[][];
   
   //Liste over gates som blir lagt til i opprettelsen av et prosjekt
@@ -255,7 +256,14 @@ export default defineEventHandler(async event => {
     const body = await readBody(event);
     const { title, progress, plannedDate, POdate, status, PEM, comment } = body;
 
-    const ID = 25; // Må gjøres dynamisk etter hvert.
+    var IDobject = await connectAndQuery('SELECT MAX(ID) FROM projectModel')
+    ID = IDobject[0]['']
+    if(ID === null) {
+      ID = 1
+    } else {
+      ID++
+    }
+    
 
     console.log("Attempting to create project in DB..");
 
@@ -267,7 +275,7 @@ export default defineEventHandler(async event => {
     for (const gate of gateListe) {
       const gateNR = gate[0];
       const gateName = gate[1];
-      const gateID = ID*1000 + gateNR; // Assuming a gateNR will not exceed 999
+      const gateID = ID*10000 + gateNR; // Assuming a gateNR will not exceed 9999
       
       await connectAndQuery(`INSERT INTO gateModel VALUES (${gateID}, ${ID}, ${gateNR}, '${gateName}')`);
     }
@@ -280,8 +288,8 @@ export default defineEventHandler(async event => {
         const taskName = task[0];
         const taskPEM = task[1];
         const duration = task[2];
-        const taskID = ID*1000000 + gatecounter*10000 + step;
-        const gateID = ID*1000 + gatecounter;
+        const taskID = ID*100000000 + gatecounter*10000 + step; // ppppggggtttt lager taskID med gatenr og prosjektID innebakt
+        const gateID = ID*10000 + gatecounter;
 
         await connectAndQuery(`INSERT INTO taskModel VALUES (${taskID}, ${ID}, ${gateID}, ${step}, '${taskName}', '${taskPEM}', 1, 0.00, ${duration})`)
         step++;
