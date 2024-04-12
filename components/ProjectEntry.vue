@@ -1,4 +1,3 @@
-
 <script setup>
 // Imports
 import {ref} from "vue";

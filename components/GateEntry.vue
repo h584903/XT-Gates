@@ -1,4 +1,27 @@
 <script setup>
+  const props = defineProps({
+    gateId: {
+      type: Number,
+      required: true
+    },
+    title: {
+      type: Number,
+      required: true
+    },
+    projectId: {
+      type: Number,
+      required: true
+    },
+    plannedDate: {
+      type: Number,
+      required: true
+    },
+    completionDate: {
+      type: Number,
+      required: true
+    }
+    
+  });
   const plannedDate = "2024-03-18"
   const completionDate = "2024-03-19"
   const isOpen = ref(false);
@@ -6,13 +29,13 @@
 <template>
   <div class="list" @click="isOpen = ! isOpen">
     <div class="title">
-      <span>Gate example</span>
+      <span>{{ props.title }}</span>
     </div>
     <div class="progress">
       <ProgressBar :progressNumber="30" />
     </div>
     <div class="plannedDate">
-      <DateEntry :dateString = plannedDate />
+      <DateEntry :dateString = props.plannedDate />
     </div>
     <div class="remaining">
       <span>test</span>
@@ -21,7 +44,7 @@
       <span>test</span>
     </div>
     <div class="completion">
-      <DateEntry :dateString = completionDate />
+      <DateEntry :dateString = props.completionDate />
     </div>
   </div>
   <CollapseTransition>
