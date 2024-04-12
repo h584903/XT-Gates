@@ -27,8 +27,8 @@
 
 <script setup>
   import Modal from "@/components/ReusableModal.vue"
-  import {ref, onMounted} from 'vue'
   // importerer prosjekt storen
+  import {ref, onMounted} from 'vue'
   import { useProjectsStore } from '@/stores/projects'
   import {useGatesStore} from '@/stores/gates'
   import {  v4 as uuid } from 'uuid'
@@ -38,7 +38,7 @@
   const store = useProjectsStore();
   const gateStore = useGatesStore();
   const projects = ref([]);
-  const index = ref(0);
+const index = ref(0);
 
 
 const formData = ref({
@@ -48,31 +48,13 @@ const formData = ref({
   PEM: ''
 })
 
-
-const submitForm = async() => {
-  try {
+const submitForm = () => {
   const projectId = uuid();
   console.log(formData.value.PO.toString())
-  await store.addProject(projectId,formData.value.title, 0, formData.value.SF.toString().replace(/-/g, ''), formData.value.PO.toString().replace(/-/g, ''), true, formData.value.PEM, "comment");
+  store.addProject(projectId,formData.value.title, 0, formData.value.SF.toString().replace(/-/g, ''), formData.value.PO.toString().replace(/-/g, ''), true, formData.value.PEM, "comment");
   index.value++;
   console.log(formData.value);
-  // Push the new project to the projects array
-  projects.value.push({
-      id: projectId,
-      title: formData.value.title,
-      progress: 0,
-      onTime: true,
-      PEM: formData.value.PEM,
-      comment: "comment",
-      POdate: formData.value.PO,
-      SFdate: formData.value.SF,
-      archive: false,
-      gates: {}
-    });
   toggleModal();
-  } catch (error) {
-    console.error('Error adding project:', error);
-  }
 }
 
 // Metode for toggle modalen - settes til false by default
@@ -81,14 +63,13 @@ const toggleModal = () => {
   modalActive.value = !modalActive.value;
 
 };
-onMounted(async () => {
+  onMounted(async () => {
   try {
     const response = await $fetch('/projects', {
       method: 'GET'
     });
     // Henter bare ut dataen i responsen, dropper "Hello World..."
     const data = response.data;
-
     // Transformerer data til en liste av projects
   const projectsArray = Object.values(data).map(project => ({
   id: project.ID,
@@ -108,7 +89,10 @@ onMounted(async () => {
     console.error('Error fetching projects:', error);
   }
 });
+
+
 </script>
+
 
 <style scoped>
 .list-wrapper {
