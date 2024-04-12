@@ -63,6 +63,32 @@ const toggleModal = () => {
   modalActive.value = !modalActive.value;
 
 };
+  onMounted(async () => {
+  try {
+    const response = await $fetch('/projects', {
+      method: 'GET'
+    });
+    // Henter bare ut dataen i responsen, dropper "Hello World..."
+    const data = response.data;
+    // Transformerer data til en liste av projects
+  const projectsArray = Object.values(data).map(project => ({
+  id: project.ID,
+  title: project.title,
+  progress: project.progress,
+  onTime: project.onTime,
+  PEM: project.PEM,
+  comment: project.comment,
+  POdate: project.POdate,
+  SFdate: project.SFdate,
+  archive: project.archive,
+  gates: project.gates
+}));
+    // Oppdaterer projects ref med transformert data
+    projects.value = projectsArray;
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+  }
+});
 
 
 </script>
