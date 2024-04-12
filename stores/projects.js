@@ -11,12 +11,12 @@ export const useProjectsStore = defineStore('projects', () => {
     projects.value.push({
         id: 1,
         title: "Test Project",
-        duration: 50,
-        startDate: "2024-12-12",
-        endDate: "2024-12-12",
-        ownerId: 1,
-        ownerName: "Petter Tesdal",
-        description: "This is a test project"
+        progress: 50,
+        plannedDate: "2024-12-12",
+        PODate: "2024-12-12",
+        status: 1,
+        PEM: "Petter Tesdal",
+        comment: "This is a test project"
     });
     const index = ref (1)
 

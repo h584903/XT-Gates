@@ -24,19 +24,14 @@
 </script>
 <template>
   <div class="gatelist">
-    <hr class="solid">
-    <GateEntry />
-    <hr class="solid">
-    <GateEntry />
-    <hr class="solid">
-    <GateEntry />
-    <hr class="solid">
-    <GateEntry />
-    <hr class="solid">
-    <GateEntry />
-    <hr class="solid">
-    <GateEntry />
-    <hr class="solid">
+    <div v-if="gates.length > 0" v-for ="gate in gates">
+      <hr class="solid" >
+      <GateEntry :gateId="gate.id" :title="gate.title" :projectId="props.projectId" :plannedDate="gate.plannedDate" :completionDate="gate.completionDate" />
+      <hr class="solid" >
+    </div>
+    <div v-else>
+      No gates found for this project
+    </div>
   </div>
 </template>
 <style scoped>

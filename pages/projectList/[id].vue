@@ -47,6 +47,7 @@
     } catch (error) {
       console.error('Error fetching project:', error);
     }
+  })
 </script>
 
 <style scoped>

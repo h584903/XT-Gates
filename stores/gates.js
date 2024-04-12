@@ -9,19 +9,19 @@ export const useGatesStore = defineStore('gates', () => {
         projectID: 1,
         title: "gate 1",
         progress: 10,
-        plannedDate: "2024-12-12",
+        plannedDate: "2024-05-12",
         remaining: 12,
         daysToEnd: 12,
-        completion: 1
+        completionDate: "2024-03-02"
     });
     gates.value.push({
         projectID: 1,
         title: "gate 2",
         progress: 20,
-        plannedDate: "2024-12-12",
+        plannedDate: "2024-07-07",
         remaining: 12,
         daysToEnd: 12,
-        completion: 1
+        completionDate: "2024-06-07"
     });
 
     // Function to add a gate to the gates array

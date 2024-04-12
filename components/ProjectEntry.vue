@@ -1,4 +1,3 @@
-
 <script setup>
 // Imports
 import {ref} from "vue";
@@ -47,7 +46,7 @@ const sortDates = () => {
       <PlanStatus :onSchedule = "entryData.status" />
     </div>
     <div class="personWrapper">
-      <PersonInCharge :entryName="entryData.pem"/>  
+      <PersonInCharge :entryName="entryData.PEM"/>  
     </div>
     <div class="commentWrapper">
       <Modal @close="toggleModal" :modalActive="modalActive"> 
