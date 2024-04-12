@@ -9,7 +9,7 @@ export const useProjectsStore = defineStore('projects', () => {
     // listen av prosjekter
     const projects = ref([]);
     projects.value.push({
-        id: 1,
+        id: 0,
         title: "Test Project",
         progress: 50,
         plannedDate: "2024-12-12",
