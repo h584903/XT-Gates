@@ -9,6 +9,39 @@ export const useProjectsStore = defineStore('projects', () => {
 	// listen av prosjekter
 	const projects = ref([]);
 	const index = ref (0)
+
+	function setProjects(newProjects) {
+		console.log("Legger til alt i store igjen")
+		projects.value = newProjects;
+	  }
+	
+	// hente og oppdatere prosjekter
+  	async function fetchProjects() {
+		console.log('Fetching projects...');
+    try {
+      const response = await $fetch('/projects', {
+        method: 'GET'
+      });
+
+      const data = response.data;
+      const projectsArray = Object.values(data).map(project => ({
+        id: project.ID,
+        title: project.title,
+        progress: project.progress,
+        onTime: project.onTime,
+        PEM: project.PEM,
+        comment: project.comment,
+        POdate: project.POdate,
+        SFdate: project.SFdate,
+        archive: project.archive,
+        gates: project.gates
+      }));
+
+      setProjects(projectsArray);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  }
 	
 	function getProjectById(projectId) {
 		console.log(projectId)
@@ -17,7 +50,6 @@ export const useProjectsStore = defineStore('projects', () => {
 	}
 	// Funksjon for å legge til et prosjekt i listen
 	async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
-
 
         const requestBody = {
 			ID: ID,
@@ -50,5 +82,5 @@ export const useProjectsStore = defineStore('projects', () => {
             });
         }
     }
-	return { project, projects, getProjectById, addProject }
+	return { project, projects, getProjectById, addProject, setProjects, fetchProjects}
 });
