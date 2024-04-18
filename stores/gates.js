@@ -3,8 +3,9 @@ import { packProject } from '@/utils/packProject.js';
 import { defineStore } from "pinia";
 
 export const useGatesStore = defineStore('gates', () => {
-    // State for defining data accessible through all components
+    // Vanlig Ref
     const gates = ref([]);
+    // Pusher opp noe eksempel gates
     gates.value.push({
         projectID: 0,
         ID:'0001',
@@ -26,7 +27,7 @@ export const useGatesStore = defineStore('gates', () => {
         completionDate: "2024-06-07"
     });
 
-    // Function to add a gate to the gates array
+    // Funksjon for å legge til gates, ikke testet
     function addGate(projectID, gateID, title, progress, plannedDate, remaining, daysToEnd, completion) {
         const newGate = { projectID, gateID, title, progress, plannedDate, remaining, daysToEnd, completion };
         gates.value.push(newGate);
