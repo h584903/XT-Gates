@@ -37,7 +37,7 @@
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
   const store = useProjectsStore();
   const gateStore = useGatesStore();
-  const projects = store.projects;
+  const projects = store.getProjects();
   const index = ref(0);
 
 

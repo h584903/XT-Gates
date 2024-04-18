@@ -42,6 +42,9 @@ export const useProjectsStore = defineStore('projects', () => {
       console.error('Error fetching projects:', error);
     }
   }
+  	function getProjects() {
+		return projects.value;
+	}
 	
 	function getProjectById(projectId) {
 		console.log(projectId)
@@ -82,5 +85,5 @@ export const useProjectsStore = defineStore('projects', () => {
             });
         }
     }
-	return { project, projects, getProjectById, addProject, setProjects, fetchProjects}
+	return { project, projects, getProjects,getProjectById, addProject, setProjects, fetchProjects}
 });

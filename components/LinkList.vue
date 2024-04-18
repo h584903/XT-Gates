@@ -16,7 +16,7 @@ const projects = ref([]);
 
 // ser etter endringer i projects tabell og legger deretter til ref([])
 watchEffect(() => {
-  projects.value = store.projects;
+  projects.value = store.getProjects();
 });
 
 </script>
