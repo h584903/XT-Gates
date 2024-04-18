@@ -15,8 +15,7 @@
 
   onMounted(async () => {
     try {
-      const projectGates = gateStore.getProjectGates(props.projectId);
-      gates.value = projectGates.value;
+      gates.value = await gateStore.getProjectGates(props.projectId);
     } catch (error) {
       console.error('Error fetching gates:', error);
     }
@@ -26,7 +25,7 @@
   <div class="gatelist">
     <div v-if="gates.length > 0" v-for ="gate in gates">
       <hr class="solid" >
-      <GateEntry :gateId="gate.id" :title="gate.title" :projectId="props.projectId" :plannedDate="gate.plannedDate" :completionDate="gate.completionDate" />
+      <GateEntry :gateID="gate.ID" :title="gate.title" :projectId="props.projectId" :plannedDate="gate.plannedDate" :completionDate="gate.completionDate" />
       <hr class="solid" >
     </div>
     <div v-else>

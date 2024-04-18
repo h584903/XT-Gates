@@ -1,20 +1,36 @@
-<script>
+<script setup>
+  // Henter task storen
+  import { useTasksStore } from '@/stores/tasks';
+
+  // Henter de ulike variablene fra gaten
+  const props = defineProps({
+    gateID: {
+      type: String,
+      required: true
+    }
+    // Må legge til flere props etterhvert
+  });
+
+  // Initialiserer Tasks listen, 
+  const taskStore = useTasksStore();
+  const tasks = ref([]);
+
+  onMounted(async () => {
+    try {
+      tasks.value = taskStore.getGateTasks(props.gateID);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  });
 </script>
 <template>
-  <div class="listGate">
-    <GateTask />
-    <HorizontalLine />
-    <GateTask />
-    <HorizontalLine />
-    <GateTask />
-    <HorizontalLine />
-    <GateTask />
-    <HorizontalLine />
-    <GateTask />
-    <HorizontalLine />
-    <GateTask />
-    <HorizontalLine />
-  </div>
+    <div class="listGate" v-if="tasks.length > 0" v-for ="task in tasks">
+      <GateTask :taskID="task.ID" :step="task.step" :title="task.title" :duration="task.duration" :responsiblePerson="task.responsiblePerson"/>
+      <HorizontalLine />
+    </div>
+    <div v-else>
+      No tasks found for this gate
+    </div>
 </template>
 <style scoped>
 .listGate {
