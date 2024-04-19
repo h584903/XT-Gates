@@ -4,10 +4,10 @@ import { defineStore } from "pinia";
 
 
 export const useProjectsStore = defineStore('projects', () => {
-    // denne brukes hvis man vil hente et spesifikt object, må implementere metode for det da
-    const project = ref();
-    // listen av prosjekter
-    const projects = ref([]);
+	// denne brukes hvis man vil hente et spesifikt object, må implementere metode for det da
+	const project = ref();
+	// listen av prosjekter
+	const projects = ref([]);
     projects.value.push({
         id: 0,
         title: "Test Project",
@@ -20,15 +20,51 @@ export const useProjectsStore = defineStore('projects', () => {
     });
     const index = ref (1)
 
+	function setProjects(newProjects) {
+		console.log("Legger til alt i store igjen")
+		projects.value = newProjects;
+	  }
+	
+	// hente og oppdatere prosjekter
+  	async function fetchProjects() {
+		console.log('Fetching projects...');
+    try {
+      const response = await $fetch('/projects', {
+        method: 'GET'
+      });
+
+      const data = response.data;
+      const projectsArray = Object.values(data).map(project => ({
+        id: project.ID,
+        title: project.title,
+        progress: project.progress,
+        onTime: project.onTime,
+        PEM: project.PEM,
+        comment: project.comment,
+        POdate: project.POdate,
+        SFdate: project.SFdate,
+        archive: project.archive,
+        gates: project.gates
+      }));
+
+      setProjects(projectsArray);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  }
+  	function getProjects() {
+		return projects.value;
+	}
+
     function getProjectById(projectId) {
         console.log(projectId)
         return projects.value.find(project => parseInt(project.id, 10) === projectId);
 
-    }
 
     async function deleteProject () {
         console.log("Store attempting to delete project")
     }
+
     // Funksjon for å legge til et prosjekt i listen
     async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
 
@@ -65,5 +101,5 @@ export const useProjectsStore = defineStore('projects', () => {
             });
         }
     }
-    return { project, projects, getProjectById, addProject }
+	return { project, projects, getProjects,getProjectById, addProject, setProjects, fetchProjects}
 });
