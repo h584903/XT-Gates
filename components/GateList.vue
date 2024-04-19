@@ -21,6 +21,7 @@
     }
   });
 </script>
+
 <template>
   <div class="gatelist">
     <div v-if="gates.length > 0" v-for ="gate in gates">
@@ -33,6 +34,7 @@
     </div>
   </div>
 </template>
+
 <style scoped>
 
 .gatelist {
