@@ -25,6 +25,10 @@ export const useProjectsStore = defineStore('projects', () => {
         return projects.value.find(project => parseInt(project.id, 10) === projectId);
 
     }
+
+    async function deleteProject () {
+        console.log("Store attempting to delete project")
+    }
     // Funksjon for å legge til et prosjekt i listen
     async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
 
