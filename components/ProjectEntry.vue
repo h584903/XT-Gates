@@ -19,6 +19,7 @@ const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
 
+
 const sortDates = () => {
   // Assuming you have dates defined somewhere
   dates.value.sort((a, b) => new Date(a) - new Date(b));
@@ -53,9 +54,11 @@ const sortDates = () => {
         <div class="modal-content">
           <h1>This is a modal header</h1>
           <p>This is a modal message</p>
+          <button @click="toggleModal" class="smallButton">Save comment</button>
+          <button @click="toggleModal" class="smallButton">Cancel</button>
         </div>
       </Modal>
-      <button @click="toggleModal" type = "button">Open Modal</button>
+      <button @click="toggleModal" class = "bigButton">Open Modal</button>
     </div>
   </div>
 </template>
@@ -127,7 +130,8 @@ const sortDates = () => {
   p {font-size: 16px;}
 /* Knappen som vises i prosjektsiden*/
 }
-button {
+
+.bigButton {
   padding: 10px 10px;
   border: none;
   font-size: 16px;
@@ -136,4 +140,9 @@ button {
   cursor: pointer;
 }
 
+.smallButton {
+  margin: 10px;
+  width: 100px;
+  flex: auto;
+}
 </style>

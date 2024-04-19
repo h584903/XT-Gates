@@ -6,7 +6,6 @@
           <!-- Modal content skal her -->
           <slot></slot>
           
-          <button @click="close">Close Window</button>
         </div>
       </div>
     </transition>
