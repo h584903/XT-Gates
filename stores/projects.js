@@ -18,7 +18,7 @@ export const useProjectsStore = defineStore('projects', () => {
         PEM: "Petter Tesdal",
         comment: "This is a test project"
     });
-    const index = ref (1)
+    const index = ref (0)
 
 	function setProjects(newProjects) {
 		console.log("Legger til alt i store igjen")
@@ -59,7 +59,7 @@ export const useProjectsStore = defineStore('projects', () => {
     function getProjectById(projectId) {
         console.log(projectId)
         return projects.value.find(project => parseInt(project.id, 10) === projectId);
-
+    }
 
     async function deleteProject () {
         console.log("Store attempting to delete project")
@@ -101,5 +101,7 @@ export const useProjectsStore = defineStore('projects', () => {
             });
         }
     }
+
 	return { project, projects, getProjects,getProjectById, addProject, setProjects, fetchProjects}
+    
 });

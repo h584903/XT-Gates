@@ -11,7 +11,7 @@ import { useProjectsStore } from '@/stores/projects';
 const store = useProjectsStore();
 
 onMounted(() => {
-  if (store.getProjects().length === 0) {
+  if (store.getProjects().length === 1) {
     console.log('Dashboard mounted');
     store.fetchProjects();
   }
