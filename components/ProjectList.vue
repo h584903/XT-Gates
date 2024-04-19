@@ -20,6 +20,7 @@
         <input type="text" id="PEM" v-model="formData.PEM" required><br>
         <button type="submit" class="addButton">Create Project</button>
       </form>
+      <button class="closeButton" @click="toggleModal">Cancel</button>
     </Modal>
     <button @click="toggleModal" type = "button">Add Project</button>
   </div>
@@ -63,7 +64,8 @@ const toggleModal = () => {
   modalActive.value = !modalActive.value;
 
 };
-  onMounted(async () => {
+
+onMounted(async () => {
   try {
     const response = await $fetch('/projects', {
       method: 'GET'
@@ -101,6 +103,16 @@ const toggleModal = () => {
   width: 90%
 }
 .addButton{
+  background-color: rgb(77,77,77);
+  color: white;
+  cursor: pointer;
+  border: none;
+  padding: 10px 10px;
+  font-size: 16px;
+  margin: 10px;
+}
+
+.closeButton{
   background-color: rgb(77,77,77);
   color: white;
   cursor: pointer;
