@@ -6,11 +6,21 @@
         <!--Skal oppdateres med komponent etter merge-->
         <h2>PO Date</h2>
       </div>
-      <GateList />
+      <GateList :projectId="project.id"/>
       <!-- Brukes for å kunne ha ting på en linje etter listen -->
       <div class="semi-footer">
         <SaveButton />
       </div>
+      <div>
+        <ReusableModal @close="toggleModal" :modalActive="modalActive">
+          <h1>Delete Project?</h1>
+          <p>Deleting a project is absolute, and cannot be reversed. Make certain this is necessary before doing so.</p>
+          <p>Delete project {{ project.title }}?</p>
+          <button class="customButton">Yes</button>
+          <button @click="toggleModal" class="customButton">No</button>
+        </ReusableModal>
+      </div>
+      <button @click="toggleModal" type = "button">Delete project</button>
     </div>
     <div v-else>
       loading project...
@@ -19,39 +29,41 @@
 </template>
 
 <script setup>
-  import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { useProjectsStore } from '@/stores/projects';
+  import ReusableModal from '~/components/ReusableModal.vue';
+  import { useRoute } from 'vue-router';
+  import { useProjectsStore } from '@/stores/projects';
 
-const store = useProjectsStore();
-const route = useRoute();
-const project = ref(null);
+  const store = useProjectsStore();
+  const route = useRoute();
+  const project = ref(null);
 
-onMounted(async () => {
-  if (route.params.id) {
-    const projectId = parseInt(route.params.id, 10); // Parse to integer
+  onMounted(async () => {
+    const projectId = parseInt(route.params.id, 10); // parser routen til en int og spesifiserer base 10 
     if (isNaN(projectId)) {
-  console.error('Project ID is not a valid number');
-  return;
-}
+      console.error('Project ID is not a valid number');
+      return;
+    }
 
-
-    if (!isNaN(projectId)) { // Check if the parsing was successful
     try {
-      const fetchedProject = await store.getProjectById(0);
+      // Henter prosjekt info
+      const fetchedProject = await store.getProjectById(projectId);
       if (fetchedProject) {
         project.value = fetchedProject;
       } else {
         console.error('Project not found:', route.params.id);
+        return;
       }
+
     } catch (error) {
       console.error('Error fetching project:', error);
     }
-    }else {
-      console.error('Invalid project ID:', route.params.id);
-    }
-  }
-});
+  })
+
+// Metode for toggle modalen - settes til false by default
+const modalActive = ref(false);
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+};
 </script>
 
 <style scoped>
@@ -73,4 +85,7 @@ onMounted(async () => {
   justify-content: flex-end;
 }
 
+.customButton {
+  margin: 10px;
+}
 </style>

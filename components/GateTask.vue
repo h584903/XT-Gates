@@ -1,15 +1,37 @@
-<script>
+<script setup>
+  const props = defineProps({
+  taskID: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  responsiblePerson: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: Number,
+    required: true
+  },
+  step: {
+    type: Number,
+    required: true
+  }
+  })
 </script>
 <template>
   <div class="list">
     <div class="w5">
-      <span>1.1</span>
+      <span>{{ props.step }}</span>
     </div>
     <div class="w15">
-      <span>activity</span>
+      <span>{{ props.title }}</span>
     </div>
     <div class="w10">
-      <span>Responsible Role</span>
+      <span>{{ props.responsiblePerson }}</span>
     </div>
     <div class="w10">
       <DateEntry :dateString = "'2024-05-05'" />
@@ -30,7 +52,7 @@
       <PlanStatus :onSchedule="true" />
     </div>
     <div class="w5">
-      <span>10</span>
+      <span>{{ props.duration }}</span>
     </div>
   </div>
 </template>

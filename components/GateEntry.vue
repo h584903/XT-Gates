@@ -1,18 +1,43 @@
 <script setup>
-  const plannedDate = "2024-03-18"
-  const completionDate = "2024-03-19"
+  // Henter task storen
+  import { useTasksStore } from '@/stores/tasks';
+  const taskStore = useTasksStore();
+
+  // Henter de ulike variablene fra gaten
+  const props = defineProps({
+    gateID: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    projectId: {
+      type: Number,
+      required: true
+    },
+    plannedDate: {
+      type: String,
+      required: true
+    },
+    completionDate: {
+      type: String,
+      required: true
+    }
+  });
   const isOpen = ref(false);
 </script>
 <template>
   <div class="list" @click="isOpen = ! isOpen">
     <div class="title">
-      <span>Gate example</span>
+      <span>{{ props.title }}</span>
     </div>
     <div class="progress">
       <ProgressBar :progressNumber="30" />
     </div>
     <div class="plannedDate">
-      <DateEntry :dateString = plannedDate />
+      <DateEntry :dateString = props.plannedDate />
     </div>
     <div class="remaining">
       <span>test</span>
@@ -21,13 +46,13 @@
       <span>test</span>
     </div>
     <div class="completion">
-      <DateEntry :dateString = completionDate />
+      <DateEntry :dateString = props.completionDate />
     </div>
   </div>
   <CollapseTransition>
     <div v-show="isOpen">
       <hr class="solid">
-      <GateContent />
+      <GateContent :gateID = props.gateID />
     </div>
   </CollapseTransition>
 </template>

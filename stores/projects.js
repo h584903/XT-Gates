@@ -8,7 +8,17 @@ export const useProjectsStore = defineStore('projects', () => {
 	const project = ref();
 	// listen av prosjekter
 	const projects = ref([]);
-	const index = ref (0)
+    projects.value.push({
+        id: 0,
+        title: "Test Project",
+        progress: 50,
+        SFdate: "2024-12-12",
+        POdate: "2024-12-12",
+        onTime: 1,
+        PEM: "Petter Tesdal",
+        comment: "This is a test project"
+    });
+    const index = ref (1)
 
 	function setProjects(newProjects) {
 		console.log("Legger til alt i store igjen")
@@ -45,17 +55,22 @@ export const useProjectsStore = defineStore('projects', () => {
   	function getProjects() {
 		return projects.value;
 	}
-	
-	function getProjectById(projectId) {
-		console.log(projectId)
-		return projects.value.find(project => parseInt(project.id, 10) === projectId);
-		
-	}
-	// Funksjon for å legge til et prosjekt i listen
-	async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
+
+    function getProjectById(projectId) {
+        console.log(projectId)
+        return projects.value.find(project => parseInt(project.id, 10) === projectId);
+
+
+    async function deleteProject () {
+        console.log("Store attempting to delete project")
+    }
+
+    // Funksjon for å legge til et prosjekt i listen
+    async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
+
 
         const requestBody = {
-			ID: ID,
+            ID: ID,
             title: title,
             progress: progress,
             plannedDate: plannedDate,
@@ -75,7 +90,8 @@ export const useProjectsStore = defineStore('projects', () => {
             });
 
             // Assuming successful response, add project to the store
-            
+            projects.value.push(requestBody);
+
             index.value++;
         } catch (error) {
             return createError({
