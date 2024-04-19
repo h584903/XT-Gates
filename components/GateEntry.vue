@@ -1,11 +1,16 @@
 <script setup>
+  // Henter task storen
+  import { useTasksStore } from '@/stores/tasks';
+  const taskStore = useTasksStore();
+
+  // Henter de ulike variablene fra gaten
   const props = defineProps({
-    gateId: {
-      type: Number,
+    gateID: {
+      type: String,
       required: true
     },
     title: {
-      type: Number,
+      type: String,
       required: true
     },
     projectId: {
@@ -13,17 +18,14 @@
       required: true
     },
     plannedDate: {
-      type: Number,
+      type: String,
       required: true
     },
     completionDate: {
-      type: Number,
+      type: String,
       required: true
     }
-    
   });
-  const plannedDate = "2024-03-18"
-  const completionDate = "2024-03-19"
   const isOpen = ref(false);
 </script>
 <template>
@@ -50,7 +52,7 @@
   <CollapseTransition>
     <div v-show="isOpen">
       <hr class="solid">
-      <GateContent />
+      <GateContent :gateID = props.gateID />
     </div>
   </CollapseTransition>
 </template>

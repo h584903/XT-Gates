@@ -50,7 +50,7 @@ export const useProjectsStore = defineStore('projects', () => {
             });
 
             // Assuming successful response, add project to the store
-            this.projects.push(requestBody);
+            projects.value.push(requestBody);
 
             index.value++;
         } catch (error) {

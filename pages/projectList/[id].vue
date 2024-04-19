@@ -21,7 +21,6 @@
 <script setup>
   import { useRoute } from 'vue-router';
   import { useProjectsStore } from '@/stores/projects';
-  import { useGatesStore } from '@/stores/gates'; // Importerer storen
 
   const store = useProjectsStore();
   const route = useRoute();
