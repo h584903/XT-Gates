@@ -5,6 +5,7 @@
   const gateStore = useGatesStore();
 
   // Henter de ulike variablene fra gaten
+  const gateStore = useGatesStore();
   const props = defineProps({
     gateID: {
       type: String,
@@ -34,6 +35,7 @@
 
   const plannedDate = gateStore.calculateDate(props.projectId, props.gateNR)
 
+  const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
 </script>
 <template>
@@ -42,7 +44,7 @@
       <span>{{ props.title }}</span>
     </div>
     <div class="progress">
-      <ProgressBar :progressNumber="30" />
+      <ProgressBar :progressNumber=gateProgress />
     </div>
     <div class="plannedDate">
       <DateEntry :dateString = plannedDate />

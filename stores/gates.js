@@ -101,8 +101,23 @@ export const useGatesStore = defineStore('gates', () => {
     function getProjectGates(projectID) {
         return gates.value.filter(gate => gate.projectID === projectID);
     }
-    // Example usage to console log the result of getProjectGates
+
+    function getGateProgress(gateID) {
+        const taskStore = useTasksStore();
+        return computed(() => {
+            const tasks = taskStore.getGateTasks(gateID)
+            if (!tasks.length) return 0;
+            const totalWeightedProgress = tasks.reduce((total, task) => {
+                return total + (task.progress / 100) * task.duration
+            }, 0);
+            const totalDuration = tasks.reduce((total, task) => {
+                return total + task.duration
+            }, 0);
+            return totalDuration > 0 ? (totalWeightedProgress / totalDuration) * 100 : 0;
+        });
+    }
 
 
-    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays };
+    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress };
+
 });

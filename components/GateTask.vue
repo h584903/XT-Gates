@@ -1,4 +1,7 @@
 <script setup>
+  import { useTasksStore } from '@/stores/tasks';
+
+  const tasksStore = useTasksStore();
   const props = defineProps({
   taskID: {
     type: String,
@@ -21,6 +24,14 @@
     required: true
   }
   })
+
+  const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
+  const selectedProgress = ref(currentTask ? currentTask.progress : 0);
+
+  function updateProgress() {
+    tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
+    tasksStore.update
+  }
 </script>
 <template>
   <div class="list">
@@ -40,13 +51,7 @@
       <span>Petter Tesdal</span>
     </div>
     <div class="w5">
-      <select name="progress" id="task_progress">
-        <option value="0.0">0%</option>
-        <option value="0.25">25%</option>
-        <option value="0.5">50%</option>
-        <option value="0.75">75%</option>
-        <option value="1.0">100%</option>
-      </select>
+        <input type="range" min="0" max="100" step="10" v-model="selectedProgress" @input="updateProgress" />
     </div>
     <div class="w5">
       <PlanStatus :onSchedule="true" />
