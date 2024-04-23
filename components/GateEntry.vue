@@ -2,11 +2,16 @@
   // Henter task storen
   import { useTasksStore } from '@/stores/tasks';
   const taskStore = useTasksStore();
+  const gateStore = useGatesStore();
 
   // Henter de ulike variablene fra gaten
   const props = defineProps({
     gateID: {
       type: String,
+      required: true
+    },
+    gateNR: {
+      type: Number,
       required: true
     },
     title: {
@@ -26,6 +31,9 @@
       required: true
     }
   });
+
+  const plannedDate = gateStore.calculateDate(props.projectId, props.gateNR)
+
   const isOpen = ref(false);
 </script>
 <template>
@@ -37,7 +45,7 @@
       <ProgressBar :progressNumber="30" />
     </div>
     <div class="plannedDate">
-      <DateEntry :dateString = props.plannedDate />
+      <DateEntry :dateString = plannedDate />
     </div>
     <div class="remaining">
       <span>test</span>
