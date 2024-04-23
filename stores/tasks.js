@@ -38,5 +38,12 @@ export const useTasksStore = defineStore('tasks', () => {
         return tasks.value.filter(task => task.ID.substring(0, gateIdPattern.length) === gateIdPattern);
     }
 
-    return { tasks, addTask, getGateTasks };
+    function updateTaskProgress(taskID, newProgress) {
+        const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+        if (taskIndex !== -1) {
+            tasks.value[taskIndex].progress = newProgress;
+        }
+    }
+
+    return { tasks, addTask, getGateTasks, updateTaskProgress };
 });
