@@ -5,7 +5,6 @@
   const gateStore = useGatesStore();
 
   // Henter de ulike variablene fra gaten
-  const gateStore = useGatesStore();
   const props = defineProps({
     gateID: {
       type: String,

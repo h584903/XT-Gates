@@ -1,4 +1,3 @@
-import Id from "~/pages/projectList/[id].vue";
 
 // routes/projects/[id].get.ts
 export default defineEventHandler (async (event) => {
