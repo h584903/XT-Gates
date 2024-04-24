@@ -32,8 +32,10 @@
   import ReusableModal from '~/components/ReusableModal.vue';
   import { useRoute } from 'vue-router';
   import { useProjectsStore } from '@/stores/projects';
+  import { useGatesStore } from '@/stores/gates';
 
   const store = useProjectsStore();
+  const gateStore = useGatesStore();
   const route = useRoute();
   const project = ref(null);
 
@@ -57,7 +59,14 @@
     } catch (error) {
       console.error('Error fetching project:', error);
     }
-  })
+    try {
+      console.log('Fetching gates for project ID:', projectId);
+      gateStore.fetchGates(projectId);
+      console.log('Gates fetched:', gateStore.getProjectGates(projectId));
+    } catch (error) {
+      console.error('Error fetching gates:', error);
+    }
+  });
 
 // Metode for toggle modalen - settes til false by default
 const modalActive = ref(false);
