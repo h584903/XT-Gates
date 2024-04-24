@@ -10,7 +10,6 @@ export const useTasksStore = defineStore('tasks', () => {
     tasks.value.push({
         // ID er nå en string, siden det er enklest å behandle og gir mest mening
         ID: '00010001',
-        prosjektID: '0',
         step: 1,
         title: "Renovere deler",
         responsiblePerson: "Petter Tesdal",
@@ -19,46 +18,18 @@ export const useTasksStore = defineStore('tasks', () => {
     });
     tasks.value.push({
         ID: '00010002',
-        prosjektID: '0',
         step: 2,
         title: "Syre bad",
         responsiblePerson: "Kristoffer Madsen",
         progress: 10,
         duration: 10,
     });
-    tasks.value.push({
-        ID: '00020003',
-        prosjektID: '0',
-        step: 1,
-        title: "Syrebad",
-        responsiblePerson: "Kristoffer Madsen",
-        progress: 10,
-        duration: 20,
-    })
-    tasks.value.push({
-        ID: '00030002',
-        prosjektID: '0',
-        step: 1,
-        title: "Syre bad",
-        responsiblePerson: "Kristoffer Madsen",
-        progress: 10,
-        duration: 30,
-    })
 
     // Funksjon for å legge til en task
     function addTask(ID, step, title, responsiblePerson, progress, duration) {
         const newTask = { ID, step, title, responsiblePerson, progress, duration };
         tasks.value.push(newTask);
     }
-
-    function maxTaskDuration(projectID, gateNR) {
-        let maxDuration = 0;
-        //implementer logikk
-        return maxDuration;
-    }
-    
-    
-    
     
     // Du oppgir gateID, så vil den filtrere ut alle gates som starter med sammeID som gateID
     function getGateTasks(gateIdPattern) {
@@ -67,7 +38,6 @@ export const useTasksStore = defineStore('tasks', () => {
         return tasks.value.filter(task => task.ID.substring(0, gateIdPattern.length) === gateIdPattern);
     }
 
-
     function updateTaskProgress(taskID, newProgress) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
         if (taskIndex !== -1) {
@@ -75,5 +45,5 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, maxTaskDuration };
+    return { tasks, addTask, getGateTasks, updateTaskProgress };
 });

@@ -20,14 +20,13 @@
       console.error('Error fetching gates:', error);
     }
   });
-
 </script>
 
 <template>
   <div class="gatelist">
     <div v-if="gates.length > 0" v-for ="gate in gates">
       <hr class="solid" >
-      <GateEntry :gateID="gate.ID" :gateNR="gate.gateNR" :title="gate.title" :projectId="props.projectId" :plannedDate="gate.plannedDate" :completionDate="gate.completionDate" />
+      <GateEntry :gateID="gate.ID" :title="gate.title" :projectId="props.projectId" :plannedDate="gate.plannedDate" :completionDate="gate.completionDate" />
       <hr class="solid" >
     </div>
     <div v-else>
