@@ -1,12 +1,8 @@
 // routes/projects/[id].get.ts
 
-
 //slette prosjekt
 export default defineEventHandler (async (event) => {
 	const id = getRouterParam(event, 'id')
-
-	
-
 	try {
 		if(id == undefined || isNaN(id as any)) {
 			console.log("id undefined, cannot delete project")
@@ -16,10 +12,9 @@ export default defineEventHandler (async (event) => {
                 data: 'Invalid or missing project ID',
             });
 		} else {
-		const result = await connectAndQuery(`DELETE FROM projectModel WHERE ID = ${id}`);
-
-		console.log(`Project with ID ${id} deleted successfully.`);
-
+		
+		console.log(`Project deletion initiated for ID ${id}`);
+        return `Project deletion initiated for ID ${id}`;
 		}
 	} catch (error) {
 		return createError({
@@ -28,6 +23,4 @@ export default defineEventHandler (async (event) => {
                 data: 'Invalid or missing project ID',
 		  });
 	}
-
-	return 'individual project!'
-})
+});
