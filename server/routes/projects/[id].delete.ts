@@ -17,7 +17,6 @@ export default defineEventHandler (async (event) => {
             });
 		} else {
 		const result = await connectAndQuery(`DELETE FROM projectModel WHERE ID = ${id}`);
-
 		console.log(`Project with ID ${id} deleted successfully.`);
 
 		}
