@@ -2,8 +2,7 @@
   // Henter task storen
   import { useTasksStore } from '@/stores/tasks';
   const taskStore = useTasksStore();
-  const gateStore = useGatesStore();
-
+  
   // Henter de ulike variablene fra gaten
   const gateStore = useGatesStore();
   const props = defineProps({
