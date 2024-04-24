@@ -1,18 +1,9 @@
 <script setup>
-  // Henter task storen
-  import { useTasksStore } from '@/stores/tasks';
-  const taskStore = useTasksStore();
-  const gateStore = useGatesStore();
-
   // Henter de ulike variablene fra gaten
   const gateStore = useGatesStore();
   const props = defineProps({
     gateID: {
       type: String,
-      required: true
-    },
-    gateNR: {
-      type: Number,
       required: true
     },
     title: {
@@ -33,8 +24,6 @@
     }
   });
 
-  const plannedDate = gateStore.calculateDate(props.projectId, props.gateNR)
-
   const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
 </script>
@@ -47,7 +36,7 @@
       <ProgressBar :progressNumber=gateProgress />
     </div>
     <div class="plannedDate">
-      <DateEntry :dateString = plannedDate />
+      <DateEntry :dateString = props.plannedDate />
     </div>
     <div class="remaining">
       <span>test</span>

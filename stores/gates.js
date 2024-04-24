@@ -9,8 +9,7 @@ export const useGatesStore = defineStore('gates', () => {
     gates.value.push({
         projectID: 0,
         ID:'0001',
-        gateNR: 1,
-        title: "RFQ",
+        title: "gate 1",
         progress: 10,
         plannedDate: "2024-05-12",
         remaining: 12,
@@ -20,81 +19,18 @@ export const useGatesStore = defineStore('gates', () => {
     gates.value.push({
         projectID: 0,
         ID:'0002',
-        gateNR: 2,
-        title: "QUOTATION",
+        title: "gate 2",
         progress: 20,
         plannedDate: "2024-07-07",
         remaining: 12,
         daysToEnd: 12,
         completionDate: "2024-06-07"
     });
-    gates.value.push({
-        projectID: 0,
-        ID: '0003',
-        gateNR: 3,
-        title: "EXAMPLE",
-        progress: 20,
-        plannedDate: "2024-10-10",
-        remaining: 12,
-        daysToEnd: 12,
-        completionDate: "2024-06-07"
-    })
 
     // Funksjon for å legge til gates, ikke testet
     function addGate(projectID, gateID, title, progress, plannedDate, remaining, daysToEnd, completion) {
         const newGate = { projectID, gateID, title, progress, plannedDate, remaining, daysToEnd, completion };
         gates.value.push(newGate);
-    }
-
-    function calculateDate(prosjektID, nr){
-        const projectStore = useProjectsStore();
-        let index;
-        for (let i = 0; i < gates.value.length; i++) {
-            if (gates.value[i].projectID === prosjektID && gates.value[i].gateNR === nr) {
-                index = i;
-            }
-        }
-        if (lastGate(prosjektID, nr)) {
-            gates.value[index].plannedDate = projectStore.getPODate(prosjektID)
-            return projectStore.getPODate(prosjektID)
-        } else {
-            return computed(() => {
-                gates.value[index].plannedDate = getNextGateDate(prosjektID, nr)
-                return (getNextGateDate(prosjektID, nr))
-            })
-        }
-    }
-
-
-    function getNextGateDate(prosjektID, nr) {
-        const taskStore = useTasksStore();
-        for (let i = 0; i < gates.value.length; i++) {
-            if ((gates.value[i].projectID == prosjektID) && (gates.value[i].gateNR-1 === nr)) {
-                let date;
-                date = substractDays(gates.value[i].plannedDate, taskStore.maxTaskDuration(prosjektID, nr))
-                return date;
-            }
-        }
-        
-        return "0000-12-24"
-    }
-
-    function substractDays(date, days) {
-        const currentDate = new Date(date);
-        const newDateTimestamp = currentDate.getTime() - (days * 24 * 60 * 60 * 1000);
-        const newDate = new Date(newDateTimestamp);
-        const formattedDate = newDate.toISOString().split('T')[0];
-        return formattedDate;
-    }
-    
-
-    function lastGate(prosjektID, nr) {
-        for (let i = 0; i < gates.value.length; i++) {
-            if((gates.value[i].projectID == prosjektID) && gates.value[i].gateNR>nr){
-                return false
-            }
-        }
-        return true
     }
     
     // Computed property to get gates belonging to a specific project
@@ -118,6 +54,5 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
 
-    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress };
-
+    return { gates, addGate, getProjectGates, getGateProgress };
 });

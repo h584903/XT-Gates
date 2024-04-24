@@ -26,7 +26,7 @@ export const useProjectsStore = defineStore('projects', () => {
 	  }
 	
 	// hente og oppdatere prosjekter
-  async function fetchProjects() {
+  	async function fetchProjects() {
 		console.log('Fetching projects...');
     try {
       const response = await $fetch('/projects', {
@@ -52,22 +52,9 @@ export const useProjectsStore = defineStore('projects', () => {
       console.error('Error fetching projects:', error);
     }
   }
-  
-  function getProjects() {
+  	function getProjects() {
 		return projects.value;
 	}
-
-  function getPODate(projectID) {
-    let pro;
-    for (let i = 0; i<projects.value.length; i++) {
-      if(projects.value[i].id === projectID) {
-        pro = projects.value[i]
-      }
-    }
-    return computed(() => {
-      return pro.POdate
-    })
-  }
 
     function getProjectById(projectId) {
         console.log(projectId)
@@ -115,6 +102,6 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
-	return { project, projects, getProjects,getProjectById, addProject, setProjects, fetchProjects, getPODate}
+	return { project, projects, getProjects,getProjectById, addProject, setProjects, fetchProjects}
     
 });
