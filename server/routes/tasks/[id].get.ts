@@ -1,29 +1,26 @@
-// Henter gates til et prosjekt
-// routes/projects/[id].get.ts
-// GET for gates
+// Henter tasks til et prosjekt
+// GET for tasks
 export default defineEventHandler (async (event) => {
     const id = getRouterParam(event, 'id')
-    let gateList;
-
+    let taskList;
     try {
         if (id === undefined || isNaN(id as any)) {
-            console.log("Invalid or missing project ID. Cannot fetch gates.");
+            console.log("Invalid or missing project ID. Cannot fetch tasks.");
             return createError({
                 statusCode: 400,
                 statusMessage: 'Bad Request',
                 data: 'Invalid or missing project ID',
             });
         }
-        gateList = await connectAndQuery(`SELECT * FROM gateModel WHERE prosjektID = ${id}`)
-        console.log(gateList)
+        taskList = await connectAndQuery(`SELECT * FROM taskModel WHERE prosjektID = ${id}`)
     } catch (error) {
         return createError({
             statusCode: 500,
             statusMessage: 'Internal Server Error',
-            data: 'Failed to fetch gates' + error,
+            data: 'Failed to fetch tasks',
         });
     }
 
-    return gateList
+    return taskList
 })
 

@@ -33,9 +33,11 @@
   import { useRoute } from 'vue-router';
   import { useProjectsStore } from '@/stores/projects';
   import { useGatesStore } from '@/stores/gates';
+  import { useTasksStore } from '@/stores/tasks';
 
   const store = useProjectsStore();
   const gateStore = useGatesStore();
+  const taskStore = useTasksStore();
   const route = useRoute();
   const project = ref(null);
 
@@ -65,6 +67,12 @@
       console.log('Gates fetched:', gateStore.getProjectGates(projectId));
     } catch (error) {
       console.error('Error fetching gates:', error);
+    }
+    try {
+      console.log('Fetching tasks for project ID:', projectId);
+      taskStore.fetchTasks(projectId);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
     }
   });
 

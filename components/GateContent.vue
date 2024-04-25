@@ -13,15 +13,10 @@
 
   // Initialiserer Tasks listen, 
   const taskStore = useTasksStore();
-  const tasks = ref([]);
 
-  onMounted(async () => {
-    try {
-      tasks.value = taskStore.getGateTasks(props.gateID);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  });
+
+const tasks = computed(() => taskStore.getGateTasks(props.gateID));
+
 </script>
 <template>
     <div class="listGate" v-if="tasks.length > 0" v-for ="task in tasks">

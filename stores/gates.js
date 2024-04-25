@@ -69,13 +69,13 @@ export const useGatesStore = defineStore('gates', () => {
         gates.value = newGates;
     }
 
-    async function fetchGates(gateID) {
+    async function fetchGates(projectID) {
         console.log('Fetching gates...');
         try {
-            const response = await $fetch('/gates/' + gateID, {
+            const response = await $fetch('/gates/' + projectID, {
                 method: 'GET'
             });
-            
+
             const gateArray = response.map(gate => ({
                 ID: gate.ID.toString(),
                 projectID: gate.prosjektID,

@@ -47,6 +47,8 @@ export const useProjectsStore = defineStore('projects', () => {
                 gates: project.gates
             }));
 
+            console.log(projectsArray);
+
             setProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
