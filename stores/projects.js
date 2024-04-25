@@ -24,7 +24,7 @@ export const useProjectsStore = defineStore('projects', () => {
 		console.log("Legger til alt i store igjen")
 		projects.value = newProjects;
 	  }
-	
+
 	// hente og oppdatere prosjekter
   async function fetchProjects() {
 		console.log('Fetching projects...');
@@ -69,10 +69,11 @@ export const useProjectsStore = defineStore('projects', () => {
     })
   }
 
-    function getProjectById(projectId) {
-        console.log(projectId)
-        return projects.value.find(project => parseInt(project.id, 10) === projectId);
-    }
+  function getProjectById(projectId) {
+      console.log(projectId)
+      return projects.value.find(project => parseInt(project.id, 10) === projectId);
+  }
+
 
     // Funksjon for å legge til et prosjekt i listen
     async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
@@ -110,6 +111,7 @@ export const useProjectsStore = defineStore('projects', () => {
             });
         }
     }
+
 
     async function deleteProject(deleteID) {
         console.log(`Store attempting to delete project with ID ${deleteID}`);

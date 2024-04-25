@@ -12,9 +12,8 @@ export default defineEventHandler (async (event) => {
                 data: 'Invalid or missing project ID',
             });
 		} else {
-		
-		console.log(`Project deletion initiated for ID ${id}`);
-        return `Project deletion initiated for ID ${id}`;
+		const result = await connectAndQuery(`DELETE FROM projectModel WHERE ID = ${id}`);
+		console.log(`Project with ID ${id} deleted successfully.`);
 		}
 	} catch (error) {
 		return createError({
