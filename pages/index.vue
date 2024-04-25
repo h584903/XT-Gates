@@ -10,11 +10,11 @@ import { useProjectsStore } from '@/stores/projects';
 
 const store = useProjectsStore();
 
-onMounted(async() => {
+onMounted(() => {
   // Må endres til 0 hvis testprosjekt fjernes
   if (store.getProjects().length === 1) {
     console.log('Dashboard mounted');
-    await store.fetchProjects();
+    store.fetchProjects();
   }
   });
   watchEffect(() => {
