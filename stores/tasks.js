@@ -11,6 +11,7 @@ export const useTasksStore = defineStore('tasks', () => {
         // ID er nå en string, siden det er enklest å behandle og gir mest mening
         ID: '00010001',
         prosjektID: '0',
+        gateNR: '1',
         step: 1,
         title: "Renovere deler",
         responsiblePerson: "Petter Tesdal",
@@ -20,6 +21,7 @@ export const useTasksStore = defineStore('tasks', () => {
     tasks.value.push({
         ID: '00010002',
         prosjektID: '0',
+        gateNR: '1',
         step: 2,
         title: "Syre bad",
         responsiblePerson: "Kristoffer Madsen",
@@ -29,6 +31,7 @@ export const useTasksStore = defineStore('tasks', () => {
     tasks.value.push({
         ID: '00020003',
         prosjektID: '0',
+        gateNR: '2',
         step: 1,
         title: "Syrebad",
         responsiblePerson: "Kristoffer Madsen",
@@ -38,11 +41,12 @@ export const useTasksStore = defineStore('tasks', () => {
     tasks.value.push({
         ID: '00030002',
         prosjektID: '0',
+        gateNR: '3',
         step: 1,
         title: "Syre bad",
         responsiblePerson: "Kristoffer Madsen",
         progress: 10,
-        duration: 30,
+        duration: 137,
     })
 
     // Funksjon for å legge til en task
@@ -51,9 +55,17 @@ export const useTasksStore = defineStore('tasks', () => {
         tasks.value.push(newTask);
     }
 
-    function maxTaskDuration(projectID, gateNR) {
+    function maxTaskDuration(prosjektID, gateNR) {
         let maxDuration = 0;
-        //implementer logikk
+        for (let i = 0; i<tasks.value.length; i++) {
+            let rettGate = false;
+            let rettProsjekt = false;
+            rettProsjekt = (Number(tasks.value[i].prosjektID) === prosjektID) 
+            rettGate = (Number(tasks.value[i].gateNR) === (gateNR+1))
+            if(tasks.value[i].duration>maxDuration && rettGate && rettProsjekt) {
+                maxDuration = tasks.value[i].duration
+            }
+        }
         return maxDuration;
     }
     
