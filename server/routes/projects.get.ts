@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     console.log("Starting...");
-    projects = await connectAndQuery("SELECT * FROM projectModel")
+    projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress FROM projectModel pm LEFT JOIN ProjectAverageProgress pavg ON pm.ID = pavg.ID;")
 
   } catch (error) {
     return createError({
@@ -21,14 +21,13 @@ export default defineEventHandler(async (event) => {
       organizedData[row.ID] = {
         ID: row.ID,
         title: row.title,
-        progress: row.progress,
+        progress: row.AverageProgress,
         onTime: row.onTime,
         PEM: row.PEM,
         comment: row.comment,
         POdate: row.POdate,
         SFdate: row.SFdate,
         archive: row.archive,
-        gates: {}
       };
     }
 
