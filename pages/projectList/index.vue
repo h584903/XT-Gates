@@ -8,7 +8,6 @@
 </template>
 
 <script setup> 
-import { onMounted } from 'vue';
 import { useProjectsStore } from '@/stores/projects';
 
 const store = useProjectsStore();
