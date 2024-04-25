@@ -16,7 +16,7 @@
           <h1>Delete Project?</h1>
           <p>Deleting a project is absolute, and cannot be reversed. Make certain this is necessary before doing so.</p>
           <p>Delete project {{ project.title }}?</p>
-          <button @click="deleteProjectHandler" class="customButton">Yes</button>
+          <button @click="deleteProjectHandler" deleteProject class="customButton">Yes</button>
           <button @click="toggleModal" class="customButton">No</button>
         </ReusableModal>
       </div>
