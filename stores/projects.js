@@ -71,14 +71,11 @@ export const useProjectsStore = defineStore('projects', () => {
         })
     }
 
-    function getProjectById(projectId) {
-        console.log(projectId)
-        return projects.value.find(project => parseInt(project.id, 10) === projectId);
-    }
+  function getProjectById(projectId) {
+      console.log(projectId)
+      return projects.value.find(project => parseInt(project.id, 10) === projectId);
+  }
 
-    async function deleteProject () {
-        console.log("Store attempting to delete project")
-    }
 
     // Funksjon for å legge til et prosjekt i listen
     async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
@@ -117,6 +114,23 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
-    return { project, projects, getProjects,getProjectById, addProject, setProjects, fetchProjects, getPODate}
-
+    async function deleteProject(deleteID) {
+        console.log(`Store attempting to delete project with ID ${deleteID}`);
+        console.log("Projects before deletion", projects.value);
+        try {
+            console.log("Store sending deletion to back-end");
+            const response = await $fetch(`/projects/${deleteID}`, {
+                method: 'DELETE'
+            });
+            // If the deletion from the backend is successful, remove the project from the store
+            projects.value = projects.value.filter(project => project.id !== deleteID);
+            console.log(`Project with ID ${deleteID} deleted successfully from backend and store.`);
+            console.log('Projects after deletion: ', projects.value);
+            
+        } catch (error) {
+            console.log("Failed to delete project:", error);
+        }
+    }     
+    
+  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, }
 });
