@@ -65,6 +65,34 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
+    function setGates(newGates) {
+        gates.value = newGates;
+    }
+
+    async function fetchGates(projectID) {
+        console.log('Fetching gates...');
+        try {
+            const response = await $fetch('/gates/' + projectID, {
+                method: 'GET'
+            });
+
+            const gateArray = response.map(gate => ({
+                ID: gate.ID.toString(),
+                projectID: gate.prosjektID,
+                gateNR: gate.gateNR,
+                title: gate.gateTitle,
+                plannedDate: "2024-07-07",
+                completionDate: "2024-06-07"
+            }));
+
+            console.log(gateArray);
+            setGates(gateArray);
+            console.log(gates.value);
+        } catch (error) {
+            console.error('Error fetching gates:', error);
+        }
+    }
+
 
     function getNextGateDate(prosjektID, nr) {
         const taskStore = useTasksStore();
@@ -75,7 +103,7 @@ export const useGatesStore = defineStore('gates', () => {
                 return date;
             }
         }
-        
+
         return "0000-12-24"
     }
 
@@ -86,7 +114,7 @@ export const useGatesStore = defineStore('gates', () => {
         const formattedDate = newDate.toISOString().split('T')[0];
         return formattedDate;
     }
-    
+
 
     function lastGate(prosjektID, nr) {
         for (let i = 0; i < gates.value.length; i++) {
@@ -96,10 +124,10 @@ export const useGatesStore = defineStore('gates', () => {
         }
         return true
     }
-    
+
     // Computed property to get gates belonging to a specific project
     function getProjectGates(projectID) {
-        return gates.value.filter(gate => gate.projectID === projectID);
+        return computed(() => gates.value.filter(gate => gate.projectID === projectID));
     }
 
     function getGateProgress(gateID) {
@@ -118,6 +146,6 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
 
-    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress };
+    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates };
 
 });

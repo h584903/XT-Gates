@@ -5,7 +5,7 @@ import { defineStore } from "pinia";
 export const useTasksStore = defineStore('tasks', () => {
     // Vanlig Ref
     const tasks = ref([]);
-    
+
     // Pusher opp noen eksempel tasks
     tasks.value.push({
         // ID er nå en string, siden det er enklest å behandle og gir mest mening
@@ -56,10 +56,10 @@ export const useTasksStore = defineStore('tasks', () => {
         //implementer logikk
         return maxDuration;
     }
-    
-    
-    
-    
+
+
+
+
     // Du oppgir gateID, så vil den filtrere ut alle gates som starter med sammeID som gateID
     function getGateTasks(gateIdPattern) {
         // Substring henter ut string fra starten og frem til lengden av gateID som ble oppgitt
@@ -75,5 +75,34 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, maxTaskDuration };
+    function setTasks(newTasks) {
+        tasks.value = newTasks;
+    }
+    async function fetchTasks(taskID) {
+        console.log('Fetching tasks...');
+        try {
+            const response = await $fetch('/tasks/' + taskID, {
+                method: 'GET'
+            });
+
+            const taskArray = response.map(task => ({
+                ID: task.ID.toString(),
+                prosjektID: task.prosjektID,
+                step: task.step,
+                title: task.title,
+                responsiblePerson: task.responsiblePerson,
+                onTime: task.onTime,
+                progress: task.progress,
+                duration: task.duration
+            }));
+
+            setTasks(taskArray)
+            console.log(tasks.value);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    }
+
+
+    return { tasks, addTask, getGateTasks, updateTaskProgress, maxTaskDuration, fetchTasks };
 });

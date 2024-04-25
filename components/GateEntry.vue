@@ -22,10 +22,6 @@
       type: Number,
       required: true
     },
-    plannedDate: {
-      type: String,
-      required: true
-    },
     completionDate: {
       type: String,
       required: true
