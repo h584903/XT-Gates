@@ -38,9 +38,12 @@
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
   const store = useProjectsStore();
   const gateStore = useGatesStore();
-  const projects = store.getProjects();
+  const projects = ref([]);
   const index = ref(0);
 
+  watchEffect(() => {
+  projects.value = store.getProjects();
+  });
 
 const formData = ref({
   title: '',
