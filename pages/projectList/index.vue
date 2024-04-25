@@ -6,8 +6,19 @@
     </div>
   </div>
 </template>
-<script>
 
+<script setup> 
+import { useProjectsStore } from '@/stores/projects';
+
+const store = useProjectsStore();
+
+onMounted(() => {
+  // Må endres til 0 hvis testprosjekt fjernes
+  if (store.getProjects().length === 1) {
+    console.log('Projectlist mounted');
+    store.fetchProjects();
+  }
+  });
 </script>
 <style scoped>
 /* Style er scoped for å beholde singleFileComponent struktur */

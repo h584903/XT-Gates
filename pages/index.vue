@@ -11,6 +11,7 @@ import { useProjectsStore } from '@/stores/projects';
 const store = useProjectsStore();
 
 onMounted(() => {
+  // Må endres til 0 hvis testprosjekt fjernes
   if (store.getProjects().length === 1) {
     console.log('Dashboard mounted');
     store.fetchProjects();
