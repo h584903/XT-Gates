@@ -131,5 +131,5 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }     
     
-  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPOdate, deleteProject, }
+  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, }
 });
