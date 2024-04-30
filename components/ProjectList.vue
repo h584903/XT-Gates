@@ -38,7 +38,7 @@
   // Initialiserer prosjectStore slik at man kan bruke den ved å kalle på store.
   const store = useProjectsStore();
   const gateStore = useGatesStore();
-  const projects = ref([]);
+  const projects = ref(store.getProjects());
   const index = ref(0);
 
   watchEffect(() => {
@@ -60,6 +60,7 @@ const submitForm = () => {
   console.log(formData.value);
   toggleModal();
 }
+projects.value = store.getProjects();
 
 // Metode for toggle modalen - settes til false by default
 const modalActive = ref(false);

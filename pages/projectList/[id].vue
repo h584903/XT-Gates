@@ -30,7 +30,7 @@
 
 <script setup>
   import ReusableModal from '~/components/ReusableModal.vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import { useProjectsStore } from '@/stores/projects';
   import { useGatesStore } from '@/stores/gates';
   import { useTasksStore } from '@/stores/tasks';
@@ -39,6 +39,7 @@
   const gateStore = useGatesStore();
   const taskStore = useTasksStore();
   const route = useRoute();
+  const router = useRouter();
   const project = ref(null);
 
   onMounted(async () => {
@@ -86,6 +87,7 @@ const deleteProjectHandler= () => {
   console.log(`Attempting to delete project with ID ${project.value.id}`)
   store.deleteProject(project.value.id);
   toggleModal();
+  router.push('/projectlist');
 }
 </script>
 
