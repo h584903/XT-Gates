@@ -25,12 +25,24 @@
   }
   })
 
+  // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
   const selectedProgress = ref(currentTask ? currentTask.progress : 0);
 
   function updateProgress() {
     tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
     tasksStore.update
+  }
+
+  const editMode = ref(false);
+  function enableEditMode() {
+    editMode.value = true;
+  }
+
+  const taskDuration = ref(currentTask ? currentTask.duration : 0);
+  function updateDuration() {
+    tasksStore.updateTaskDuration(props.taskID, parseInt(taskDuration.value))
+    editMode.value = false;
   }
 </script>
 <template>
@@ -51,13 +63,18 @@
       <span>Petter Tesdal</span>
     </div>
     <div class="w5">
-        <input type="range" min="0" max="100" step="10" v-model="selectedProgress" @input="updateProgress" />
+        <input type="range" min="0" max="100" step="25" v-model="selectedProgress" @input="updateProgress" />
     </div>
     <div class="w5">
       <PlanStatus :onSchedule="true" />
     </div>
     <div class="w5">
-      <span>{{ props.duration }}</span>
+      <div v-if="editMode">
+        <input type="number" v-model.number="taskDuration" @blur="updateDuration" @keyup.enter="updateDuration">
+      </div>
+      <div v-else @click="enableEditMode">
+        {{ taskDuration }} days
+      </div>
     </div>
   </div>
 </template>
@@ -83,5 +100,9 @@
 }
 .w5 {
   width: 5%;
+}
+
+.w5 input {
+  width: 100%;
 }
 </style>
