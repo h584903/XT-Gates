@@ -87,10 +87,27 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    function updateTaskDuration(taskID, newDuration) {
+    async function updateTaskDuration(taskID, newDuration) {
+        console.log("updateTaskDuration kjøres")
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].duration = newDuration;
+        }
+
+        // Her oppdaterer jeg tasken i databasen gjennom PUT api
+        try {
+            const response = await fetch(`/tasks/`+taskID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newDuration: newDuration
+                })
+            });
+        } catch (error) {
+            console.error('Error updating task duration:', error);
         }
     }
 
