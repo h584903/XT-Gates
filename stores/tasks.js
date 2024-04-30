@@ -87,7 +87,7 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    function updateTaskDuration() {
+    function updateTaskDuration(taskID, newDuration) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].duration = newDuration;
