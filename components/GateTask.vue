@@ -25,12 +25,19 @@
   }
   })
 
+  // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
   const selectedProgress = ref(currentTask ? currentTask.progress : 0);
 
   function updateProgress() {
     tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
     tasksStore.update
+  }
+
+  const editMode = ref(false);
+  const taskDuration = ref(currentTask ? currentTask.duration : 0);
+  function updateDuration() {
+    tasksStore.updateTaskDuration(props.taskID, parseInt(taskDuration.value))
   }
 </script>
 <template>
@@ -57,7 +64,12 @@
       <PlanStatus :onSchedule="true" />
     </div>
     <div class="w5">
-      <span>{{ props.duration }}</span>
+      <div v-if="editMode">
+        <input v-model="taskDuration" @blur="saveDuration" @keyup.enter="saveDuration">
+      </div>
+      <div v-else @click="enableEditMode">
+        {{ props.duration }} hours
+      </div>
     </div>
   </div>
 </template>

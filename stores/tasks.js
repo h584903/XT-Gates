@@ -87,6 +87,13 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
+    function updateTaskDuration() {
+        const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+        if (taskIndex !== -1) {
+            tasks.value[taskIndex].duration = newDuration;
+        }
+    }
+
     function setTasks(newTasks) {
         tasks.value = newTasks;
     }
@@ -116,5 +123,5 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, maxTaskDuration, fetchTasks };
+    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, maxTaskDuration, fetchTasks };
 });
