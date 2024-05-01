@@ -9,7 +9,7 @@ export const useProjectsStore = defineStore('projects', () => {
     // listen av prosjekter
     const projects = ref([]);
     projects.value.push({
-        id: 0,
+        id: "0",
         title: "Test Project",
         progress: 50,
         SFdate: "2024-12-12",
@@ -71,10 +71,11 @@ export const useProjectsStore = defineStore('projects', () => {
         })
     }
 
-  function getProjectById(projectId) {
-      console.log(projectId)
-      return projects.value.find(project => parseInt(project.id, 10) === projectId);
-  }
+    function getProjectById(projectId) {
+        console.log(projectId); // Ensure projectId is correct
+        return projects.value.find(project => project.id === projectId);
+      }
+      
 
 
     // Funksjon for å legge til et prosjekt i listen

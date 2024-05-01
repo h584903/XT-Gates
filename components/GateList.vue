@@ -2,10 +2,11 @@
 
   import { ref, onMounted } from 'vue';
   import { useGatesStore } from '@/stores/gates';
+  
 
   const props = defineProps({
     projectId: {
-      type: Number,
+      type: String,
       required: true
     }
   });
@@ -15,6 +16,7 @@
   const gates = computed(() => {
     return gateStore.getProjectGates(props.projectId).value;
   });
+  console.log("Dette er gatene: " + gates.value)
 
 </script>
 

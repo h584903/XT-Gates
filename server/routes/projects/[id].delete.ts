@@ -4,7 +4,7 @@
 export default defineEventHandler (async (event) => {
 	const id = getRouterParam(event, 'id')
 	try {
-		if(id == undefined || isNaN(id as any)) {
+		if(id == undefined) {
 			console.log("id undefined, cannot delete project")
 			return createError({
                 statusCode: 400,

@@ -5,7 +5,7 @@ export default defineEventHandler (async (event) => {
 	let taskList;
 
 	try {
-		if (id == undefined || isNaN(id as any)) {
+		if (id == undefined) {
 			console.log("Invalid or missing project ID. Cannot fetch tasks.")
 			return createError({
                 statusCode: 400,

@@ -17,9 +17,10 @@ export default defineEventHandler(async (event) => {
 
   // Organiserer dataen i prosjektet til et object
   projects.forEach(row => {
-    if (!organizedData[row.ID]) {
-      organizedData[row.ID] = {
-        ID: row.ID,
+    const IDAsString = String(row.ID); // Convert ID to string
+    if (!organizedData[IDAsString]) {
+      organizedData[IDAsString] = {
+        ID: IDAsString,
         title: row.title,
         progress: row.AverageProgress,
         onTime: row.onTime,
@@ -28,12 +29,13 @@ export default defineEventHandler(async (event) => {
         POdate: row.POdate,
         SFdate: row.SFdate,
         archive: row.archive,
+        gates: {} // Initialize gates as an empty object
       };
     }
 
     // If this row has a gate and we haven't seen this gate yet, initialize it
-    if (row.gateID && !organizedData[row.ID].gates[row.gateID]) {
-      organizedData[row.ID].gates[row.gateID] = {
+    if (row.gateID && !organizedData[IDAsString].gates[row.gateID]) {
+      organizedData[IDAsString].gates[row.gateID] = {
         gateID: row.gateID,
         gateTitle: row.gateTitle,
         tasks: []
@@ -42,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
     // If this row has a task, add it to the appropriate gate
     if (row.gateID && row.step) {
-      organizedData[row.ID].gates[row.gateID].tasks.push({
+      organizedData[IDAsString].gates[row.gateID].tasks.push({
         step: row.step,
         title: row.title,
         responsiblePerson: row.responsiblePerson,
