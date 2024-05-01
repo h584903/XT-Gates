@@ -7,48 +7,7 @@ export const useTasksStore = defineStore('tasks', () => {
     const tasks = ref([]);
 
     // Pusher opp noen eksempel tasks
-    tasks.value.push({
-        // ID er nå en string, siden det er enklest å behandle og gir mest mening
-        ID: '00010001',
-        prosjektID: '0',
-        gateNR: '1',
-        step: 1,
-        title: "Renovere deler",
-        responsiblePerson: "Petter Tesdal",
-        progress: 10,
-        duration: 10,
-    });
-    tasks.value.push({
-        ID: '00010002',
-        prosjektID: '0',
-        gateNR: '1',
-        step: 2,
-        title: "Syre bad",
-        responsiblePerson: "Kristoffer Madsen",
-        progress: 10,
-        duration: 10,
-    });
-    tasks.value.push({
-        ID: '00020003',
-        prosjektID: '0',
-        gateNR: '2',
-        step: 1,
-        title: "Syrebad",
-        responsiblePerson: "Kristoffer Madsen",
-        progress: 10,
-        duration: 20,
-    })
-    tasks.value.push({
-        ID: '00030002',
-        prosjektID: '0',
-        gateNR: '3',
-        step: 1,
-        title: "Syre bad",
-        responsiblePerson: "Kristoffer Madsen",
-        progress: 10,
-        duration: 137,
-    })
-
+    
     // Funksjon for å legge til en task
     function addTask(ID, step, title, responsiblePerson, progress, duration) {
         const newTask = { ID, step, title, responsiblePerson, progress, duration };
@@ -57,15 +16,20 @@ export const useTasksStore = defineStore('tasks', () => {
 
     function maxTaskDuration(prosjektID, gateNR) {
         let maxDuration = 0;
+        const gates = useGatesStore()
         for (let i = 0; i<tasks.value.length; i++) {
             let rettGate = false;
             let rettProsjekt = false;
-            rettProsjekt = (Number(tasks.value[i].prosjektID) === prosjektID) 
-            rettGate = (Number(tasks.value[i].gateNR) === (gateNR+1))
+            rettProsjekt = (Number(tasks.value[i].prosjektID) === prosjektID)
+            rettGate = (Number(gates.getGateNR(tasks.value[i].gateID)) === (gateNR+1))
+            if(rettGate) {
+                console.log("Rett Gate")
+            }
             if(tasks.value[i].duration>maxDuration && rettGate && rettProsjekt) {
                 maxDuration = tasks.value[i].duration
             }
         }
+        console.log(maxDuration)
         return maxDuration;
     }
 
@@ -139,6 +103,7 @@ export const useTasksStore = defineStore('tasks', () => {
             const taskArray = response.map(task => ({
                 ID: task.ID.toString(),
                 prosjektID: task.prosjektID,
+                gateID: task.gateID,
                 step: task.step,
                 title: task.title,
                 responsiblePerson: task.responsiblePerson,

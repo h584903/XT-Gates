@@ -145,7 +145,16 @@ export const useGatesStore = defineStore('gates', () => {
         });
     }
 
+    function getGateNR(searchid) {
+        for(let i = 0; i<gates.value.length; i++) {
+            if(searchid === Number(gates.value[i].ID)) {
+                return gates.value[i].gateNR;
+            }
+        }
+    }
 
-    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates };
+
+
+    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR };
 
 });
