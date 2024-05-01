@@ -58,7 +58,7 @@ const sortDates = () => {
           <button @click="toggleModal" class="smallButton">Cancel</button>
         </div>
       </Modal>
-      <button @click="toggleModal" class = "bigButton">Open Modal</button>
+      <button @click="toggleModal" class = "bigButton">{{entryData.comment}}</button>
     </div>
   </div>
 </template>
@@ -135,8 +135,8 @@ const sortDates = () => {
   padding: 10px 10px;
   border: none;
   font-size: 16px;
-  background-color: rgb(91, 102, 184);
-  color: white;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   cursor: pointer;
 }
 
