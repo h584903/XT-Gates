@@ -37,8 +37,8 @@
 
 </script>
 <template>
-  <draggable class="listGate" v-model="tasks" @end="onEndDrag" group="tasks" item-key="ID" animation="300">
-  <template #item="{element, index}">
+  <draggable class="listGate" v-model="tasks" @end="onEndDrag" group="tasks" item-key="ID" animation="300"> <!-- Definerer kortene som draggable -->
+  <template #item="{element, index}"> <!-- Henter ut elementene og gir de en index som brukes for å definere steps senere -->
     <div :key="element.ID">
       <GateTask :task="element" :taskID="element.ID" :step="element.step" :title="element.title" :duration="element.duration" :responsiblePerson="element.responsiblePerson" />
     </div>
