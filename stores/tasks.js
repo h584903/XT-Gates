@@ -21,7 +21,7 @@ export const useTasksStore = defineStore('tasks', () => {
             let rettGate = false;
             let rettProsjekt = false;
             rettProsjekt = (Number(tasks.value[i].prosjektID) === prosjektID)
-            rettGate = (Number(gates.getGateForTask(tasks.value[i].gateID)) === (gateNR+1))
+            rettGate = (Number(gates.getGateNR(tasks.value[i].gateID)) === (gateNR+1))
             if(rettGate) {
                 console.log("Rett Gate")
             }
