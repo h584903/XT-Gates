@@ -1,12 +1,12 @@
 export default defineEventHandler(async event => {
   try {
-    // Read the incoming request body
+    // Leser body fra put requesten
     const body = await readBody(event);
     const { tasks } = body;
     console.log("Putting the new order on database")
 
     if (!tasks ) {
-      // If taskID or newDuration is not provided in the request, return an error response
+      // Error hvis ingen tasks ble sendt
       return createError({
         statusCode: 400,
         statusMessage: 'Bad Request',
@@ -15,15 +15,14 @@ export default defineEventHandler(async event => {
     }
 
 
-    // Update the task in the database
+    // Oppdaterer tasks i databasen
     await tasks.forEach((task) => {
       connectAndQuery(`UPDATE taskModel SET step = ${task.step} WHERE ID = ${task.ID}`);
     });
 
-    // Return success response
     return { updated: true };
   } catch (error) {
-    // If there's an error during the database operation, return an internal server error
+    // Error hvis noe skule gå feil
     console.error('Failed to update the task:', error);
     return createError({
       statusCode: 500,
