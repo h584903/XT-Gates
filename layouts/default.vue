@@ -20,6 +20,7 @@ body {
 .content {
     padding-top: var(--headerHeight); /* Variablelen ligger i assets/colors.css */
     display: flex; /* Flexbox for the 2 items sidebar, and the rest of the content */
+    background-color: whitesmoke;
 }
 .slot_wrapper {
   flex: 5; /* 5/1 fordeling mellom sidebar og slot */

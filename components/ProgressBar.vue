@@ -19,11 +19,13 @@
 .bar {
   width: 100%;
   height: 20px;
-  background-color: grey;
-  /*border-radius: 13px;*/ /*legg denne til for runde kanter*/
+  background-color: white;
+  border:1px solid black;
+  border-radius: 13px; /*legg denne til for runde kanter*/
 }
 
 .bar.progress {
+  border: 0px;
   width: var(--progress);
   background-color: green;
 }
