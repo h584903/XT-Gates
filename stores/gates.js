@@ -70,7 +70,6 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     async function fetchGates(projectID) {
-        console.log('Fetching gates...');
         try {
             const response = await $fetch('/gates/' + projectID, {
                 method: 'GET'
@@ -85,9 +84,7 @@ export const useGatesStore = defineStore('gates', () => {
                 completionDate: "2024-06-07"
             }));
 
-            console.log(gateArray);
             setGates(gateArray);
-            console.log(gates.value);
         } catch (error) {
             console.error('Error fetching gates:', error);
         }

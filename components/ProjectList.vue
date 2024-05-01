@@ -54,10 +54,8 @@ const formData = ref({
 
 const submitForm = () => {
   const projectId = uuid();
-  console.log(formData.value.PO.toString())
   store.addProject(projectId,formData.value.title, 0, formData.value.SF.toString().replace(/-/g, ''), formData.value.PO.toString().replace(/-/g, ''), true, formData.value.PEM, "comment");
   index.value++;
-  console.log(formData.value);
   toggleModal();
 }
 projects.value = store.getProjects();

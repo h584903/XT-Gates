@@ -7,7 +7,6 @@ export default defineEventHandler (async (event) => {
 
 	try {
         if (id === undefined || isNaN(id as any)) {
-            console.log("Invalid or missing project ID. Cannot fetch gates.");
             return createError({
                 statusCode: 400,
                 statusMessage: 'Bad Request',
@@ -15,7 +14,6 @@ export default defineEventHandler (async (event) => {
             });
         }
 		gateList = await connectAndQuery(`SELECT * FROM gateModel WHERE projectID = ${id}`)
-		console.log(gateList)
 	} catch (error) {
         return createError({
             statusCode: 500,
