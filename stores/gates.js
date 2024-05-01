@@ -145,7 +145,7 @@ export const useGatesStore = defineStore('gates', () => {
         });
     }
 
-    function getGateForTask(searchid) {
+    function getGateNR(searchid) {
         for(let i = 0; i<gates.value.length; i++) {
             if(searchid === Number(gates.value[i].ID)) {
                 return gates.value[i].gateNR;
@@ -155,6 +155,6 @@ export const useGatesStore = defineStore('gates', () => {
 
 
 
-    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateForTask };
+    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR };
 
 });
