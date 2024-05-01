@@ -71,6 +71,18 @@ export const useProjectsStore = defineStore('projects', () => {
         })
     }
 
+    function getSFDate(projectID) {
+        let pro;
+        for (let i = 0; i<projects.value.length; i++) {
+            if(projects.value[i].id === projectID) {
+                pro = projects.value[i]
+            }
+        }
+        return computed(() => {
+            return pro.SFdate
+        })
+    }
+
   function getProjectById(projectId) {
       console.log(projectId)
       return projects.value.find(project => parseInt(project.id, 10) === projectId);
@@ -132,5 +144,5 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }     
     
-  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, }
+  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate}
 });

@@ -55,8 +55,8 @@ export const useGatesStore = defineStore('gates', () => {
             }
         }
         if (lastGate(prosjektID, nr)) {
-            gates.value[index].plannedDate = projectStore.getPODate(prosjektID)
-            return projectStore.getPODate(prosjektID)
+            gates.value[index].plannedDate = projectStore.getSFDate(prosjektID)
+            return projectStore.getSFDate(prosjektID)
         } else {
             return computed(() => {
                 gates.value[index].plannedDate = getNextGateDate(prosjektID, nr)
