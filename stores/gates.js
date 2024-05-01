@@ -52,12 +52,9 @@ export const useGatesStore = defineStore('gates', () => {
         for (let i = 0; i < gates.value.length; i++) {
             if (gates.value[i].projectID === prosjektID && gates.value[i].gateNR === nr) {
                 index = i;
-                console.log(gates.value[i].gateNR)
-                console.log("this is nr: " + nr)
             }
         }
         if (lastGate(prosjektID, nr)) {
-            console.log("LastGate")
             gates.value[index].plannedDate = projectStore.getPODate(prosjektID)
             return projectStore.getPODate(prosjektID)
         } else {
