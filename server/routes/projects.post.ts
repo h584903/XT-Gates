@@ -269,7 +269,7 @@ export default defineEventHandler(async event => {
 
 
     //Oppretter prosjektet
-    projects = await connectAndQuery(`INSERT INTO projectModel VALUES (${ID}, '${title}', 0, 1, '${PEM}', 'Sample comment', '01-01-2025', '01-01-2025', 0)`);
+    projects = await connectAndQuery(`INSERT INTO projectModel VALUES (${ID}, '${title}', 0, 1, '${PEM}', 'No comment', '01-01-2026', '01-01-2025', 0)`);
 
     //Looper gjennom gateListe og ligger disse til et nygenerert prosjekt
     for (const gate of gateListe) {
