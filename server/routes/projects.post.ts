@@ -265,9 +265,6 @@ export default defineEventHandler(async event => {
     }
     
 
-    console.log("Attempting to create project in DB..");
-
-
     //Oppretter prosjektet
     projects = await connectAndQuery(`INSERT INTO projectModel VALUES (${ID}, '${title}', 0, 1, '${PEM}', 'No comment', '01-01-2026', '01-01-2025', 0)`);
 

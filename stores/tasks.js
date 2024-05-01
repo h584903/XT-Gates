@@ -7,7 +7,7 @@ export const useTasksStore = defineStore('tasks', () => {
     const tasks = ref([]);
 
     // Pusher opp noen eksempel tasks
-    
+
     // Funksjon for å legge til en task
     function addTask(ID, step, title, responsiblePerson, progress, duration) {
         const newTask = { ID, step, title, responsiblePerson, progress, duration };
@@ -23,13 +23,11 @@ export const useTasksStore = defineStore('tasks', () => {
             rettProsjekt = (Number(tasks.value[i].prosjektID) === prosjektID)
             rettGate = (Number(gates.getGateNR(tasks.value[i].gateID)) === (gateNR+1))
             if(rettGate) {
-                console.log("Rett Gate")
             }
             if(tasks.value[i].duration>maxDuration && rettGate && rettProsjekt) {
                 maxDuration = tasks.value[i].duration
             }
         }
-        console.log(maxDuration)
         return maxDuration;
     }
 
@@ -37,10 +35,12 @@ export const useTasksStore = defineStore('tasks', () => {
 
 
     // Du oppgir gateID, så vil den filtrere ut alle gates som starter med sammeID som gateID
-    function getGateTasks(gateIdPattern) {
+    function getGateTasks(gateID) {
         // Substring henter ut string fra starten og frem til lengden av gateID som ble oppgitt
         // Denne funksjonen funker nå også for prosjekt, og kan hente alle prosjektene til et prosjekt hvis man oppgir en prosjekt id
-        return tasks.value.filter(task => task.ID.substring(0, gateIdPattern.length) === gateIdPattern);
+        const filteredTasks = tasks.value.filter(task => task.gateID == gateID);
+        filteredTasks.sort((a, b) => a.step - b.step);
+        return filteredTasks;
     }
 
 
@@ -67,7 +67,6 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     async function updateTaskDuration(taskID, newDuration) {
-        console.log("updateTaskDuration kjøres")
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].duration = newDuration;
@@ -83,18 +82,36 @@ export const useTasksStore = defineStore('tasks', () => {
                 body: JSON.stringify({
                     taskID: taskID,
                     newDuration: newDuration
-                })
+                    })
             });
         } catch (error) {
             console.error('Error updating task duration:', error);
         }
     }
 
+    async function updateTasksOrder(newTasks) {
+
+        // Sender de nye stepsene til databasen
+        try {
+            const response = await fetch(`/tasks/order`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tasks: newTasks
+                })
+            });
+        } catch (error) {
+            console.error('Error updating tasks order:', error);
+        }
+    }
+
+
     function setTasks(newTasks) {
         tasks.value = newTasks;
     }
     async function fetchTasks(taskID) {
-        console.log('Fetching tasks...');
         try {
             const response = await $fetch('/tasks/' + taskID, {
                 method: 'GET'
@@ -113,12 +130,11 @@ export const useTasksStore = defineStore('tasks', () => {
             }));
 
             setTasks(taskArray)
-            console.log(tasks.value);
         } catch (error) {
             console.error('Error fetching tasks:', error);
         }
     }
 
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, maxTaskDuration, fetchTasks };
+    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks };
 });
