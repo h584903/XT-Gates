@@ -90,9 +90,8 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     async function updateTasksOrder(newTasks) {
-        // Update the global tasks array to reflect the new order for a specific gate
 
-        console.log("running updateTasksOrder")
+        // Sender de nye stepsene til databasen
         try {
             const response = await fetch(`/tasks/order`, {
                 method: 'PUT',
@@ -106,9 +105,6 @@ export const useTasksStore = defineStore('tasks', () => {
         } catch (error) {
             console.error('Error updating tasks order:', error);
         }
-
-
-        // Optional: Add API call to save the new order in backend
     }
 
 
