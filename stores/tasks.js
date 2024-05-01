@@ -80,10 +80,25 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
 
-    function updateTaskProgress(taskID, newProgress) {
+    async function updateTaskProgress(taskID, newProgress) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].progress = newProgress;
+        }
+        // Her oppdaterer jeg tasken i databasen gjennom PUT api
+        try {
+            const response = await fetch(`/tasks/progress/`+taskID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newProgress: newProgress
+                })
+            });
+        } catch (error) {
+            console.error('Error updating task progress:', error);
         }
     }
 

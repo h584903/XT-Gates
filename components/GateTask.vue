@@ -44,6 +44,19 @@
     tasksStore.updateTaskDuration(props.taskID, parseInt(taskDuration.value))
     editMode.value = false;
   }
+
+  // Funksjon for å sette en delay på en funksjon
+  function debounce(fn, delay) {
+    let timeoutId = null;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
+  }
+
+  const debouncedUpdateProgress = debounce(updateProgress, 1500);
 </script>
 <template>
   <div class="list">
@@ -63,7 +76,7 @@
       <span>Petter Tesdal</span>
     </div>
     <div class="w5">
-        <input type="range" min="0" max="100" step="25" v-model="selectedProgress" @input="updateProgress" />
+        <input type="range" min="0" max="100" step="25" v-model="selectedProgress" @change="debouncedUpdateProgress" />
     </div>
     <div class="w5">
       <PlanStatus :onSchedule="true" />
