@@ -1,7 +1,7 @@
 <script setup>
   // Henter task storen
   import { useTasksStore } from '@/stores/tasks';
-  import draggable from 'vuedraggable';
+  import draggable from 'vuedraggable'; //Henter vue sin draggable
 
   // Henter de ulike variablene fra gaten
   const props = defineProps({
@@ -17,9 +17,9 @@
 
 
   const computedTasks = computed(() => taskStore.getGateTasks(props.gateID));
-  const tasks = ref(computedTasks.value);  // Reactive reference for draggable
+  const tasks = ref(computedTasks.value);  // for å ikke manipulere computed tasks direkte
 
-  // Watch the computedTasks for changes and update the tasks accordingly
+  // Oppdaterer som vanlig hvis de blir forandret (mulig det ikke trengs tbh)
   watch(computedTasks, (newTasks) => {
     tasks.value = newTasks;
   });
@@ -27,10 +27,11 @@
   function onEndDrag(event) {
     let updatedTasks = [...tasks.value];
 
-    // Recalculate steps based on new order
+    // (Etter endret liste finner den ut av hvordan de nye stepsene skal se ut)
     updatedTasks.forEach((task, index) => {
       task.step = index + 1;
     });
+    // Oppdaterer tasks i databasen
     taskStore.updateTasksOrder(updatedTasks);
   }
 
