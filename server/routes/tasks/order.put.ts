@@ -16,9 +16,11 @@ export default defineEventHandler(async event => {
 
 
     // Oppdaterer tasks i databasen
-    await tasks.forEach((task) => {
-      connectAndQuery(`UPDATE taskModel SET step = ${task.step} WHERE ID = ${task.ID}`);
-    });
+    const updatePromises = tasks.map(task =>
+      connectAndQuery(`UPDATE taskModel SET step = ${task.step} WHERE ID = ${task.ID}`)
+    );
+
+    await Promise.all(updatePromises);
 
     return { updated: true };
   } catch (error) {
