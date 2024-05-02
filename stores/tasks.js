@@ -20,16 +20,12 @@ export const useTasksStore = defineStore('tasks', () => {
         for (let i = 0; i<tasks.value.length; i++) {
             let rettGate = false;
             let rettProsjekt = false;
-            rettProsjekt = (tasks.value[i].prosjektID === prosjektID)
+            rettProsjekt = (tasks.value[i].prosjektID === Number(prosjektID))
             rettGate = (gates.getGateNR(tasks.value[i].gateID) === (gateNR+1))
-            if(rettGate) {
-                console.log("Rett Gate")
-            }
             if(tasks.value[i].duration>maxDuration && rettGate && rettProsjekt) {
                 maxDuration = tasks.value[i].duration
             }
         }
-        console.log(maxDuration)
         return maxDuration;
     }
 

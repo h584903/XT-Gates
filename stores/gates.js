@@ -147,7 +147,7 @@ export const useGatesStore = defineStore('gates', () => {
 
     function getGateNR(searchid) {
         for(let i = 0; i<gates.value.length; i++) {
-            if(searchid === gates.value[i].ID) {
+            if(searchid === Number(gates.value[i].ID)) {
                 return gates.value[i].gateNR;
             }
         }
