@@ -54,12 +54,6 @@ const modalActive = ref(false);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
-
-const deleteProjectHandler= () => {
-  store.deleteProject(project.value.id);
-  toggleModal();
-  router.push('/projectlist');
-}
 </script>
 
 <style scoped>
