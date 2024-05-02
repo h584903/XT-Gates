@@ -162,6 +162,27 @@ export const useGatesStore = defineStore('gates', () => {
         })
     }
 
-    return { gates, calculateDaysToEnd, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR };
+    async function updateGateTitle(gateID, newTitle) {
+        const gateIndex = gates.value.findIndex(gate => gate.ID === gateID);
+        if (gateIndex !== -1) {
+            gates.value[gateIndex].title = newTitle;
+        }
+        try {
+            const response = await fetch(`/gates/title/${gateID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    gateID: gateID,
+                    newTitle: newTitle
+                })
+            });
+        } catch (error) {
+            console.error('Error updating gate title:', error);
+        }
+    }
+
+    return { gates, calculateDaysToEnd, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle };
 
 });
