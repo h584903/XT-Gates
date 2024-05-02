@@ -60,6 +60,7 @@
 </script>
 <template>
   <div class="list task-card">
+    <div class="handle">☰</div>
     <div class="w5">
       <span>{{ props.step }}</span>
     </div>
@@ -92,6 +93,12 @@
   </div>
 </template>
 <style scoped>
+
+.handle {
+  cursor: move; /* Cursor indicates movement */
+  padding: 10px;
+  text-align: center;
+}
 
 .task-card {
     border: 1px solid #ccc;
