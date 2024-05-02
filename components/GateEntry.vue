@@ -19,7 +19,7 @@
       required: true
     },
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     completionDate: {

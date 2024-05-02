@@ -77,12 +77,13 @@ export const useGatesStore = defineStore('gates', () => {
 
             const gateArray = response.map(gate => ({
                 ID: gate.ID.toString(),
-                projectID: gate.prosjektID,
+                projectID: gate.prosjektID.toString(),
                 gateNR: gate.gateNR,
                 title: gate.gateTitle,
                 plannedDate: "2024-07-07",
                 completionDate: "2024-06-07"
             }));
+
 
             setGates(gateArray);
         } catch (error) {
@@ -94,7 +95,7 @@ export const useGatesStore = defineStore('gates', () => {
     function getNextGateDate(prosjektID, nr) {
         const taskStore = useTasksStore();
         for (let i = 0; i < gates.value.length; i++) {
-            if ((gates.value[i].projectID == prosjektID) && (gates.value[i].gateNR-1 === nr)) {
+            if ((String(gates.value[i].projectID) == String(prosjektID)) && (gates.value[i].gateNR-1 === nr)) {
                 let date;
                 date = substractDays(gates.value[i].plannedDate, taskStore.maxTaskDuration(prosjektID, nr))
                 return date;

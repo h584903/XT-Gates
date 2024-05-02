@@ -19,11 +19,6 @@ const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
 
-
-const sortDates = () => {
-  // Assuming you have dates defined somewhere
-  dates.value.sort((a, b) => new Date(a) - new Date(b));
-};
 </script>
 
 

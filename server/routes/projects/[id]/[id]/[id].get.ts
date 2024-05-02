@@ -5,6 +5,7 @@ export default defineEventHandler (async (event) => {
 	let taskList;
 
 	try {
+
 		if (id == undefined || isNaN(id as any)) {
 			return createError({
                 statusCode: 400,

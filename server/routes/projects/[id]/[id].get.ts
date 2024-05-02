@@ -6,6 +6,7 @@ export default defineEventHandler (async (event) => {
 	let gateList;
 
 	try {
+
         if (id === undefined || isNaN(id as any)) {
             return createError({
                 statusCode: 400,

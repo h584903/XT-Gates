@@ -4,6 +4,7 @@
 export default defineEventHandler (async (event) => {
 	const id = getRouterParam(event, 'id')
 	try {
+
 		if(id == undefined || isNaN(id as any)) {
 			return createError({
                 statusCode: 400,
