@@ -4,8 +4,9 @@
     <hr class="solid">
     <!--Oppretter et entry for hvert prosjekt i store.projects-->
     <div v-for="project in projects" :key = project.id>
-      <ProjectEntry :entryData="project"/>
+      <ProjectEntry :entryData="project" />
     </div> 
+
     <Modal @close="toggleModal" :modalActive="modalActive">
       <h1>New Project</h1>
       <form @submit.prevent="submitForm">
@@ -63,7 +64,6 @@ projects.value = store.getProjects();
 const modalActive = ref(false);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
-
 };
 </script>
 
