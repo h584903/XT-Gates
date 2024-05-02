@@ -32,6 +32,11 @@ watchEffect(() => {
 .ProjectNameList a {
   text-decoration: none;
   color: black;
+  /* Set maximum width and allow wrapping */
+  max-width: 130px; /* Adjust the value as needed */
+  word-wrap: break-word;
+  white-space: normal;
+  display: inline-block;
 }
 .ProjectNameList a:hover {
   text-decoration: none;

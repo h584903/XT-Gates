@@ -56,6 +56,28 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
+    async function updateProjectTitle(projectID, newTitle) {
+        const projectIndex = projects.value.findIndex(project => project.id === projectID);
+        if (projectIndex !== -1) {
+            projects.value[projectIndex].title = newTitle;
+        }
+        
+        try {
+            const response = await fetch(`/projects/title/${projectID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectID: projectID,
+                    newTitle: newTitle
+                })
+            });
+        } catch (error) {
+            console.error('Error updating project title:', error);
+        }
+    }
+
     function getProjects() {
         return projects.value;
     }
@@ -143,5 +165,7 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }     
     
-  return { getTemplate, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate}
+
+  return { getTemplate, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle}
+
 });

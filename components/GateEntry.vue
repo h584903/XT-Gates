@@ -1,10 +1,45 @@
+  <template>
+    <div class="gate-card">
+      <div class="list" @click="isOpen = ! isOpen">
+        <div class="title" @click.stop="enableEditMode()" v-if="!editing">
+        <span>{{ props.title }}</span>
+      </div>
+      <div v-else>
+        <input v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
+      </div>
+        <div class="progress">
+          <ProgressBar :progressNumber=gateProgress />
+        </div>
+        <div class="plannedDate">
+          <DateEntry :dateString = plannedDate />
+        </div>
+        <div class="remaining">
+          <span>test</span>
+        </div>
+        <div class="daysToEnd">
+          <span>{{daysToEnd}}</span>
+        </div>
+        <div class="completion">
+          <DateEntry :dateString = props.completionDate />
+        </div>
+      </div>
+      <CollapseTransition>
+        <div v-show="isOpen">
+          <hr class="solid">
+          <GateContent :gateID = props.gateID />
+        </div>
+      </CollapseTransition>
+    </div>
+  </template>
+
 <script setup>
   // Henter task storen
   import { useTasksStore } from '@/stores/tasks';
+  import {useGatesStore} from '@/stores/gates';
   const taskStore = useTasksStore();
-  
   // Henter de ulike variablene fra gaten
   const gateStore = useGatesStore();
+
   const props = defineProps({
     gateID: {
       type: String,
@@ -31,6 +66,23 @@
       required: false
     }
   });
+  const editing = ref(false);
+  const editedTitle = ref(props.title);
+
+  const enableEditMode = () => {
+  editing.value = true;
+};
+
+const updateTitle = async () => {
+  try {
+    await gateStore.updateGateTitle(props.gateID, editedTitle.value);
+  } catch (error) {
+    console.error("Failed to update the gate:", error);
+  } finally {
+    editing.value = false;
+  }
+};
+
 
   const plannedDate = ref(gateStore.calculateDate(props.projectId, props.gateNR))
   const daysToEnd = ref(gateStore.calculateDaysToEnd(plannedDate))
@@ -38,36 +90,6 @@
   const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
 </script>
-<template>
-  <div class="gate-card">
-    <div class="list" @click="isOpen = ! isOpen">
-      <div class="title">
-        <span>{{ props.title }}</span>
-      </div>
-      <div class="progress">
-        <ProgressBar :progressNumber=gateProgress />
-      </div>
-      <div class="plannedDate">
-        <DateEntry :dateString = plannedDate />
-      </div>
-      <div class="remaining">
-        <span>test</span>
-      </div>
-      <div class="daysToEnd">
-        <span>{{daysToEnd}}</span>
-      </div>
-      <div class="completion">
-        <DateEntry :dateString = props.completionDate />
-      </div>
-    </div>
-    <CollapseTransition>
-      <div v-show="isOpen">
-        <hr class="solid">
-        <GateContent :gateID = props.gateID />
-      </div>
-    </CollapseTransition>
-  </div>
-</template>
 <style scoped>
 .mb-8 {
   width: 100;

@@ -1,33 +1,11 @@
-<script setup>
-// Imports
-import {ref} from "vue";
-import Modal from "@/components/ReusableModal.vue"
-
-const props = defineProps({
-  entryData: {
-    type: Object,
-    required: true
-  }
-});
-
-// Må legge til for edit
-// const modalEdit
-
-// Metode for toggle modalen - settes til false by default
-const modalActive = ref(false);
-const toggleModal = () => {
-  modalActive.value = !modalActive.value;
-};
-
-</script>
-
-
-
 <template>
   <!-- Følger prototypen til figma -->
   <div class="list project-card">
-    <div class="titleWrapper">
+    <div class="titleWrapper" @click="enableEditMode" v-if="!editMode">
       <span>{{ entryData.title }}</span>
+    </div>
+    <div class="titleWrapper" v-else>
+      <input type="text" v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
     </div>
     <div class="progressWrapper">
       <ProgressBar :progressNumber="entryData.progress" />
@@ -58,6 +36,50 @@ const toggleModal = () => {
   </div>
 </template>
 
+<script setup>
+// Imports
+import {ref} from "vue";
+import Modal from "@/components/ReusableModal.vue";
+import { useProjectsStore } from "@/stores/projects";
+
+const props = defineProps({
+  entryData: {
+    type: Object,
+    required: true
+  }
+});
+
+const editedTitle = ref(props.entryData.title);
+const editMode = ref(false);
+const store = useProjectsStore();
+
+
+const enableEditMode = () => {
+  editMode.value = true;
+};
+
+const updateTitle = async () => {
+  try {
+    await store.updateProjectTitle(props.entryData.id, editedTitle.value);
+  } catch (error) {
+    console.error("Failed to update the project:", error);
+  } finally {
+    editMode.value = false;
+  }
+};
+
+// Må legge til for edit
+// const modalEdit
+
+// Metode for toggle modalen - settes til false by default
+const modalActive = ref(false);
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+};
+
+</script>
+
+
 
 <style scoped>
 
@@ -81,6 +103,10 @@ const toggleModal = () => {
   margin: auto;
   text-align: center;
   width: 20%;
+}
+.titleWrapper input {
+  width: 75%;
+  text-align: center;
 }
 .progressWrapper {
   margin: auto;
