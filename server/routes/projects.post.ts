@@ -1,9 +1,11 @@
 // projects.post.ts 
 export default defineEventHandler(async event => {
+  let projects;
 
   try {
+
     const body = await readBody(event);
-    const { title, progress, plannedDate, POdate, status, PEM, comment } = body;
+    const { title, progress, plannedDate, PODate, status, PEM, comment } = body;
 
     //Oppretter prosjektet
     projects = await connectAndQuery(`
@@ -11,11 +13,12 @@ export default defineEventHandler(async event => {
       @OldProjectID = 1,
       @NewProjectTitle = '${title}',
       @PEMName = '${PEM}',
-      @PODate = '2024-12-12',
-      @SFDate = '2024-12-12';`);
+      @PODate = '${PODate}',
+      @SFDate = '${plannedDate}';`);
 
     return { updated: true };
   } catch (error) {
+    console.log("error: " + error)
     return createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',
