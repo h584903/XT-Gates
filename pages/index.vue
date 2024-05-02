@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Welcome to the dashboard</h1>
+    <NuxtLink to="/template">Template</NuxtLink>
   </div>
 </template>
 
