@@ -13,9 +13,9 @@
         <label>Project title: </label>
         <input type="text" id="title" v-model="formData.title" required><br>
         <label>PO-date: </label>
-        <input type="text" id="PO" v-model="formData.PO" required><br>
+        <input type="date" id="PO" v-model="formData.PO" required><br>
         <label>Scheduled finish: </label>
-        <input type="text" id="SF" v-model="formData.SF" required><br>
+        <input type="date" id="SF" v-model="formData.SF" required><br>
         <label>PEM: </label>
         <input type="text" id="PEM" v-model="formData.PEM" required><br>
         <button type="submit" class="addButton">Create Project</button>
