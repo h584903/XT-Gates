@@ -23,13 +23,11 @@ export const useTasksStore = defineStore('tasks', () => {
             rettProsjekt = (Number(tasks.value[i].prosjektID) === prosjektID)
             rettGate = (Number(gates.getGateNR(tasks.value[i].gateID)) === (gateNR+1))
             if(rettGate) {
-                console.log("Rett Gate")
             }
             if(tasks.value[i].duration>maxDuration && rettGate && rettProsjekt) {
                 maxDuration = tasks.value[i].duration
             }
         }
-        console.log(maxDuration)
         return maxDuration;
     }
 
@@ -113,7 +111,6 @@ export const useTasksStore = defineStore('tasks', () => {
             }));
 
             setTasks(taskArray)
-            console.log(tasks.value);
         } catch (error) {
             console.error('Error fetching tasks:', error);
         }

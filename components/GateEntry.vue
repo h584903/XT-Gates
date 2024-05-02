@@ -25,10 +25,15 @@
     completionDate: {
       type: String,
       required: true
+    },
+    daysToEnd: {
+      type: Number,
+      required: false
     }
   });
 
-  const plannedDate = gateStore.calculateDate(props.projectId, props.gateNR)
+  const plannedDate = ref(gateStore.calculateDate(props.projectId, props.gateNR))
+  const daysToEnd = ref(gateStore.calculateDaysToEnd(plannedDate))
 
   const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
@@ -48,7 +53,7 @@
       <span>test</span>
     </div>
     <div class="daysToEnd">
-      <span>test</span>
+      <span>{{daysToEnd}}</span>
     </div>
     <div class="completion">
       <DateEntry :dateString = props.completionDate />

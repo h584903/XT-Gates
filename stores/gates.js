@@ -85,9 +85,7 @@ export const useGatesStore = defineStore('gates', () => {
                 completionDate: "2024-06-07"
             }));
 
-            console.log(gateArray);
             setGates(gateArray);
-            console.log(gates.value);
         } catch (error) {
             console.error('Error fetching gates:', error);
         }
@@ -153,8 +151,18 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
+    function calculateDaysToEnd(plannedDate) {
+        return computed(() => {
+            let daysLeft = 0;
+            let date = new Date(plannedDate.value)
+            const today = new Date();
+            console.log("Planned Date: " + plannedDate.value)
+            var differenceInMs = date.getTime() - today.getTime()
+            daysLeft = Math.floor(differenceInMs/(1000*60*60*24))+1
+            return Math.max(daysLeft, 0);
+        })
+    }
 
-
-    return { gates, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR };
+    return { gates, calculateDaysToEnd, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR };
 
 });
