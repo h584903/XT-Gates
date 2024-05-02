@@ -1,21 +1,20 @@
 export default defineEventHandler(async event => {
   try {
-    // Read the incoming request body
+    // gjør klar body
     const body = await readBody(event);
-    const { taskID, newDuration } = body;
+    const { taskID, newStep } = body;
 
-    if (!taskID || !newDuration) {
-      // If taskID or newDuration is not provided in the request, return an error response
+    if (!taskID || !newStep) {
+      // Sender en error hvis requesten er feil
       return createError({
         statusCode: 400,
         statusMessage: 'Bad Request',
-        data: 'taskID and newDuration must be provided',
+        data: 'taskID and newStep must be provided',
       });
     }
 
-
     // Update the task in the database
-    await connectAndQuery(`UPDATE taskModel SET duration = ${newDuration} WHERE ID = ${taskID}`);
+    await connectAndQuery(`UPDATE taskModel SET step = ${newStep} WHERE ID = ${taskID}`);
 
     // Return success response
     return { updated: true };

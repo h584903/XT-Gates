@@ -55,8 +55,8 @@ export const useGatesStore = defineStore('gates', () => {
             }
         }
         if (lastGate(prosjektID, nr)) {
-            gates.value[index].plannedDate = projectStore.getPODate(prosjektID)
-            return projectStore.getPODate(prosjektID)
+            gates.value[index].plannedDate = projectStore.getSFDate(prosjektID)
+            return projectStore.getSFDate(prosjektID)
         } else {
             return computed(() => {
                 gates.value[index].plannedDate = getNextGateDate(prosjektID, nr)
@@ -70,7 +70,6 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     async function fetchGates(projectID) {
-        console.log('Fetching gates...');
         try {
             const response = await $fetch('/gates/' + projectID, {
                 method: 'GET'
@@ -85,9 +84,8 @@ export const useGatesStore = defineStore('gates', () => {
                 completionDate: "2024-06-07"
             }));
 
-            console.log('Gate Array', gateArray);
+
             setGates(gateArray);
-            console.log(gates.value);
         } catch (error) {
             console.error('Error fetching gates:', error);
         }

@@ -5,8 +5,8 @@ export default defineEventHandler (async (event) => {
 	let taskList;
 
 	try {
-		if (id == undefined) {
-			console.log("Invalid or missing project ID. Cannot fetch tasks.")
+
+		if (id == undefined || isNaN(id as any)) {
 			return createError({
                 statusCode: 400,
                 statusMessage: 'Bad Request',
@@ -14,7 +14,6 @@ export default defineEventHandler (async (event) => {
             });
 		}
 		taskList = await connectAndQuery(`SELECT * FROM taskModel WHERE projectID = ${Id}`)
-		console.log(taskList)
 
 	} catch (error) {
 		return createError({

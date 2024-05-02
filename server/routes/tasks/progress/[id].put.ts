@@ -13,8 +13,6 @@ export default defineEventHandler(async event => {
       });
     }
 
-    // logging
-    console.log(`Attempting to update task ${taskID} with new progress ${newProgress}`);
 
     // Update the task in the database
     await connectAndQuery(`UPDATE taskModel SET progress = ${newProgress} WHERE ID = ${taskID}`);

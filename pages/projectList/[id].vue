@@ -63,15 +63,14 @@
       console.error('Error fetching project:', error);
     }
     try {
-      console.log('Fetching gates for project ID:', projectId);
-      await gateStore.fetchGates(projectId);
-      console.log('Gates fetched:', gateStore.getProjectGates(toString(projectId)).value);
+
+      gateStore.fetchGates(projectId);
     } catch (error) {
       console.error('Error fetching gates:', error);
     }
     try {
-      console.log('Fetching tasks for project ID:', projectId);
-      await taskStore.fetchTasks(projectId);
+
+      taskStore.fetchTasks(projectId);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
@@ -84,7 +83,6 @@ const toggleModal = () => {
 };
 
 const deleteProjectHandler= () => {
-  console.log(`Attempting to delete project with ID ${project.value.id}`)
   store.deleteProject(project.value.id);
   toggleModal();
   router.push('/projectlist');

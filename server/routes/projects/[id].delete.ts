@@ -4,8 +4,8 @@
 export default defineEventHandler (async (event) => {
 	const id = getRouterParam(event, 'id')
 	try {
-		if(id == undefined) {
-			console.log("id undefined, cannot delete project")
+
+		if(id == undefined || isNaN(id as any)) {
 			return createError({
                 statusCode: 400,
                 statusMessage: 'Bad Request',
@@ -13,7 +13,6 @@ export default defineEventHandler (async (event) => {
             });
 		} else {
 		const result = await connectAndQuery(`DELETE FROM projectModel WHERE ID = ${id}`);
-		console.log(`Project with ID ${id} deleted successfully.`);
 		}
 	} catch (error) {
 		return createError({

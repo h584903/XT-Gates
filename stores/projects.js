@@ -21,13 +21,11 @@ export const useProjectsStore = defineStore('projects', () => {
     const index = ref (0)
 
     function setProjects(newProjects) {
-        console.log("Legger til alt i store igjen")
         projects.value = newProjects;
     }
 
     // hente og oppdatere prosjekter
     async function fetchProjects() {
-        console.log('Fetching projects...');
         try {
             const response = await $fetch('/projects', {
                 method: 'GET'
@@ -47,7 +45,6 @@ export const useProjectsStore = defineStore('projects', () => {
                 gates: project.gates
             }));
 
-            console.log(projectsArray);
 
             setProjects(projectsArray);
         } catch (error) {
@@ -72,10 +69,21 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     function getProjectById(projectId) {
-        console.log(projectId); // Ensure projectId is correct
         return projects.value.find(project => project.id === projectId);
       }
       
+    function getSFDate(projectID) {
+        let pro;
+        for (let i = 0; i<projects.value.length; i++) {
+            if(projects.value[i].id === projectID) {
+                pro = projects.value[i]
+            }
+        }
+        return computed(() => {
+            return pro.SFdate
+        })
+    }
+
 
 
     // Funksjon for å legge til et prosjekt i listen
@@ -116,22 +124,17 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     async function deleteProject(deleteID) {
-        console.log(`Store attempting to delete project with ID ${deleteID}`);
-        console.log("Projects before deletion", projects.value);
         try {
-            console.log("Store sending deletion to back-end");
             const response = await $fetch(`/projects/${deleteID}`, {
                 method: 'DELETE'
             });
             // If the deletion from the backend is successful, remove the project from the store
             projects.value = projects.value.filter(project => project.id !== deleteID);
-            console.log(`Project with ID ${deleteID} deleted successfully from backend and store.`);
-            console.log('Projects after deletion: ', projects.value);
             
         } catch (error) {
-            console.log("Failed to delete project:", error);
+            console.error("Failed to delete project:", error);
         }
     }     
     
-  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, }
+  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate}
 });

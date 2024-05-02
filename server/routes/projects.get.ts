@@ -4,7 +4,6 @@ export default defineEventHandler(async (event) => {
   let organizedData = {};
 
   try {
-    console.log("Starting...");
     projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress FROM projectModel pm LEFT JOIN ProjectAverageProgress pavg ON pm.ID = pavg.ID;")
 
   } catch (error) {

@@ -25,7 +25,7 @@ const toggleModal = () => {
 
 <template>
   <!-- Følger prototypen til figma -->
-  <div class="list">
+  <div class="list project-card">
     <div class="titleWrapper">
       <span>{{ entryData.title }}</span>
     </div>
@@ -53,7 +53,7 @@ const toggleModal = () => {
           <button @click="toggleModal" class="smallButton">Cancel</button>
         </div>
       </Modal>
-      <button @click="toggleModal" class = "bigButton">Open Modal</button>
+      <button @click="toggleModal" class = "bigButton">{{entryData.comment}}</button>
     </div>
   </div>
 </template>
@@ -66,6 +66,17 @@ const toggleModal = () => {
   justify-content: space-between;
   flex-direction: row;
 }
+
+.project-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+
 .titleWrapper {
   margin: auto;
   text-align: center;
@@ -130,8 +141,8 @@ const toggleModal = () => {
   padding: 10px 10px;
   border: none;
   font-size: 16px;
-  background-color: rgb(91, 102, 184);
-  color: white;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   cursor: pointer;
 }
 
