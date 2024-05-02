@@ -8,6 +8,7 @@ export const useProjectsStore = defineStore('projects', () => {
     const project = ref();
     // listen av prosjekter
     const projects = ref([]);
+    const template = ref(null);
     projects.value.push({
         id: "0",
         title: "Test Project",
@@ -46,6 +47,9 @@ export const useProjectsStore = defineStore('projects', () => {
             }));
 
 
+            const indexToRemove = projectsArray.findIndex(project => project.id == 1);
+            template.value = indexToRemove !== -1 ? projectsArray.splice(indexToRemove, 1)[0] : null;
+
             setProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -71,6 +75,10 @@ export const useProjectsStore = defineStore('projects', () => {
     function getProjectById(projectId) {
         return projects.value.find(project => project.id === projectId);
       }
+
+    function getTemplate() {
+        return computed(() => template.value);
+    }
       
     function getSFDate(projectID) {
         let pro;
@@ -135,5 +143,5 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }     
     
-  return { project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate}
+  return { getTemplate, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate}
 });
