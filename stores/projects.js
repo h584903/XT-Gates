@@ -8,7 +8,7 @@ export const useProjectsStore = defineStore('projects', () => {
     const project = ref();
     // listen av prosjekter
     const projects = ref([]);
-    const template = ref(null);
+    const template = ref(1);
     projects.value.push({
         id: "0",
         title: "Test Project",
@@ -46,10 +46,6 @@ export const useProjectsStore = defineStore('projects', () => {
                 gates: project.gates
             }));
 
-
-            const indexToRemove = projectsArray.findIndex(project => project.id == 1);
-            template.value = indexToRemove !== -1 ? projectsArray.splice(indexToRemove, 1)[0] : null;
-
             setProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -78,8 +74,16 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
+    function getTemplate() {
+        return template.value;
+    }
+
+    const filteredProjects = computed(() => {
+        return projects.value.filter(project => project.id != template.value);
+    });
+
     function getProjects() {
-        return projects.value;
+        return filteredProjects.value;
     }
 
     function getPODate(projectID) {
@@ -98,10 +102,6 @@ export const useProjectsStore = defineStore('projects', () => {
         return projects.value.find(project => project.id === projectId);
       }
 
-    function getTemplate() {
-        return computed(() => template.value);
-    }
-      
     function getSFDate(projectID) {
         let pro;
         for (let i = 0; i<projects.value.length; i++) {
@@ -166,6 +166,6 @@ export const useProjectsStore = defineStore('projects', () => {
     }     
     
 
-  return { getTemplate, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle}
+  return { getTemplate, filteredProjects, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle}
 
 });
