@@ -5,7 +5,6 @@
     <!--Oppretter et entry for hvert prosjekt i store.projects-->
     <div v-for="project in projects" :key = project.id>
       <ProjectEntry :entryData="project"/>
-      <hr class="solid">
     </div> 
     <Modal @close="toggleModal" :modalActive="modalActive">
       <h1>New Project</h1>
@@ -54,10 +53,8 @@ const formData = ref({
 
 const submitForm = () => {
   const projectId = uuid();
-  console.log(formData.value.PO.toString())
   store.addProject(projectId,formData.value.title, 0, formData.value.SF.toString().replace(/-/g, ''), formData.value.PO.toString().replace(/-/g, ''), true, formData.value.PEM, "comment");
   index.value++;
-  console.log(formData.value);
   toggleModal();
 }
 projects.value = store.getProjects();

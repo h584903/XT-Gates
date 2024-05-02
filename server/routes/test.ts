@@ -3,7 +3,6 @@ import sql from 'mssql';
 export default defineEventHandler(async (event) => {
   let projects;
   try {
-    console.log("Starting...");
     projects = await connectAndQuery("SELECT * FROM projectModel WHERE ID = 1;");
 
   } catch (error) {

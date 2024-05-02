@@ -43,12 +43,12 @@
   const project = ref(null);
 
   onMounted(async () => {
-    const projectId = parseInt(route.params.id, 10); // parser routen til en int og spesifiserer base 10 
-    if (isNaN(projectId)) {
-      console.error('Project ID is not a valid number');
+    const projectId = route.params.id; // parser routen til en int og spesifiserer base 10 
+    if (!projectId) {
+      console.error('Project ID is not provided');
       return;
     }
-
+    
     try {
       // Henter prosjekt info
       const fetchedProject = await store.getProjectById(projectId);
@@ -63,14 +63,13 @@
       console.error('Error fetching project:', error);
     }
     try {
-      console.log('Fetching gates for project ID:', projectId);
+
       gateStore.fetchGates(projectId);
-      console.log('Gates fetched:', gateStore.getProjectGates(projectId));
     } catch (error) {
       console.error('Error fetching gates:', error);
     }
     try {
-      console.log('Fetching tasks for project ID:', projectId);
+
       taskStore.fetchTasks(projectId);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -84,7 +83,6 @@ const toggleModal = () => {
 };
 
 const deleteProjectHandler= () => {
-  console.log(`Attempting to delete project with ID ${project.value.id}`)
   store.deleteProject(project.value.id);
   toggleModal();
   router.push('/projectlist');

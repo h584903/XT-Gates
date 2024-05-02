@@ -1,7 +1,6 @@
 export function packProject(id, title, progress, plannedDate, POdate,
      status, pem, comment) {
 
-    console.log(pem);
 const myProject = {
     id: id,
     title: title,
@@ -12,7 +11,6 @@ const myProject = {
     pem: pem,
     comment: comment
 };
-    console.log(myProject);
 
 return myProject;
 }

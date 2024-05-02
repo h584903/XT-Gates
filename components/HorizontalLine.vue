@@ -4,6 +4,6 @@
 <style>
 hr.solid {
   width: 100%;
-  border-top: 1px solid grey;
+  border-top: 1px solid whitesmoke;
 }
 </style>

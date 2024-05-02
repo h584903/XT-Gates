@@ -19,7 +19,7 @@
       required: true
     },
     projectId: {
-      type: Number,
+      type: String,
       required: true
     },
     completionDate: {
@@ -39,42 +39,52 @@
   const isOpen = ref(false);
 </script>
 <template>
-  <div class="list" @click="isOpen = ! isOpen">
-    <div class="title">
-      <span>{{ props.title }}</span>
+  <div class="gate-card">
+    <div class="list" @click="isOpen = ! isOpen">
+      <div class="title">
+        <span>{{ props.title }}</span>
+      </div>
+      <div class="progress">
+        <ProgressBar :progressNumber=gateProgress />
+      </div>
+      <div class="plannedDate">
+        <DateEntry :dateString = plannedDate />
+      </div>
+      <div class="remaining">
+        <span>test</span>
+      </div>
+      <div class="daysToEnd">
+        <span>{{daysToEnd}}</span>
+      </div>
+      <div class="completion">
+        <DateEntry :dateString = props.completionDate />
+      </div>
     </div>
-    <div class="progress">
-      <ProgressBar :progressNumber=gateProgress />
-    </div>
-    <div class="plannedDate">
-      <DateEntry :dateString = plannedDate />
-    </div>
-    <div class="remaining">
-      <span>test</span>
-    </div>
-    <div class="daysToEnd">
-      <span>{{daysToEnd}}</span>
-    </div>
-    <div class="completion">
-      <DateEntry :dateString = props.completionDate />
-    </div>
+    <CollapseTransition>
+      <div v-show="isOpen">
+        <hr class="solid">
+        <GateContent :gateID = props.gateID />
+      </div>
+    </CollapseTransition>
   </div>
-  <CollapseTransition>
-    <div v-show="isOpen">
-      <hr class="solid">
-      <GateContent :gateID = props.gateID />
-    </div>
-  </CollapseTransition>
 </template>
 <style scoped>
 .mb-8 {
   width: 100;
 }
 
+.gate-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
 .list {
   display: flex;
   flex-direction: row;
-  height:40px;
 }
 
 .title {
@@ -110,8 +120,9 @@
 }
 
 hr.solid {
+  margin-top: 20px;
   width: 100%;
-  border-top: 1px solid grey;
+  border-top: 1px solid whitesmoke;
 }
 
 </style>

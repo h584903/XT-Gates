@@ -55,8 +55,8 @@ export const useGatesStore = defineStore('gates', () => {
             }
         }
         if (lastGate(prosjektID, nr)) {
-            gates.value[index].plannedDate = projectStore.getPODate(prosjektID)
-            return projectStore.getPODate(prosjektID)
+            gates.value[index].plannedDate = projectStore.getSFDate(prosjektID)
+            return projectStore.getSFDate(prosjektID)
         } else {
             return computed(() => {
                 gates.value[index].plannedDate = getNextGateDate(prosjektID, nr)
@@ -70,7 +70,6 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     async function fetchGates(projectID) {
-        console.log('Fetching gates...');
         try {
             const response = await $fetch('/gates/' + projectID, {
                 method: 'GET'
@@ -78,7 +77,7 @@ export const useGatesStore = defineStore('gates', () => {
 
             const gateArray = response.map(gate => ({
                 ID: gate.ID.toString(),
-                projectID: gate.prosjektID,
+                projectID: gate.prosjektID.toString(),
                 gateNR: gate.gateNR,
                 title: gate.gateTitle,
                 plannedDate: "2024-07-07",
@@ -95,7 +94,7 @@ export const useGatesStore = defineStore('gates', () => {
     function getNextGateDate(prosjektID, nr) {
         const taskStore = useTasksStore();
         for (let i = 0; i < gates.value.length; i++) {
-            if ((gates.value[i].projectID == prosjektID) && (gates.value[i].gateNR-1 === nr)) {
+            if ((String(gates.value[i].projectID) == String(prosjektID)) && (gates.value[i].gateNR-1 === nr)) {
                 let date;
                 date = substractDays(gates.value[i].plannedDate, taskStore.maxTaskDuration(prosjektID, nr))
                 return date;
