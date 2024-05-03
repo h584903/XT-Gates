@@ -40,12 +40,6 @@ export const useGatesStore = defineStore('gates', () => {
         completionDate: "2024-06-07"
     })
 
-    // Funksjon for å legge til gates, ikke testet
-    function addGate(projectID, gateID, title, progress, plannedDate, remaining, daysToEnd, completion) {
-        const newGate = { projectID, gateID, title, progress, plannedDate, remaining, daysToEnd, completion };
-        gates.value.push(newGate);
-    }
-
     function calculateDate(prosjektID, nr){
         const projectStore = useProjectsStore();
         let index;
@@ -66,6 +60,7 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     function setGates(newGates) {
+        console.log("gateStore: " + newGates)
         gates.value = newGates;
     }
 
@@ -90,6 +85,35 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
+    async function addGate(gateNR, projectID, title) {
+        console.log("Making gate: " + title + " with id: " + gateNR + " in project: " + projectID)
+
+        const requestBody = {
+            projectID: projectID,
+            gateNR: gateNR,
+            title: title
+        };
+
+        try {
+            const response = await $fetch('/gates', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            console.log("calling fetchgates")
+            fetchGates(projectID);
+        } catch (error) {
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to create project'
+            });
+        }
+
+    }
 
     function getNextGateDate(prosjektID, nr) {
         const taskStore = useTasksStore();

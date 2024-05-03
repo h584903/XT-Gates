@@ -99,7 +99,6 @@ const updateTitle = async () => {
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 20px;
-    margin: 10px;
     background-color: white;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
