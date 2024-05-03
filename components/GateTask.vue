@@ -121,9 +121,9 @@
 <style scoped>
 
 textarea {
-    width: 100%; /* Set to 100% to fill the container */
-    min-height: 80px; /* Adjust the height as needed */
-    resize: vertical; /* Allow vertical resizing */
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
     padding: 8px;
     font-size: 16px;
     border: 1px solid #ccc;
