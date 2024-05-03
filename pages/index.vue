@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Welcome to the dashboard</h1>
-    <NuxtLink :to="`/projectList/${template}`">Edit template</NuxtLink>
+    <NuxtLink :to="`/template/${template}`">Edit template</NuxtLink>
   </div>
 </template>
 
