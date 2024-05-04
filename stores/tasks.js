@@ -106,6 +106,25 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
+    function completedInTime(date, taskID) {
+        const gateStore = useGatesStore();
+        let inTime = false;
+    
+        const task = tasks.value.find(task => task.ID === taskID);
+    
+        if (task) {
+            const gateID = task.gateID;
+            const supposedDate = gateStore.getSFG(gateID);
+            console.log(date + ", " + supposedDate)
+            if (date >= supposedDate) {
+                inTime = true;
+                console.log("Logical Error")
+            }
+        }
+    
+        return inTime;
+    }
+
 
     function setTasks(newTasks) {
         tasks.value = newTasks;
@@ -126,7 +145,8 @@ export const useTasksStore = defineStore('tasks', () => {
                 onTime: task.onTime,
                 progress: task.progress,
                 duration: task.duration,
-                comment: task.comment
+                comment: task.comment,
+                completeDate: task.completeDate
             }));
 
             setTasks(taskArray)
@@ -154,12 +174,11 @@ export const useTasksStore = defineStore('tasks', () => {
             });
             
             const data = await response.json();
-            console.log(data);
         } catch (error) {
             console.error('Error updating task comment:', error);
         }
     }
     
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment };
+    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime };
 });

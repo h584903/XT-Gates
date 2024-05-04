@@ -59,6 +59,16 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
+    function getSFG(gateID) {
+        const gate = gates.value.find(gate => gate.ID === String(gateID));
+        if (gate) {
+            return gate.plannedDate;
+        } else {
+            console.error(`Gate with ID ${gateID} not found.`);
+            return null;
+        }
+    }
+
     function setGates(newGates) {
         console.log("gateStore: " + newGates)
         gates.value = newGates;
@@ -179,7 +189,6 @@ export const useGatesStore = defineStore('gates', () => {
             let daysLeft = 0;
             let date = new Date(plannedDate.value)
             const today = new Date();
-            console.log("Planned Date: " + plannedDate.value)
             var differenceInMs = date.getTime() - today.getTime()
             daysLeft = Math.floor(differenceInMs/(1000*60*60*24))+1
             return Math.max(daysLeft, 0);
@@ -207,6 +216,6 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
-    return { gates, calculateDaysToEnd, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle };
+    return { gates, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle };
 
 });
