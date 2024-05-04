@@ -125,7 +125,8 @@ export const useTasksStore = defineStore('tasks', () => {
                 responsiblePerson: task.responsiblePerson,
                 onTime: task.onTime,
                 progress: task.progress,
-                duration: task.duration
+                duration: task.duration,
+                comment: task.comment
             }));
 
             setTasks(taskArray)
@@ -134,6 +135,31 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
+    async function updateTaskComment(taskID, newComment) {
+        const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+        if (taskIndex !== -1) {
+            tasks.value[taskIndex].comment = newComment;
+        }
+    
+        try {
+            const response = await fetch(`/tasks/comment/${taskID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newComment: newComment
+                })
+            });
+            
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Error updating task comment:', error);
+        }
+    }
+    
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks };
+    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment };
 });

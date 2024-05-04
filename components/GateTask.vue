@@ -22,8 +22,13 @@
   step: {
     type: Number,
     required: true
-  }
-  })
+  },
+  comment: {
+      type: String,
+      required: true
+    }
+  }) 
+  const editedComment = ref(props.comment);
 
   // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
@@ -33,16 +38,29 @@
     tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
     tasksStore.update
   }
-
+  // For å editte taskDuration
   const editMode = ref(false);
   function enableEditMode() {
     editMode.value = true;
+    editCommentMode.value = false;
   }
-
+  
   const taskDuration = ref(currentTask ? currentTask.duration : 0);
   function updateDuration() {
     tasksStore.updateTaskDuration(props.taskID, parseInt(taskDuration.value))
     editMode.value = false;
+  }
+
+  // For å editte comment, hvis de deler editMode går begge inn i redigeringsmodus når du trykker på en av de
+   const editCommentMode = ref(false);
+    function enableCommentEditMode() {
+    editMode.value = false;
+    editCommentMode.value = true;
+  }
+
+  function updateComment() {
+    tasksStore.updateTaskComment(props.taskID, editedComment.value);
+    editCommentMode.value = false;
   }
 
   // Funksjon for å sette en delay på en funksjon
@@ -90,9 +108,28 @@
         {{ taskDuration }} days
       </div>
     </div>
+    <div class="w10">
+  <div v-if="editCommentMode">
+    <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
   </div>
+  <div v-else @click="enableCommentEditMode">
+    <span>{{ props.comment || 'No comment' }}</span>
+  </div>
+</div>
+   </div>
 </template>
 <style scoped>
+
+textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
 
 .handle {
   cursor: move; /* Cursor indicates movement */

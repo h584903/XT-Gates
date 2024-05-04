@@ -17,6 +17,7 @@ export default defineEventHandler(async event => {
     // Update the task in the database
     await connectAndQuery(`UPDATE taskModel SET progress = ${newProgress} WHERE ID = ${taskID}`);
 
+
     // Return success response
     return { updated: true };
   } catch (error) {
