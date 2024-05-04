@@ -25,7 +25,7 @@ defineProps ({
 }
 /* Hvis den er inProgress, sett fargen til grønn */
 .onSchedule {
-  background-color:chartreuse;
+  background-color:lightgreen;
 }
 /* Hvis den ikke er i progress, sett fargen til gul */
 .error {

@@ -1,5 +1,6 @@
 <script setup>
   import { useTasksStore } from '@/stores/tasks';
+import PlanStatus from './PlanStatus.vue';
 
   const tasksStore = useTasksStore();
   const props = defineProps({
@@ -26,6 +27,10 @@
   comment: {
       type: String,
       required: true
+  },
+  completeDate: {
+      type: String,
+      required: true
     }
   }) 
   const editedComment = ref(props.comment);
@@ -38,6 +43,17 @@
     tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
     tasksStore.update
   }
+
+  const planStatus = computed(() => {
+    if(tasksStore.completedInTime(props.completeDate, props.taskID)) {
+      return false
+    } else if(selectedProgress.value === 100) {
+      return true
+    } else {
+      return tasksStore.inTime(props.taskID);
+    }
+  })
+
   // For å editte taskDuration
   const editMode = ref(false);
   function enableEditMode() {
@@ -89,7 +105,7 @@
       <span>{{ props.responsiblePerson }}</span>
     </div>
     <div class="w10">
-      <DateEntry :dateString = "'2024-05-05'" />
+      <DateEntry :dateString = props.completeDate />
     </div>
     <div class="w10">
       <span>Petter Tesdal</span>
@@ -98,7 +114,7 @@
         <input type="range" min="0" max="100" step="25" v-model="selectedProgress" @change="debouncedUpdateProgress" />
     </div>
     <div class="w5">
-      <PlanStatus :onSchedule="true" />
+      <PlanStatus :onSchedule=planStatus />
     </div>
     <div class="w5">
       <div v-if="editMode">
@@ -168,7 +184,6 @@ textarea {
 .w5 {
   width: 5%;
 }
-
 .w5 input {
   width: 100%;
 }

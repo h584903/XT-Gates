@@ -106,6 +106,60 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
+    function inTime(taskID) {
+        const gateStore = useGatesStore();
+        let onTime = false;
+        let today = new Date();
+        let duration = getTaskDuration(taskID);
+        let progress = getTaskProgress(taskID);
+        let remainderTime = duration - (duration * progress / 100)
+        let SF = new Date(today.getTime() + (remainderTime * 86400000));
+        let PF = gateStore.getSFG(getGateID(taskID))
+        console.log(PF + "\n" + SF.toISOString())
+
+        onTime = (PF >= SF.toISOString())
+
+        return onTime
+    }
+
+    function getTaskDuration(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.duration : null;
+    }
+
+    function getTaskProgress(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.progress : null;
+    }
+
+    
+    function getProjectID(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.prosjektID : null;
+    }
+
+    function getGateID(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.gateID : null;
+    }
+
+    function completedInTime(date, taskID) {
+        const gateStore = useGatesStore();
+        let inTime = false;
+    
+        const task = tasks.value.find(task => task.ID === taskID);
+    
+        if (task) {
+            const gateID = task.gateID;
+            const supposedDate = gateStore.getSFG(gateID);
+            if (date >= supposedDate) {
+                inTime = true;
+            }
+        }
+    
+        return inTime;
+    }
+
 
     function setTasks(newTasks) {
         tasks.value = newTasks;
@@ -126,7 +180,8 @@ export const useTasksStore = defineStore('tasks', () => {
                 onTime: task.onTime,
                 progress: task.progress,
                 duration: task.duration,
-                comment: task.comment
+                comment: task.comment,
+                completeDate: task.completeDate
             }));
 
             setTasks(taskArray)
@@ -154,12 +209,11 @@ export const useTasksStore = defineStore('tasks', () => {
             });
             
             const data = await response.json();
-            console.log(data);
         } catch (error) {
             console.error('Error updating task comment:', error);
         }
     }
     
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment };
+    return { tasks, addTask, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime };
 });

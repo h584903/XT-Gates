@@ -13,7 +13,7 @@ export default defineEventHandler (async (event) => {
                 data: 'Invalid or missing project ID',
             });
 		}
-		taskList = await connectAndQuery(`SELECT * FROM taskModel WHERE projectID = ${Id}`)
+		taskList = await connectAndQuery(`SELECT * FROM taskModel WHERE projectID = ${id}`)
 
 	} catch (error) {
 		return createError({

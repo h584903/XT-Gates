@@ -36,11 +36,12 @@
   }
 
 </script>
+
 <template>
   <draggable class="listGate" v-model="tasks" @end="onEndDrag" group="tasks" item-key="ID" handle=".handle" animation="300"> 
   <template #item="{element, index}">
     <div :key="element.ID">
-      <GateTask :task="element" :taskID="element.ID" :step="element.step" :title="element.title" :duration="element.duration" :responsiblePerson="element.responsiblePerson" :comment="element.comment || ''" />
+      <GateTask :task="element" :taskID="element.ID" :step="element.step" :title="element.title" :duration="element.duration" :responsiblePerson="element.responsiblePerson" :complete-date="element.completeDate" :comment="element.comment || ''" />
     </div>
   </template>
   <div v-if="tasks.length === 0">
@@ -48,6 +49,7 @@
   </div>
   </draggable>
 </template>
+
 <style scoped>
 .listGate {
   display: flex;
