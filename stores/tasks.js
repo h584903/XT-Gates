@@ -106,6 +106,43 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
+    function inTime(taskID) {
+        const gateStore = useGatesStore();
+        let onTime = false;
+        let today = new Date();
+        let duration = getTaskDuration(taskID);
+        let progress = getTaskProgress(taskID);
+        let remainderTime = duration - (duration * progress / 100)
+        let SF = new Date(today.getTime() + (remainderTime * 86400000));
+        let PF = gateStore.getSFG(getGateID(taskID))
+        console.log(PF + "\n" + SF.toISOString())
+
+        onTime = (PF >= SF.toISOString())
+
+        return onTime
+    }
+
+    function getTaskDuration(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.duration : null;
+    }
+
+    function getTaskProgress(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.progress : null;
+    }
+
+    
+    function getProjectID(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.prosjektID : null;
+    }
+
+    function getGateID(taskID) {
+        const task = tasks.value.find(task => task.ID === taskID);
+        return task ? task.gateID : null;
+    }
+
     function completedInTime(date, taskID) {
         const gateStore = useGatesStore();
         let inTime = false;
@@ -115,10 +152,8 @@ export const useTasksStore = defineStore('tasks', () => {
         if (task) {
             const gateID = task.gateID;
             const supposedDate = gateStore.getSFG(gateID);
-            console.log(date + ", " + supposedDate)
             if (date >= supposedDate) {
                 inTime = true;
-                console.log("Logical Error")
             }
         }
     
@@ -180,5 +215,5 @@ export const useTasksStore = defineStore('tasks', () => {
     }
     
 
-    return { tasks, addTask, getGateTasks, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime };
+    return { tasks, addTask, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime };
 });

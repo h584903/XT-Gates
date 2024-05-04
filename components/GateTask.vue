@@ -50,7 +50,7 @@ import PlanStatus from './PlanStatus.vue';
     } else if(selectedProgress.value === 100) {
       return true
     } else {
-      return false
+      return tasksStore.inTime(props.taskID);
     }
   })
 
