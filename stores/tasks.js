@@ -115,7 +115,6 @@ export const useTasksStore = defineStore('tasks', () => {
         let remainderTime = duration - (duration * progress / 100)
         let SF = new Date(today.getTime() + (remainderTime * 86400000));
         let PF = gateStore.getSFG(getGateID(taskID))
-        console.log(PF + "\n" + SF.toISOString())
 
         onTime = (PF >= SF.toISOString())
 

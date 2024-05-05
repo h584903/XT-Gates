@@ -5,7 +5,7 @@ export default defineEventHandler(async event => {
     const { gates } = body;
     console.log("Putting the new order on database")
 
-    if (!tasks ) {
+    if (!gates) {
       // Error hvis ingen tasks ble sendt
       return createError({
         statusCode: 400,
@@ -16,7 +16,7 @@ export default defineEventHandler(async event => {
 
 
     // Oppdaterer tasks i databasen
-    const updatePromises = tasks.map(gate =>
+    const updatePromises = gates.map(gate =>
       connectAndQuery(`UPDATE gateModel SET gateNR = ${gate.gateNR} WHERE ID = ${gate.ID}`)
     );
 
@@ -29,7 +29,7 @@ export default defineEventHandler(async event => {
     return createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',
-      data: 'Failed to update the task',
+      data: 'Failed to update the gate',
     });
   }
 });

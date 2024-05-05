@@ -5,40 +5,7 @@ import { defineStore } from "pinia";
 export const useGatesStore = defineStore('gates', () => {
     // Vanlig Ref
     const gates = ref([]);
-    // Pusher opp noe eksempel gates
-    gates.value.push({
-        projectID: 0,
-        ID:'0001',
-        gateNR: 1,
-        title: "RFQ",
-        progress: 10,
-        plannedDate: "2024-05-12",
-        remaining: 12,
-        daysToEnd: 12,
-        completionDate: "2024-03-02"
-    });
-    gates.value.push({
-        projectID: 0,
-        ID:'0002',
-        gateNR: 2,
-        title: "QUOTATION",
-        progress: 20,
-        plannedDate: "2024-07-07",
-        remaining: 12,
-        daysToEnd: 12,
-        completionDate: "2024-06-07"
-    });
-    gates.value.push({
-        projectID: 0,
-        ID: '0003',
-        gateNR: 3,
-        title: "EXAMPLE",
-        progress: 20,
-        plannedDate: "2024-10-10",
-        remaining: 12,
-        daysToEnd: 12,
-        completionDate: "2024-06-07"
-    })
+
 
     function calculateDate(prosjektID, nr){
         const projectStore = useProjectsStore();
@@ -114,13 +81,40 @@ export const useGatesStore = defineStore('gates', () => {
             });
 
             console.log("calling fetchgates")
-            fetchGates(projectID);
+            await fetchGates(projectID);
+            updateGateOrder(gates.value)
         } catch (error) {
             return createError({
                 statusCode: 500,
                 statusMessage: 'Internal Server Error',
                 data: 'Failed to create project'
             });
+        }
+
+    }
+
+    async function updateGateOrder(newGates) {
+        let i = 1
+        newGates.sort((a, b) => a.gateNR - b.gateNR);
+        
+        newGates.forEach(gate => {
+            console.log("This is the index: " + i)
+            gate.gateNR = i;
+            i++
+        });
+        try {
+            const response = await fetch(`/gates/order`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    gates: newGates
+                })
+            });
+            setGates(newGates);
+        } catch (error) {
+            console.error('Error updating gates order:', error);
         }
 
     }

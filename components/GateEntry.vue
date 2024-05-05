@@ -1,12 +1,15 @@
   <template>
     <div class="gate-card">
       <div class="list" @click="isOpen = ! isOpen">
+        <div>
+          <span>{{ props.gateNR }}</span>
+        </div>
         <div class="title" @click.stop="enableEditMode()" v-if="!editing">
-        <span>{{ props.title }}</span>
-      </div>
-      <div v-else>
-        <input v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
-      </div>
+          <span>{{ props.title }}</span>
+        </div>
+        <div v-else>
+          <input v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
+        </div>
         <div class="progress">
           <ProgressBar :progressNumber=gateProgress />
         </div>
