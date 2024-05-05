@@ -14,9 +14,7 @@ const template = store.getTemplate();
 
 onMounted(() => {
   // Må endres til 0 hvis testprosjekt fjernes
-  if (store.getProjects().length === 1) {
     store.fetchProjects();
-  }
   });
   watchEffect(() => {
   });

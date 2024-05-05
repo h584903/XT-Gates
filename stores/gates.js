@@ -156,10 +156,11 @@ export const useGatesStore = defineStore('gates', () => {
         return true
     }
 
-    // Computed property to get gates belonging to a specific project
+    // Henter gates til et spesifikt prosjekt
     function getProjectGates(projectID) {
-        return computed(() => gates.value.filter(gate => gate.projectID === projectID));
+        return computed(() => gates.value.filter(gate => gate.projectID === projectID).sort((a, b) => a.gateNR - b.gateNR));
     }
+
 
     function getGateProgress(gateID) {
         const taskStore = useTasksStore();
