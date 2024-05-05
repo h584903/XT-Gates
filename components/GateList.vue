@@ -76,9 +76,9 @@
   <Modal @close="toggleModal" :modalActive="modalActive">
     <h1>New Gate</h1>
     <form @submit.prevent="submitForm">
-      <label>Project title: </label>
+      <label>Gate title: </label>
       <input type="text" id="title" v-model="formData.title" required><br>
-      <button type="submit" class="addButton">Create Project</button>
+      <button type="submit" class="addButton">Create Gate</button>
     </form>
     <button class="closeButton" @click="toggleModal">Cancel</button>
   </Modal>

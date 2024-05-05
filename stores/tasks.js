@@ -9,9 +9,44 @@ export const useTasksStore = defineStore('tasks', () => {
     // Pusher opp noen eksempel tasks
 
     // Funksjon for å legge til en task
-    function addTask(ID, step, title, responsiblePerson, progress, duration) {
-        const newTask = { ID, step, title, responsiblePerson, progress, duration };
-        tasks.value.push(newTask);
+    async function addTask(taskID, gateID, step, title, responsiblePerson, duration) {
+
+        const projectID = getProjectID(taskID);
+        console.log("Making Task: " + title + " with step: " + step + " in project: " + projectID + "and gate: " + gateID)
+
+        const requestBody = {
+            projectID: projectID,
+            gateID: gateID,
+            step: step,
+            title: title,
+            responsiblePerson: responsiblePerson,
+            duration: duration
+        };
+
+        try {
+            const response = await $fetch('/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            await fetchTasks(projectID);
+
+            let sortedTasks = getGateTasks(gateID).sort((a, b) => a.step - b.step);
+            sortedTasks.forEach((task, index) => {
+                task.step = index + 1;
+            })
+            updateTasksOrder(sortedTasks);
+            await fetchTasks(projectID);
+        } catch (error) {
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to create project'
+            });
+        }
     }
 
     function maxTaskDuration(prosjektID, gateNR) {

@@ -5,8 +5,6 @@ import { defineStore } from "pinia";
 export const useGatesStore = defineStore('gates', () => {
     // Vanlig Ref
     const gates = ref([]);
-
-
     function calculateDate(prosjektID, nr){
         const projectStore = useProjectsStore();
         let index;
