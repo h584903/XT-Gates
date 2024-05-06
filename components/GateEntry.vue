@@ -113,6 +113,9 @@ const updateTitle = async () => {
   const deleteGateHandler= () => {
     gateStore.deleteGate(props.gateID, props.projectId);
     toggleModal();
+
+
+
   }
 
 </script>
