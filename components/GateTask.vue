@@ -34,12 +34,16 @@ import PlanStatus from './PlanStatus.vue';
     required: true
 },
 
-  updateUser: {
-      type: String,
-      required: true
-  }
-  }) 
-  const editedComment = ref(props.comment);
+updateUser: {
+  type: String,
+  required: true
+}
+}) 
+const editMode = ref(false);
+const editedComment = ref(props.comment);
+const editCommentMode = ref(false);
+const editedTitle = ref(props.title);
+const editTitleMode = ref(false);
 
   // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
@@ -64,10 +68,10 @@ import PlanStatus from './PlanStatus.vue';
   })
 
   // For å editte taskDuration
-  const editMode = ref(false);
   function enableEditMode() {
     editMode.value = true;
     editCommentMode.value = false;
+    editTitleMode.value = false;
   }
   
   const taskDuration = ref(currentTask ? currentTask.duration : 0);
@@ -77,10 +81,10 @@ import PlanStatus from './PlanStatus.vue';
   }
 
   // For å editte comment, hvis de deler editMode går begge inn i redigeringsmodus når du trykker på en av de
-   const editCommentMode = ref(false);
     function enableCommentEditMode() {
-    editMode.value = false;
-    editCommentMode.value = true;
+      editCommentMode.value = true;
+      editMode.value = false;
+      editTitleMode.value = false;
   }
 
   function updateComment() {
@@ -92,6 +96,21 @@ import PlanStatus from './PlanStatus.vue';
   const trimmedComment = editedComment.value.trim();
   return trimmedComment === "" ? "No comment" : trimmedComment;
 });
+
+  function enableTitleEditMode() {
+    editTitleMode.value = true;
+    editMode.value = false;
+    editCommentMode.value = false;
+  }
+  function updateTitle() {
+    tasksStore.updateTaskTitle(props.taskID, editedTitle.value);
+    editTitleMode.value = false;
+  }
+
+  const titleDisplay = computed(() => {
+    const trimmedTitle = editedTitle.value.trim();
+    return trimmedTitle === "" ? "No title" : trimmedTitle;
+  });
 
   // Funksjon for å sette en delay på en funksjon
   function debounce(fn, delay) {
@@ -136,7 +155,12 @@ import PlanStatus from './PlanStatus.vue';
       <span>{{ props.step }}</span>
     </div>
     <div class="w15">
-      <span>{{ props.title }}</span>
+      <div v-if="editTitleMode">
+        <input type="text" v-model="editedTitle" @blur="updateTitle" @keyup.enter="updateTitle" />
+      </div>
+      <div v-else @click="enableTitleEditMode">
+        {{ titleDisplay }}
+      </div>
     </div>
     <div class="w10">
       <span>{{ props.responsiblePerson }}</span>

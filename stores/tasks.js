@@ -295,6 +295,29 @@ export const useTasksStore = defineStore('tasks', () => {
             console.error('Error updating task comment:', error);
         }
     }
+
+    async function updateTaskTitle(taskID, newTitle) {
+        const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+        if (taskIndex !== -1) {
+            tasks.value[taskIndex].title = newTitle;
+        }
+    
+        try {
+            const response = await fetch(`/tasks/title/${taskID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newTitle: newTitle
+                })
+            });
+        } catch (error) {
+            console.error('Error updating task title:', error);
+        }
+    }
+    
     
     async function deleteTask(taskID, step) {
         try {
@@ -309,5 +332,5 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask };
+    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask, updateTaskTitle };
 });
