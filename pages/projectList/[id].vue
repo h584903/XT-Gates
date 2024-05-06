@@ -16,7 +16,7 @@
               <span>{{ formatEuropeanDate(project.POdate) }}</span>
             </div>
           </div>
-          
+          <!-- SF Date -->
           <div>
             <label>SF Date:</label>
             <div v-if="editSFDateMode">
@@ -27,7 +27,7 @@
               <span>{{ formatEuropeanDate(project.SFdate) }}</span>
             </div>
           </div>
-
+          <!-- PEM -->
            <div>
             <label>PEM:</label>
             <div v-if="editPEM_Mode">
@@ -113,6 +113,7 @@
   };
 
   const enableEditPEM_Mode = () => {
+  editedPEM.value = project.value.PEM;
   editPEM_Mode.value = true;
   editPODateMode.value = false;
   editSFDateMode.value = false;
