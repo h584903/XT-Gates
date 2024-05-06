@@ -13,7 +13,13 @@
             <span>PO Date: {{ formatEuropeanDate(project.POdate) }}</span>
           </div>
           <div>Planned Delivery Date: {{ formatEuropeanDate(project.SFdate) }}</div>
-          <div>PEM: {{ project.PEM }}</div>
+          <div v-if="editPEM_Mode">
+            <input type="text" v-model="editedPEM" @blur="updatePEM" @keyup.enter="updatePEM" @keyup.esc="cancelEdit" />
+            <button @click="cancelEdit">Cancel</button>
+          </div>
+          <div v-else @click="enableEditPEM_Mode">
+            <span>PEM: {{ project.PEM }}</span>
+          </div>
         </div>
       </div>
       <GateList :projectId="project.id"/>
@@ -54,6 +60,8 @@
   const project = ref(null);
   const editPODateMode = ref(false);
   const editedPODate = ref('');
+  const editPEM_Mode = ref(false);
+  const editedPEM = ref('Default Value');
 
   const enableEditPODateMode = () => {
     editPODateMode.value = true;
@@ -66,6 +74,21 @@
       console.error("Failed to update the project:", error);
     } finally {
       editPODateMode.value = false;
+    }
+  };
+
+const enableEditPEM_Mode = () => {
+  editPEM_Mode.value = true;
+  editPODateMode.value = false;
+}
+
+function updatePEM() {
+    try {
+      store.updatePEM(project.value.id, editedPEM.value);
+    } catch (error) {
+      console.error("Failed to update the project:", error);
+    } finally {
+      editPEM_Mode.value = false;
     }
   };
 
@@ -126,6 +149,8 @@ const formatEuropeanDate = (isoDate) => {
 const cancelEdit = () => {
     editedPODate.value = '';
     editPODateMode.value = false;
+    editedPEM.value = '';
+    editPEM_Mode.value = false;
   };
 </script>
 
