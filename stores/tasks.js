@@ -333,5 +333,5 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask };
+    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask, updateTaskResponsiblePerson };
 });
