@@ -295,30 +295,6 @@ export const useTasksStore = defineStore('tasks', () => {
             console.error('Error updating task comment:', error);
         }
     }
-
-    async function updateTaskResponsiblePerson(taskID, newResponsiblePerson) {
-        const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
-        if (taskIndex !== -1) {
-            tasks.value[taskIndex].responsiblePerson = newResponsiblePerson;
-        }
-
-        try {
-            const response = await fetch(`/tasks/responsiblePerson/${taskID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    taskID: taskID,
-                    newResponsiblePerson: newResponsiblePerson
-                })
-            });
-
-            // Handle response if needed
-        } catch (error) {
-            console.error('Error updating task responsible person:', error);
-        }
-    }
     
     async function deleteTask(taskID, step) {
         try {
@@ -333,5 +309,5 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask, updateTaskResponsiblePerson };
+    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask };
 });
