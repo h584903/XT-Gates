@@ -1,4 +1,4 @@
-  < femplate>
+  <template>
     <div class="gate-card">
       <div class="list" @click="isOpen = ! isOpen">
         <div class="gateNR">
@@ -113,6 +113,9 @@ const updateTitle = async () => {
   const deleteGateHandler= () => {
     gateStore.deleteGate(props.gateID, props.projectId);
     toggleModal();
+
+
+
   }
 
 </script>
