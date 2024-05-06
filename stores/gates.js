@@ -89,8 +89,9 @@ export const useGatesStore = defineStore('gates', () => {
                 data: 'Failed to create project'
             });
         }
-
     }
+
+
 
     async function updateGateOrder(newGates) {
         try {
@@ -158,17 +159,64 @@ export const useGatesStore = defineStore('gates', () => {
             const totalDuration = tasks.reduce((total, task) => {
                 return total + task.duration
             }, 0);
-            return totalDuration > 0 ? (totalWeightedProgress / totalDuration) * 100 : 0;
+            const answer = totalDuration > 0 ? (totalWeightedProgress / totalDuration) * 100 : 0
+            setGateScheduleLightDate(gateID, answer)
+            return answer;
+            
         });
     }
 
-    function getGateNR(searchid) {
-        for(let i = 0; i<gates.value.length; i++) {
-            if(searchid === Number(gates.value[i].ID)) {
-                return gates.value[i].gateNR;
-            }
+    async function setGateScheduleLightDate(gateID, progress) {
+        const taskStore = useTasksStore();
+        const PD = getPlannedDate(gateID);
+        const maxTaskDur = taskStore.maxTaskDuration(getProjectID(gateID), getGateNR(gateID) - 1);
+        const remainingDays = maxTaskDur - (progress / 100) * maxTaskDur;
+        
+        const PDDate = new Date(PD);
+        const GSLD = new Date(PDDate.getTime() - remainingDays * 24 * 60 * 60 * 1000);
+        
+        
+        try {
+            const gslDateFormat = GSLD.toISOString().split('T')[0]; // Convert GSLD to ISO string format
+            console.log(gslDateFormat)
+            const response = await fetch(`/gates/lastdate/${gateID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    gateID: gateID,
+                    lastDate: gslDateFormat
+                })
+            });
+        } catch (error) {
+            console.error('Error updating GSLD:', error);
         }
     }
+    
+
+    function getGateNR(searchID) {
+        const gate = gates.value.find(gate => gate.ID === searchID.toString());
+        if (gate) {
+            return gate.gateNR;
+        } else {
+            console.error("Gate with ID " + searchID + " not found.");
+            return null;
+        }
+    }
+
+    function getPlannedDate(gateID) {
+        const gate = gates.value.find(gate => gate.ID === gateID);
+        return gate ? gate.plannedDate : null;
+    }
+    
+    
+
+    function getProjectID(gateID) {
+        const gate = gates.value.find(gate => gate.ID === gateID);
+        return gate ? gate.projectID : null;
+    }
+    
 
     function calculateDaysToEnd(plannedDate) {
         return computed(() => {
@@ -218,6 +266,7 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
-    return { gates, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, updateGateOrder, deleteGate };
+
+    return { gates, getPlannedDate, getProjectID, setGateScheduleLightDate, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, updateGateOrder, deleteGate };
 
 });
