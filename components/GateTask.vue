@@ -45,6 +45,10 @@ const editedComment = ref(props.comment);
 const editCommentMode = ref(false);
 const editedTitle = ref(props.title);
 const editTitleMode = ref(false);
+const editedResponsiblePerson = ref(props.responsiblePerson);
+const editResponsiblePersonMode = ref(false);
+
+
 
   // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
