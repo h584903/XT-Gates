@@ -29,9 +29,10 @@ import PlanStatus from './PlanStatus.vue';
       required: true
   },
   completeDate: {
-      type: String,
-      required: true
-    },
+    type: [String, null],
+    required: true
+},
+
   updateUser: {
       type: String,
       required: true

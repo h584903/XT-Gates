@@ -3,8 +3,12 @@ import { computed } from 'vue';
 
 // Får komponenten til å ta imot en String for datoen
 const props = defineProps({
-  dateString: String
+  dateString: {
+    type: String,
+    default: null
+  }
 });
+
 
 // Computed property to handle date formatting or fallback
 const formattedDate = computed(() => {
