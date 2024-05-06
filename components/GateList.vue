@@ -3,6 +3,7 @@
   import { ref, onMounted } from 'vue';
   import { useGatesStore } from '@/stores/gates';
   import Modal from "@/components/ReusableModal.vue"
+  import draggable from 'vuedraggable'; //Henter vue sin draggable
 
   
 
@@ -15,10 +16,16 @@
 
   const gateStore = useGatesStore();
 
-  const gates = computed(() => {
-    return gateStore.getProjectGates(props.projectId).value;
+  const computedGates = computed(() => gateStore.getProjectGates(props.projectId));
+
+  // lager en non-reactive copy
+  const gates = ref([]);
+
+// ser etter forandringer
+  watch(computedGates, (newGates) => {
+    gates.value = [...newGates];
   });
-  console.log("Dette er gatene: " + gates.value)
+
 
   const hoverIndex = ref(-1); // Index of the gate being hovered over
     
@@ -54,25 +61,36 @@
     toggleModal();
   }
 
+  function onEndDrag(event) {
+    let updatedGates = [...gates.value];
+
+    // (Etter endret liste finner den ut av hvordan de nye stepsene skal se ut)
+    updatedGates.forEach((gate, index) => {
+      gate.gateNR = index + 1;
+    });
+    // Oppdaterer tasks i databasen
+    gateStore.updateGateOrder(updatedGates);
+  }
 
 </script>
 
 <template>
-  <div class="gatelist" @mousemove="handleMouseMove" @mouseleave="resetMouseState">
-    <div v-if="gates.length > 0" v-for="gate, index in gates" :key="gate.ID">
-      <GateEntry :gateID="gate.ID" :gateNR="gate.gateNR" :title="gate.title" :projectId="props.projectId" :completionDate="gate.completionDate" />
-      <!-- Legger til slik at hvis man muser over vil index skifte til den gaten -->
+  <draggable class="gatelist" v-model="gates" @end="onEndDrag" group="gates" item-key="ID" handle=".handle" animation="300"> 
+  <template #item="{ element, index }">
+    <div :key="element.ID">
+      <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" />
       <div
         v-if="index < gates.length - 1"
-        @mouseover="setHoverIndex(index)"
-        @click="addGateBetween(gate.gateNR)"
+        @click="addGateBetween(element.gateNR)"
         class="gate-divider">
       </div>
     </div>
-    <div v-else>
-      No gates found for this project
-    </div>
+  </template>
+  <div v-if="gates.length === 0">
+    No gates found for this project
   </div>
+</draggable>
+
   <Modal @close="toggleModal" :modalActive="modalActive">
     <h1>New Gate</h1>
     <form @submit.prevent="submitForm">

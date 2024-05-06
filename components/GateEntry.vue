@@ -1,9 +1,10 @@
   <template>
     <div class="gate-card">
       <div class="list" @click="isOpen = ! isOpen">
-        <div>
+        <div class="gateNR">
           <span>{{ props.gateNR }}</span>
         </div>
+        <div class="handle">☰</div>
         <div class="title" @click.stop="enableEditMode()" v-if="!editing">
           <span>{{ props.title }}</span>
         </div>
@@ -14,7 +15,7 @@
           <ProgressBar :progressNumber=gateProgress />
         </div>
         <div class="plannedDate">
-          <DateEntry :dateString = plannedDate />
+          <DateEntry :dateString = plannedDate.value />
         </div>
         <div class="remaining">
           <span>test</span>
@@ -96,9 +97,9 @@ const updateTitle = async () => {
   }
 };
 
+  const plannedDate = computed(() => gateStore.calculateDate(props.projectId, props.gateNR));
+  const daysToEnd = computed(() => gateStore.calculateDaysToEnd(plannedDate.value));
 
-  const plannedDate = ref(gateStore.calculateDate(props.projectId, props.gateNR))
-  const daysToEnd = ref(gateStore.calculateDaysToEnd(plannedDate))
 
   const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
@@ -118,6 +119,17 @@ const updateTitle = async () => {
 <style scoped>
 .mb-8 {
   width: 100;
+}
+
+.gateNR {
+  margin: auto;
+  text-align: center;
+}
+
+.handle {
+  cursor: move; /* Cursor indicates movement */
+  padding: 10px;
+  text-align: center;
 }
 
 .gate-card {
