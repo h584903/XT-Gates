@@ -241,13 +241,37 @@ export const useTasksStore = defineStore('tasks', () => {
         
     }
 
+        async function updateTaskResponsiblePerson(taskID, newResponsiblePerson) {
+        const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+        if (taskIndex !== -1) {
+            tasks.value[taskIndex].responsiblePerson = newResponsiblePerson;
+        }
+
+        try {
+            const response = await fetch(`/tasks/responsiblePerson/${taskID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newResponsiblePerson: newResponsiblePerson
+                })
+            });
+
+            // Handle response if needed
+        } catch (error) {
+            console.error('Error updating task responsible person:', error);
+        }
+    }
+
 
     function setTasks(newTasks) {
         tasks.value = newTasks;
     }
-    async function fetchTasks(taskID) {
+    async function fetchTasks(projectID) {
         try {
-            const response = await $fetch('/tasks/' + taskID, {
+            const response = await $fetch('/tasks/' + projectID, {
                 method: 'GET'
             });
 
@@ -296,18 +320,18 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
     
-    async function deleteTask(taskID) {
+    async function deleteTask(taskID, step) {
         try {
+            // Attempt to delete the task by making an API call
             const response = await $fetch(`/tasks/${taskID}`, {
                 method: 'DELETE'
             });
-            // If the deletion from the backend is successful, remove the project from the store
-            tasks.value = tasks.value.filter(task => task.ID !== taskID);
-            
+            fetchTasks(getProjectID(taskID))
+
         } catch (error) {
             console.error("Failed to delete task:", error);
         }
     }
 
-    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask };
+    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask, updateTaskResponsiblePerson };
 });

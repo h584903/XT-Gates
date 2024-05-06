@@ -20,7 +20,7 @@
   const computedTasks = computed(() => taskStore.getGateTasks(props.gateID));
   const tasks = ref(computedTasks.value);  // for å ikke manipulere computed tasks direkte
 
-  // Oppdaterer som vanlig hvis de blir forandret (mulig det ikke trengs tbh)
+  // Oppdaterer som vanlig hvis de blir forandret
   watch(computedTasks, (newTasks) => {
     tasks.value = newTasks;
   });
@@ -61,6 +61,7 @@
     taskStore.addTask(formData.value.ID, props.gateID, formData.value.step,  formData.value.title, formData.value.responsiblePerson, formData.value.duration);
 
   }
+
 </script>
 
 <template>
