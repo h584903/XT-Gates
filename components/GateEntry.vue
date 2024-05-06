@@ -25,6 +25,9 @@
         <div class="completion">
           <DateEntry :dateString = props.completionDate />
         </div>
+        <div class="delete" @click="toggleModal">
+          <img src="/assets/x.svg" />
+        </div>
       </div>
       <CollapseTransition>
         <div v-show="isOpen">
@@ -33,6 +36,13 @@
         </div>
       </CollapseTransition>
     </div>
+    <ReusableModal @close="toggleModal" :modalActive="modalActive">
+      <h1>Delete Gate?</h1>
+      <p>Deleting a gate is absolute, and cannot be reversed. Make certain this is necessary before doing so.</p>
+      <p>Delete gate {{ props.title }}?</p>
+      <button @click="deleteGateHandler" deleteGate class="customButton">Yes</button>
+      <button @click="toggleModal" class="customButton">No</button>
+    </ReusableModal>
   </template>
 
 <script setup>
@@ -92,6 +102,18 @@ const updateTitle = async () => {
 
   const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
+
+// Delete modal
+  const modalActive = ref(false);
+  const toggleModal = () => {
+    modalActive.value = !modalActive.value;
+  };
+
+  const deleteGateHandler= () => {
+    gateStore.deleteGate(props.gateID);
+    toggleModal();
+  }
+
 </script>
 <style scoped>
 .mb-8 {
@@ -147,6 +169,21 @@ hr.solid {
   margin-top: 20px;
   width: 100%;
   border-top: 1px solid whitesmoke;
+}
+
+.delete {
+  margin: auto;
+  width: 24px;  /* Increased to a standard clickable size */
+  height: 24px; /* Matching height to width for consistency */
+  display: flex;  /* Ensures the img element centers inside the div */
+  align-items: center;  /* Centers the img vertically */
+  justify-content: center;  /* Centers the img horizontally */
+  cursor: pointer;
+}
+
+.delete img {
+  max-width: 60%;  /* Ensures the image does not exceed the div size */
+  max-height:60%;  /* Maintains aspect ratio and ensures fitting within the div */
 }
 
 </style>
