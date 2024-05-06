@@ -75,6 +75,10 @@
     daysToEnd: {
       type: Number,
       required: false
+    },
+    responsiblePerson: {
+      type: String,
+      required: true
     }
   });
   const editing = ref(false);
@@ -110,6 +114,9 @@ const updateTitle = async () => {
   const deleteGateHandler= () => {
     gateStore.deleteGate(props.gateID, props.projectId);
     toggleModal();
+
+
+
   }
 
 </script>

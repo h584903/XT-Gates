@@ -3,6 +3,7 @@
 import PlanStatus from './PlanStatus.vue';
 
   const tasksStore = useTasksStore();
+
   const props = defineProps({
   taskID: {
     type: String,
@@ -39,7 +40,9 @@ import PlanStatus from './PlanStatus.vue';
   }
   }) 
   const editedComment = ref(props.comment);
-
+  const editResponsiblePersonMode = ref(false);
+  const editedResponsiblePerson = ref(props.responsiblePerson);
+  
   // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
   const selectedProgress = ref(currentTask ? currentTask.progress : 0);
@@ -67,6 +70,7 @@ import PlanStatus from './PlanStatus.vue';
   function enableEditMode() {
     editMode.value = true;
     editCommentMode.value = false;
+    editResponsiblePersonMode.value = false;
   }
   
   const taskDuration = ref(currentTask ? currentTask.duration : 0);
@@ -90,6 +94,21 @@ import PlanStatus from './PlanStatus.vue';
   const commentDisplay = computed(() => {
   const trimmedComment = editedComment.value.trim();
   return trimmedComment === "" ? "No comment" : trimmedComment;
+});
+
+  function enableResponsiblePersonEditMode() {
+  editResponsiblePersonMode.value = true;
+  editMode.value = false;
+  editCommentMode.value = false;
+  
+}
+function updateResponsiblePerson() {
+  tasksStore.updateTaskResponsiblePerson(props.taskID, editedResponsiblePerson.value);
+  editResponsiblePersonMode.value = false;
+}
+const responsiblePersonDisplay = computed(() => {
+  const trimmedResponsiblePerson = editedResponsiblePerson.value.trim();
+  return trimmedResponsiblePerson === "" ? "No responsible person" : trimmedResponsiblePerson;
 });
 
   // Funksjon for å sette en delay på en funksjon
@@ -123,8 +142,9 @@ import PlanStatus from './PlanStatus.vue';
   }
 
   const deleteTaskHandler= () => {
-    tasksStore.deleteTask(props.taskID);
+    tasksStore.deleteTask(props.taskID, props.step);
     toggleModal();
+
   }
 </script>
 <template>
@@ -137,7 +157,12 @@ import PlanStatus from './PlanStatus.vue';
       <span>{{ props.title }}</span>
     </div>
     <div class="w10">
-      <span>{{ props.responsiblePerson }}</span>
+            <div v-if="editResponsiblePersonMode">
+        <input type="text" v-model="editedResponsiblePerson" @blur="updateResponsiblePerson" @keyup.enter="updateResponsiblePerson" />
+      </div>
+      <div v-else @click="enableResponsiblePersonEditMode">
+        {{ responsiblePersonDisplay }}
+      </div>
     </div>
     <div class="w10">
       <div v-if="updateMode">Update completion date?</div>
