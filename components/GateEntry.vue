@@ -78,6 +78,10 @@
     daysToEnd: {
       type: Number,
       required: false
+    },
+    responsiblePerson: {
+      type: String,
+      required: true
     }
   });
   const editing = ref(false);
