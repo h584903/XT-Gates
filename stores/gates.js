@@ -81,7 +81,7 @@ export const useGatesStore = defineStore('gates', () => {
 
             console.log("calling fetchgates")
             await fetchGates(projectID);
-            updateGateOrder(gates.value)
+            
         } catch (error) {
             return createError({
                 statusCode: 500,
@@ -205,13 +205,13 @@ export const useGatesStore = defineStore('gates', () => {
 
 
     // Deleting a gate
-    async function deleteGate(gateID) {
+    async function deleteGate(gateID, projectID) {
         try {
             const response = await $fetch(`/gates/${gateID}`, {
                 method: 'DELETE'
             });
             // If the deletion from the backend is successful, remove the project from the store
-            gates.value = gates.value.filter(gate => gate.id !== gateID);
+            await fetchGates(projectID);
             
         } catch (error) {
             console.error("Failed to delete gate:", error);

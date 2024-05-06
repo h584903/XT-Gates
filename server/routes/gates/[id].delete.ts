@@ -12,7 +12,9 @@ export default defineEventHandler (async (event) => {
                 data: 'Invalid or missing project ID',
             });
 		} else {
-		const result = await connectAndQuery(`DELETE FROM gateModel WHERE ID = ${id}`);
+		const result = await connectAndQuery(`
+			EXEC DeleteGate @GateID = ${id};
+		`);
 		}
 	} catch (error) {
 		console.log("Error: " + error)
