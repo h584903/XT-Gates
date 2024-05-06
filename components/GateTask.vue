@@ -96,6 +96,21 @@ import PlanStatus from './PlanStatus.vue';
   return trimmedComment === "" ? "No comment" : trimmedComment;
 });
 
+  function enableResponsiblePersonEditMode() {
+  editResponsiblePersonMode.value = true;
+  editMode.value = false;
+  editCommentMode.value = false;
+  
+}
+function updateResponsiblePerson() {
+  tasksStore.updateTaskResponsiblePerson(props.taskID, editedResponsiblePerson.value);
+  editResponsiblePersonMode.value = false;
+}
+const responsiblePersonDisplay = computed(() => {
+  const trimmedResponsiblePerson = editedResponsiblePerson.value.trim();
+  return trimmedResponsiblePerson === "" ? "No responsible person" : trimmedResponsiblePerson;
+});
+
   // Funksjon for å sette en delay på en funksjon
   function debounce(fn, delay) {
     let timeoutId = null;
