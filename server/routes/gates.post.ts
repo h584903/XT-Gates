@@ -8,8 +8,10 @@ export default defineEventHandler(async event => {
 
     //Oppretter prosjektet
     gate = await connectAndQuery(`
-      INSERT INTO gateModel (prosjektID, gateNR, gateTitle)
-      VALUES (${projectID}, ${gateNR}, '${title}')
+      EXEC AdjustAndInsertGate
+      @ProsjektID = ${projectID},
+      @GateNR = ${gateNR},
+      @GateTitle = '${title}';
     `); return { gate };
   } catch (error) {
     console.log("error: " + error)
