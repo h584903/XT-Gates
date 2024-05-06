@@ -15,7 +15,7 @@
 
 .sidebar {
   padding: 10px; /* Omrisset til teksten */
-  position: absolute;
+  position: fixed;
   margin: 0;
   height: 100%;
   font-size: 25px;
