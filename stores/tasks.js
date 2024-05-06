@@ -214,6 +214,18 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
     
+    async function deleteTask(taskID) {
+        try {
+            const response = await $fetch(`/tasks/${taskID}`, {
+                method: 'DELETE'
+            });
+            // If the deletion from the backend is successful, remove the project from the store
+            tasks.value = tasks.value.filter(task => task.ID !== taskID);
+            
+        } catch (error) {
+            console.error("Failed to delete task:", error);
+        }
+    }
 
-    return { tasks, addTask, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime };
+    return { tasks, addTask, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask };
 });

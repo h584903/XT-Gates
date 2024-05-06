@@ -91,6 +91,18 @@ import PlanStatus from './PlanStatus.vue';
   }
 
   const debouncedUpdateProgress = debounce(updateProgress, 1500);
+
+  
+  // Delete modal
+  const modalActive = ref(false);
+  const toggleModal = () => {
+    modalActive.value = !modalActive.value;
+  };
+
+  const deleteTaskHandler= () => {
+    tasksStore.deleteTask(props.taskID);
+    toggleModal();
+  }
 </script>
 <template>
   <div class="list task-card">
@@ -125,16 +137,40 @@ import PlanStatus from './PlanStatus.vue';
       </div>
     </div>
     <div class="w10">
-  <div v-if="editCommentMode">
-    <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
+      <div v-if="editCommentMode">
+        <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
+      </div>
+      <div v-else @click="enableCommentEditMode">
+        <span>{{ props.comment || 'No comment' }}</span>
+      </div>
+    </div>
+    <div class="delete" @click="toggleModal">
+      <img src="assets/x.svg" />
+    </div>
   </div>
-  <div v-else @click="enableCommentEditMode">
-    <span>{{ props.comment || 'No comment' }}</span>
-  </div>
-</div>
-   </div>
+    <ReusableModal @close="toggleModal" :modalActive="modalActive">
+      <h1>Delete Task?</h1>
+      <p>Deleting a task is absolute, and cannot be reversed. Make certain this is necessary before doing so.</p>
+      <p>Delete task {{ props.title }}?</p>
+      <button @click="deleteTaskHandler" deleteTask class="customButton">Yes</button>
+      <button @click="toggleModal" class="customButton">No</button>
+    </ReusableModal>
 </template>
 <style scoped>
+
+.delete {
+  margin: auto;
+  width: 24px;  
+  height: 24px; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.delete img {
+  max-width: 50%; 
+  max-height: 50%;
+}
 
 textarea {
     width: 100%;

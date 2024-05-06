@@ -216,6 +216,22 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
-    return { gates, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle };
+
+
+    // Deleting a gate
+    async function deleteGate(gateID) {
+        try {
+            const response = await $fetch(`/gates/${gateID}`, {
+                method: 'DELETE'
+            });
+            // If the deletion from the backend is successful, remove the project from the store
+            gates.value = gates.value.filter(gate => gate.id !== gateID);
+            
+        } catch (error) {
+            console.error("Failed to delete gate:", error);
+        }
+    }
+
+    return { gates, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, deleteGate };
 
 });
