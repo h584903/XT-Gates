@@ -157,7 +157,12 @@ const responsiblePersonDisplay = computed(() => {
       <span>{{ props.title }}</span>
     </div>
     <div class="w10">
-      <span>{{ props.responsiblePerson }}</span>
+            <div v-if="editResponsiblePersonMode">
+        <input type="text" v-model="editedResponsiblePerson" @blur="updateResponsiblePerson" @keyup.enter="updateResponsiblePerson" />
+      </div>
+      <div v-else @click="enableResponsiblePersonEditMode">
+        {{ responsiblePersonDisplay }}
+      </div>
     </div>
     <div class="w10">
       <div v-if="updateMode">Update completion date?</div>
