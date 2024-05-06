@@ -205,7 +205,7 @@ const responsiblePersonDisplay = computed(() => {
       </div>
       <div v-else>{{ props.updateUser }}</div>
     </div>
-    <div class="w5">
+    <div class="w10">
         <input type="range" min="0" max="100" step="25" v-model="selectedProgress" @change="debouncedUpdateProgress" />
     </div>
     <div class="w5">

@@ -15,14 +15,16 @@
 
 .sidebar {
   padding: 10px; /* Omrisset til teksten */
+  position: absolute;
   margin: 0;
+  height: 100%;
   font-size: 25px;
-  position:fixed; /* Beholder posisjonen til sidebaren */
   min-height: 100vh; /* Minste størrelsen er på størrelsen med skjermen */
   z-index: 700; /* Beholder komponenten fremst */
   display: flex;
   flex-direction: column; /* Fordeler hver item i sidebar nedover */
   background-color: var(--sideBarColor);
+  width: 12%;
 }
 
 /* Hover og tekststyling */

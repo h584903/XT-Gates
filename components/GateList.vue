@@ -75,6 +75,10 @@
 </script>
 
 <template>
+  <div class="descWrapper">
+    <GateDesc/>
+  </div>
+  <hr class="solid"/>
   <draggable class="gatelist" v-model="gates" @end="onEndDrag" group="gates" item-key="ID" handle=".handle" animation="300"> 
   <template #item="{ element, index }">
     <div :key="element.ID">
@@ -136,6 +140,10 @@
 hr.solid {
   width: 100%;
   border-top: 1px solid grey;
+}
+.descWrapper {
+  width: 92%;
+  margin: auto;
 }
 
 </style>

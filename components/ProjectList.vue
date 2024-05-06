@@ -72,7 +72,7 @@ const toggleModal = () => {
 .list-wrapper {
   display: flex;
   flex-direction: column;
-  width: 90%
+  width: 100%
 }
 .addButton{
   background-color: rgb(77,77,77);
