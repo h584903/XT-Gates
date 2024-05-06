@@ -1,4 +1,4 @@
-// routes/gates/[id].get.ts
+// routes/tasks/[id].get.ts
 
 //slette prosjekt
 export default defineEventHandler (async (event) => {
@@ -9,16 +9,18 @@ export default defineEventHandler (async (event) => {
 			return createError({
                 statusCode: 400,
                 statusMessage: 'Bad Request',
-                data: 'Invalid or missing gate ID',
+                data: 'Invalid or missing task ID',
             });
 		} else {
-		const result = await connectAndQuery(`DELETE FROM taskModel WHERE ID = ${id}`);
+		const result = await connectAndQuery(`
+			EXEC DeleteTask @TaskID = ${id};
+		`);
 		}
 	} catch (error) {
 		return createError({
 			statusCode: 400,
                 statusMessage: 'Bad Request',
-                data: 'Invalid or missing gate ID',
+                data: 'Invalid or missing task ID',
 		  });
 	}
 });

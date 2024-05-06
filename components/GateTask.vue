@@ -3,6 +3,7 @@
 import PlanStatus from './PlanStatus.vue';
 
   const tasksStore = useTasksStore();
+
   const props = defineProps({
   taskID: {
     type: String,
@@ -117,8 +118,9 @@ import PlanStatus from './PlanStatus.vue';
   }
 
   const deleteTaskHandler= () => {
-    tasksStore.deleteTask(props.taskID);
+    tasksStore.deleteTask(props.taskID, props.step);
     toggleModal();
+
   }
 </script>
 <template>

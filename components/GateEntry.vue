@@ -1,4 +1,4 @@
-  <template>
+  < femplate>
     <div class="gate-card">
       <div class="list" @click="isOpen = ! isOpen">
         <div class="gateNR">
