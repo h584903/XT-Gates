@@ -178,7 +178,7 @@ const responsiblePersonDisplay = computed(() => {
     <div class="w5">
       <span>{{ props.step }}</span>
     </div>
-    <div class="w15">
+    <div class="w15 edit">
       <div v-if="editTitleMode">
         <input type="text" v-model="editedTitle" @blur="updateTitle" @keyup.enter="updateTitle" />
       </div>
@@ -186,7 +186,7 @@ const responsiblePersonDisplay = computed(() => {
         {{ titleDisplay }}
       </div>
     </div>
-    <div class="w10">
+    <div class="w10 edit">
             <div v-if="editResponsiblePersonMode">
         <input type="text" v-model="editedResponsiblePerson" @blur="updateResponsiblePerson" @keyup.enter="updateResponsiblePerson" />
       </div>
@@ -211,7 +211,7 @@ const responsiblePersonDisplay = computed(() => {
     <div class="w5">
       <PlanStatus :onSchedule=planStatus />
     </div>
-    <div class="w5">
+    <div class="w5 edit">
       <div v-if="editMode">
         <input type="number" v-model.number="taskDuration" @blur="updateDuration" @keyup.enter="updateDuration">
       </div>
@@ -219,7 +219,7 @@ const responsiblePersonDisplay = computed(() => {
         {{ taskDuration }} days
       </div>
     </div>
-    <div class="w10">
+    <div class="w10 edit">
       <div v-if="editCommentMode">
         <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
       </div>
@@ -253,6 +253,10 @@ const responsiblePersonDisplay = computed(() => {
 .delete img {
   max-width: 50%; 
   max-height: 50%;
+}
+
+.edit {
+  cursor: pointer;
 }
 
 textarea {
@@ -305,5 +309,9 @@ textarea {
 }
 .w5 input {
   width: 100%;
+}
+.w10 input {
+  width: 100%;
+  cursor: pointer;
 }
 </style>

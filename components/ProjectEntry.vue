@@ -1,5 +1,6 @@
 <template>
   <!-- Følger prototypen til figma -->
+  <NuxtLink :to="'projectList/' + entryData.id">
   <div class="list project-card">
     <div class="titleWrapper" @click="enableEditMode" v-if="!editMode">
       <span>{{ entryData.title }}</span>
@@ -31,6 +32,7 @@
       </div>
     </div>
   </div>
+  </NuxtLink>
 </template>
 
 <script setup>
@@ -111,7 +113,12 @@ const toggleModal = () => {
   flex-direction: row;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
 .project-card {
+
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 20px;
