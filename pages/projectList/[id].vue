@@ -4,7 +4,11 @@
       <div class="title">
         <h1>{{ project.title }}</h1>
         <!--Skal oppdateres med komponent etter merge-->
-        <h2>PO Date: {{ formatEuropeanDate(project.POdate) }}</h2>
+        <div class="info">
+          <div>PO Date: {{ formatEuropeanDate(project.POdate) }}</div>
+          <div>Planned Delivery Date: {{ formatEuropeanDate(project.SFdate) }}</div>
+          <div>PEM: {{ project.PEM }}</div>
+        </div>
       </div>
       <GateList :projectId="project.id"/>
       <!-- Brukes for å kunne ha ting på en linje etter listen -->

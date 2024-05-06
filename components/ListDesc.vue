@@ -8,7 +8,7 @@
             <ProgressBar />
         </div>
         <div class="dateWrapper">
-            <span>Planned Delivery date</span>
+            <span>Planned Delivery Date</span>
         </div>
         <div class="dateWrapper">
             <span>PO Date</span>
