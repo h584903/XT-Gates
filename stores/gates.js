@@ -36,6 +36,7 @@ export const useGatesStore = defineStore('gates', () => {
 
     function setGates(newGates) {
         console.log("gateStore: " + newGates)
+        // måtte legge til .value her
         gates.value = newGates;
     }
 
@@ -92,14 +93,6 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     async function updateGateOrder(newGates) {
-        let i = 1
-        newGates.sort((a, b) => a.gateNR - b.gateNR);
-        
-        newGates.forEach(gate => {
-            console.log("This is the index: " + i)
-            gate.gateNR = i;
-            i++
-        });
         try {
             const response = await fetch(`/gates/order`, {
                 method: 'PUT',
@@ -110,7 +103,6 @@ export const useGatesStore = defineStore('gates', () => {
                     gates: newGates
                 })
             });
-            setGates(newGates);
         } catch (error) {
             console.error('Error updating gates order:', error);
         }
@@ -150,9 +142,10 @@ export const useGatesStore = defineStore('gates', () => {
 
     // Henter gates til et spesifikt prosjekt
     function getProjectGates(projectID) {
-        return computed(() => gates.value.filter(gate => gate.projectID === projectID).sort((a, b) => a.gateNR - b.gateNR));
+        const filteredGates = gates.value.filter(gate => gate.projectID === projectID);
+        filteredGates.sort((a, b) => a.gateNR - b.gateNR);
+        return filteredGates;
     }
-
 
     function getGateProgress(gateID) {
         const taskStore = useTasksStore();
@@ -225,6 +218,6 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
-    return { gates, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, deleteGate };
+    return { gates, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, updateGateOrder, deleteGate };
 
 });
