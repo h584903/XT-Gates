@@ -215,10 +215,34 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
     
+    async function updateSFDate(projectID, newSFDate) {
+        // Find the project by ID
+        const projectIndex = projects.value.findIndex(project => project.id === projectID);
+        if (projectIndex !== -1) {
+            // Update the POdate property of the project
+            projects.value[projectIndex].SFdate = newSFDate;
+        }
     
+        try {
+            // Make a PUT request to update the POdate in the backend
+            const response = await fetch(`/projects/SFdate/${projectID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectID: projectID,
+                    newSFDate: newSFDate
+                })
+            });
+            // Handle response if needed
+        } catch (error) {
+            console.error('Error updating project SFdate:', error);
+        }
+    }
     
     
 
-  return { getTemplate, filteredProjects, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle, updateProjectComment, updatePODate}
+  return { getTemplate, filteredProjects, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle, updateProjectComment, updatePODate, updateSFDate}
 
 });

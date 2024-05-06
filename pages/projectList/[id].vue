@@ -12,7 +12,15 @@
           <div v-else @click="enableEditPODateMode">
             <span>PO Date: {{ formatEuropeanDate(project.POdate) }}</span>
           </div>
-          <div>Planned Delivery Date: {{ formatEuropeanDate(project.SFdate) }}</div>
+          
+          <div v-if="editSFDateMode">
+            <input type="date" v-model="editedSFDate" @blur="updateSFDate" @keyup.enter="updateSFDate" @keyup.esc="cancelEdit" />
+            <button @click="cancelEdit">Cancel</button>
+          </div>
+          <div v-else @click="enableEditSFDateMode">
+            <span>SF Date: {{ formatEuropeanDate(project.SFdate) }}</span>
+          </div>
+
           <div>PEM: {{ project.PEM }}</div>
         </div>
       </div>
@@ -44,7 +52,6 @@
   import { useProjectsStore } from '@/stores/projects';
   import { useGatesStore } from '@/stores/gates';
   import { useTasksStore } from '@/stores/tasks';
-  import { ref, defineProps } from 'vue';
 
   const store = useProjectsStore();
   const gateStore = useGatesStore();
@@ -54,11 +61,12 @@
   const project = ref(null);
   const editPODateMode = ref(false);
   const editedPODate = ref('');
+  const editSFDateMode = ref(false);
+  const editedSFDate = ref('');
 
   const enableEditPODateMode = () => {
     editPODateMode.value = true;
   }
-
   function updatePODate() {
     try {
       store.updatePODate(project.value.id, editedPODate.value);
@@ -66,6 +74,19 @@
       console.error("Failed to update the project:", error);
     } finally {
       editPODateMode.value = false;
+    }
+  };
+
+  const enableEditSFDateMode = () => {
+    editSFDateMode.value = true;
+  }
+  function updateSFDate() {
+    try {
+      store.updateSFDate(project.value.id, editedSFDate.value);
+    } catch (error) {
+      console.error("Failed to update the project:", error);
+    } finally {
+      editSFDateMode.value = false;
     }
   };
 
@@ -126,6 +147,8 @@ const formatEuropeanDate = (isoDate) => {
 const cancelEdit = () => {
     editedPODate.value = '';
     editPODateMode.value = false;
+    editedSFDate.value = '';
+    editSFDateMode.value = false;
   };
 </script>
 
