@@ -245,9 +245,9 @@ export const useTasksStore = defineStore('tasks', () => {
     function setTasks(newTasks) {
         tasks.value = newTasks;
     }
-    async function fetchTasks(taskID) {
+    async function fetchTasks(projectID) {
         try {
-            const response = await $fetch('/tasks/' + taskID, {
+            const response = await $fetch('/tasks/' + projectID, {
                 method: 'GET'
             });
 
@@ -320,14 +320,14 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
     
-    async function deleteTask(taskID) {
+    async function deleteTask(taskID, step) {
         try {
+            // Attempt to delete the task by making an API call
             const response = await $fetch(`/tasks/${taskID}`, {
                 method: 'DELETE'
             });
-            // If the deletion from the backend is successful, remove the project from the store
-            tasks.value = tasks.value.filter(task => task.ID !== taskID);
-            
+            fetchTasks(getProjectID(taskID))
+
         } catch (error) {
             console.error("Failed to delete task:", error);
         }

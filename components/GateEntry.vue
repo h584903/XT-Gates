@@ -92,6 +92,20 @@ const updateTitle = async () => {
 
   const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
+
+// Delete modal
+  const modalActive = ref(false);
+  const toggleModal = () => {
+    modalActive.value = !modalActive.value;
+  };
+
+  const deleteGateHandler= () => {
+    gateStore.deleteGate(props.gateID, props.projectId);
+    toggleModal();
+
+
+
+  }
 </script>
 <style scoped>
 .mb-8 {
