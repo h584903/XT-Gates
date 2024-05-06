@@ -86,6 +86,11 @@ import PlanStatus from './PlanStatus.vue';
     editCommentMode.value = false;
   }
 
+  const commentDisplay = computed(() => {
+  const trimmedComment = editedComment.value.trim();
+  return trimmedComment === "" ? "No comment" : trimmedComment;
+});
+
   // Funksjon for å sette en delay på en funksjon
   function debounce(fn, delay) {
     let timeoutId = null;
@@ -163,7 +168,7 @@ import PlanStatus from './PlanStatus.vue';
         <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
       </div>
       <div v-else @click="enableCommentEditMode">
-        <span>{{ props.comment || 'No comment' }}</span>
+        <span>{{ commentDisplay }}</span>
       </div>
     </div>
     <div class="delete" @click="toggleModal">
