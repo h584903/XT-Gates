@@ -37,7 +37,7 @@ export const useProjectsStore = defineStore('projects', () => {
                 id: project.ID,
                 title: project.title,
                 progress: project.progress,
-                onTime: project.onTime,
+                onTimeDate: project.onTimeDate,
                 PEM: project.PEM,
                 comment: project.comment,
                 POdate: project.POdate,

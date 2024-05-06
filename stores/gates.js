@@ -178,7 +178,6 @@ export const useGatesStore = defineStore('gates', () => {
         
         try {
             const gslDateFormat = GSLD.toISOString().split('T')[0]; // Convert GSLD to ISO string format
-            console.log(gslDateFormat)
             const response = await fetch(`/gates/lastdate/${gateID}`, {
                 method: 'PUT',
                 headers: {

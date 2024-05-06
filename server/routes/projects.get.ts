@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   let organizedData = {};
 
   try {
-    projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress FROM projectModel pm LEFT JOIN ProjectAverageProgress pavg ON pm.ID = pavg.ID;")
+    projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress, podv.onTimeDate FROM projectModel pm LEFT JOIN ProjectAverageProgress pavg ON pm.ID = pavg.ID LEFT JOIN ProjectOnTimeDateView podv ON pm.ID = podv.prosjektID;")
 
   } catch (error) {
     return createError({
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         ID: IDAsString,
         title: row.title,
         progress: row.AverageProgress,
-        onTime: row.onTime,
+        onTimeDate: row.onTimeDate,
         PEM: row.PEM,
         comment: row.COMMENT,
         POdate: row.POdate,
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
         step: row.step,
         title: row.title,
         responsiblePerson: row.responsiblePerson,
-        onTime: row.onTime,
+        onTimeDate: row.onTimeDate,
         progress: row.progress,
         duration: row.duration
       });
