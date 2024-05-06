@@ -1,6 +1,5 @@
-// projects.post.ts 
 export default defineEventHandler(async event => {
-  let projects;
+  let gate;
 
   try {
 
@@ -8,12 +7,10 @@ export default defineEventHandler(async event => {
     const { projectID, gateNR, title } = body;
 
     //Oppretter prosjektet
-    projects = await connectAndQuery(`
+    gate = await connectAndQuery(`
       INSERT INTO gateModel (prosjektID, gateNR, gateTitle)
       VALUES (${projectID}, ${gateNR}, '${title}')
-    `);
-
-    return { updated: true };
+    `); return { gate };
   } catch (error) {
     console.log("error: " + error)
     return createError({

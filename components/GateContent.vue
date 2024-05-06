@@ -2,6 +2,7 @@
   // Henter task storen
   import { useTasksStore } from '@/stores/tasks';
   import draggable from 'vuedraggable'; //Henter vue sin draggable
+  import Modal from "@/components/ReusableModal.vue"
 
   // Henter de ulike variablene fra gaten
   const props = defineProps({
@@ -35,6 +36,31 @@
     taskStore.updateTasksOrder(updatedTasks);
   }
 
+  const formData = ref({
+    title: '',
+    duration: '',
+    step: '',
+    responsiblePerson: '',
+    ID: ''
+  })
+
+  const modalActive = ref(false);
+  const toggleModal = () => {
+    modalActive.value = !modalActive.value;
+  };
+
+  function addTaskBetween(step, ID) {
+    console.log("Adding a task between tasks with NR:" + step);
+    toggleModal();
+    formData.value.step = step;
+    formData.value.ID = ID;
+  };
+
+  const submitForm = () => {
+    toggleModal();
+    taskStore.addTask(formData.value.ID, props.gateID, formData.value.step,  formData.value.title, formData.value.responsiblePerson, formData.value.duration);
+
+  }
 </script>
 
 <template>
@@ -42,12 +68,27 @@
   <template #item="{element, index}">
     <div :key="element.ID">
       <GateTask :task="element" :taskID="element.ID" :step="element.step" :title="element.title" :duration="element.duration" :responsiblePerson="element.responsiblePerson" :complete-date="element.completeDate" :comment="element.comment || ''" />
+      <div
+        @click="addTaskBetween(element.step, element.ID)"
+        class="task-divider">
+      </div>
     </div>
   </template>
   <div v-if="tasks.length === 0">
     No tasks found for this gate
   </div>
   </draggable>
+  <Modal @close="toggleModal" :modalActive="modalActive">
+    <h1>New Task</h1>
+    <form @submit.prevent="submitForm">
+      <label>Task title: </label>
+      <input type="text" id="title" v-model="formData.title" required><br>
+      <input type="text" id="responsiblePerson" v-model="formData.responsiblePerson" required><br>
+      <input type="number" id="duration" v-model="formData.duration" required><br>
+      <button type="submit" class="addButton">Create Task</button>
+    </form>
+    <button class="closeButton" @click="toggleModal">Cancel</button>
+  </Modal>
 </template>
 
 <style scoped>
@@ -57,6 +98,13 @@
   justify-content: space-between;
 }
 
+.task-divider{
+  left: 0;
+  right: 0;
+  height: 8px;
+  cursor: copy;
+  background-color: transparent;
+}
 .list * {
   margin: auto;
   text-align: center;

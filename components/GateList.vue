@@ -26,11 +26,6 @@
     hoverIndex.value = index;
   };
 
-  const handleMouseMove = (event) => {
-    // Implement logic to change cursor to plus sign if between gates
-    // You can use hoverIndex.value to determine if between gates
-  };
-
   const resetMouseState = () => {
     hoverIndex.value = -1; // Reset hoverIndex when mouse leaves gate list
   };
@@ -66,7 +61,7 @@
   <div class="gatelist" @mousemove="handleMouseMove" @mouseleave="resetMouseState">
     <div v-if="gates.length > 0" v-for="gate, index in gates" :key="gate.ID">
       <GateEntry :gateID="gate.ID" :gateNR="gate.gateNR" :title="gate.title" :projectId="props.projectId" :completionDate="gate.completionDate" />
-      <!-- Add mouseover and click listeners to each gate -->
+      <!-- Legger til slik at hvis man muser over vil index skifte til den gaten -->
       <div
         v-if="index < gates.length - 1"
         @mouseover="setHoverIndex(index)"
@@ -81,9 +76,9 @@
   <Modal @close="toggleModal" :modalActive="modalActive">
     <h1>New Gate</h1>
     <form @submit.prevent="submitForm">
-      <label>Project title: </label>
+      <label>Gate title: </label>
       <input type="text" id="title" v-model="formData.title" required><br>
-      <button type="submit" class="addButton">Create Project</button>
+      <button type="submit" class="addButton">Create Gate</button>
     </form>
     <button class="closeButton" @click="toggleModal">Cancel</button>
   </Modal>
