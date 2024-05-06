@@ -34,6 +34,7 @@ import PlanStatus from './PlanStatus.vue';
     required: true
 },
 
+
 updateUser: {
   type: String,
   required: true
@@ -72,6 +73,7 @@ const editTitleMode = ref(false);
     editMode.value = true;
     editCommentMode.value = false;
     editTitleMode.value = false;
+    editResponsiblePersonMode.value = false;
   }
   
   const taskDuration = ref(currentTask ? currentTask.duration : 0);
@@ -85,6 +87,7 @@ const editTitleMode = ref(false);
       editCommentMode.value = true;
       editMode.value = false;
       editTitleMode.value = false;
+      editResponsiblePersonMode.value = false;
   }
 
   function updateComment() {
@@ -97,9 +100,11 @@ const editTitleMode = ref(false);
   return trimmedComment === "" ? "No comment" : trimmedComment;
 });
 
+
   function enableTitleEditMode() {
     editTitleMode.value = true;
     editMode.value = false;
+    editResponsiblePersonMode.value = false;
     editCommentMode.value = false;
   }
   function updateTitle() {
@@ -111,6 +116,21 @@ const editTitleMode = ref(false);
     const trimmedTitle = editedTitle.value.trim();
     return trimmedTitle === "" ? "No title" : trimmedTitle;
   });
+
+  function enableResponsiblePersonEditMode() {
+  editResponsiblePersonMode.value = true;
+  editMode.value = false;
+  editCommentMode.value = false;
+  
+}
+function updateResponsiblePerson() {
+  tasksStore.updateTaskResponsiblePerson(props.taskID, editedResponsiblePerson.value);
+  editResponsiblePersonMode.value = false;
+}
+const responsiblePersonDisplay = computed(() => {
+  const trimmedResponsiblePerson = editedResponsiblePerson.value.trim();
+  return trimmedResponsiblePerson === "" ? "No responsible person" : trimmedResponsiblePerson;
+});
 
   // Funksjon for å sette en delay på en funksjon
   function debounce(fn, delay) {
@@ -163,7 +183,12 @@ const editTitleMode = ref(false);
       </div>
     </div>
     <div class="w10">
-      <span>{{ props.responsiblePerson }}</span>
+            <div v-if="editResponsiblePersonMode">
+        <input type="text" v-model="editedResponsiblePerson" @blur="updateResponsiblePerson" @keyup.enter="updateResponsiblePerson" />
+      </div>
+      <div v-else @click="enableResponsiblePersonEditMode">
+        {{ responsiblePersonDisplay }}
+      </div>
     </div>
     <div class="w10">
       <div v-if="updateMode">Update completion date?</div>
