@@ -4,7 +4,7 @@ export default defineEventHandler(async event => {
     const body = await readBody(event);
     const { taskID, newProgress } = body;
 
-    if (!taskID || !newProgress) {
+    if (!taskID) {
       // Sender en error hvis requesten er feil
       return createError({
         statusCode: 400,
@@ -13,6 +13,7 @@ export default defineEventHandler(async event => {
       });
     }
 
+    console.log("This is newProgress in API: " + newProgress)
 
     // Update the task in the database
     await connectAndQuery(`UPDATE taskModel SET progress = ${newProgress} WHERE ID = ${taskID}`);
