@@ -1,10 +1,10 @@
   <template>
     <div class="gate-card">
       <div class="list" @click="isOpen = ! isOpen">
+        <div class="handle">☰</div>
         <div class="gateNR">
           <span>{{ props.gateNR }}</span>
         </div>
-        <div class="handle">☰</div>
         <div class="title" @click.stop="enableEditMode()" v-if="!editing">
           <span>{{ props.title }}</span>
         </div>
@@ -16,9 +16,6 @@
         </div>
         <div class="plannedDate">
           <DateEntry :dateString = plannedDate.value />
-        </div>
-        <div class="remaining">
-          <span>test</span>
         </div>
         <div class="daysToEnd">
           <span>{{daysToEnd}}</span>
@@ -124,6 +121,7 @@ const updateTitle = async () => {
 .gateNR {
   margin: auto;
   text-align: center;
+  width: 5%;
 }
 
 .handle {

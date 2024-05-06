@@ -1,4 +1,4 @@
-<template>
+<template class="allWrapper">
   <div> event id: {{ route.params.id}}
     <div class="wrapper" v-if="project">
       <div class="title">
@@ -91,9 +91,14 @@ const deleteProjectHandler= () => {
 
 <style scoped>
 .wrapper {
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+}
+
+.allWrapper {
+  margin:auto;
 }
 
 .title {

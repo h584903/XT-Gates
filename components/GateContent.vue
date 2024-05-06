@@ -64,6 +64,7 @@
 </script>
 
 <template>
+  <TaskDesc class="descWrapper"/>
   <draggable class="listGate" v-model="tasks" @end="onEndDrag" group="tasks" item-key="ID" handle=".handle" animation="300"> 
   <template #item="{element, index}">
     <div :key="element.ID">
@@ -120,5 +121,13 @@
 }
 .w5 {
   width: 5%;
+}
+.descWrapper{
+  width: 84%;
+  margin: auto;
+}
+hr.solid {
+  width: 100%;
+  border-top: 1px solid whitesmoke;
 }
 </style>

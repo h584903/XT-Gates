@@ -5,7 +5,7 @@
       <sideBar />
     </div>
     <div class="slot_wrapper">
-      <slot /> <!-- Her ligger siden som hentes fra page mappen -->
+      <slot/> <!-- Her ligger siden som hentes fra page mappen -->
     </div>
   </div>
 </template>
@@ -23,9 +23,13 @@ body {
     background-color: whitesmoke;
 }
 .slot_wrapper {
-  flex: 5; /* 5/1 fordeling mellom sidebar og slot */
+  flex: 6; /* 5/1 fordeling mellom sidebar og slot */
+  margin-left: 3%;
+  margin-right: 3%;
+  justify-content: center;
 }
 .sidebar_wrapper {
-  flex: 1;
+  width: 12%;
+  background-color: var(--sideBarColor);
 }
 </style>
