@@ -96,6 +96,9 @@ export const useTasksStore = defineStore('tasks', () => {
                     newProgress: newProgress
                 })
             });
+            const gateStore = useGatesStore();
+            console.log("Starting up updateGateProgress")
+            gateStore.updateGateProgress(getGateID(taskID));
         } catch (error) {
             console.error('Error updating task progress:', error);
         }
@@ -119,6 +122,8 @@ export const useTasksStore = defineStore('tasks', () => {
                     newDuration: newDuration
                     })
             });
+            const gateStore = useGatesStore();
+            gateStore.updateGateProgress(getGateID(taskID));
         } catch (error) {
             console.error('Error updating task duration:', error);
         }
