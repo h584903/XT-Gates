@@ -4,7 +4,7 @@
       <div class="title">
         <h1>{{ project.title }}</h1>
         <!--Skal oppdateres med komponent etter merge-->
-        <h2>PO Date</h2>
+        <h2>PO Date: {{ formatEuropeanDate(project.POdate) }}</h2>
       </div>
       <GateList :projectId="project.id"/>
       <!-- Brukes for å kunne ha ting på en linje etter listen -->
@@ -87,6 +87,14 @@ const deleteProjectHandler= () => {
   toggleModal();
   router.push('/projectlist');
 }
+
+const formatEuropeanDate = (isoDate) => {
+  const date = new Date(isoDate);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+};
 </script>
 
 <style scoped>
