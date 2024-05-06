@@ -1,14 +1,14 @@
   <template>
-    <div class="gate-card">
-      <div class="list" @click="isOpen = ! isOpen">
+    <div class="gate-card" @click.capture="openCollapsable">
+      <div class="list" >
         <div class="handle">☰</div>
         <div class="gateNR">
           <span>{{ props.gateNR }}</span>
         </div>
-        <div class="title" @click.stop="enableEditMode()" v-if="!editing">
+        <div class="title edit" @click.stop="enableEditMode()" v-if="!editing">
           <span>{{ props.title }}</span>
         </div>
-        <div v-else>
+        <div v-else class="title">
           <input v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
         </div>
         <div class="progress">
@@ -23,11 +23,11 @@
         <div class="completion">
           <DateEntry :dateString = props.completionDate />
         </div>
-        <div class="delete" @click="toggleModal">
+        <div class="delete" @click.stop="toggleModal">
           <img src="/assets/x.svg" />
         </div>
       </div>
-      <CollapseTransition>
+      <CollapseTransition class ="collapsable">
         <div v-show="isOpen">
           <hr class="solid">
           <GateContent :gateID = props.gateID />
@@ -114,15 +114,22 @@ const updateTitle = async () => {
   const deleteGateHandler= () => {
     gateStore.deleteGate(props.gateID, props.projectId);
     toggleModal();
+  }
 
-
-
+  function openCollapsable(event) {
+    if (!event.target.closest('.collapsable') && !event.target.closest('.title')) {
+        isOpen.value = !isOpen.value;
+    }
   }
 
 </script>
 <style scoped>
 .mb-8 {
   width: 100;
+}
+
+.edit {
+  cursor: pointer;
 }
 
 .gateNR {

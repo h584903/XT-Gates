@@ -4,7 +4,17 @@
       <div class="title">
         <h1>{{ project.title }}</h1>
         <!--Skal oppdateres med komponent etter merge-->
-        <h2>PO Date: {{ formatEuropeanDate(project.POdate) }}</h2>
+        <div class="info">
+          <div v-if="editPODateMode">
+            <input type="date" v-model="editedPODate" @blur="updatePODate" @keyup.enter="updatePODate" @keyup.esc="cancelEdit" />
+            <button @click="cancelEdit">Cancel</button>
+          </div>
+          <div v-else @click="enableEditPODateMode">
+            <span>PO Date: {{ formatEuropeanDate(project.POdate) }}</span>
+          </div>
+          <div>Planned Delivery Date: {{ formatEuropeanDate(project.SFdate) }}</div>
+          <div>PEM: {{ project.PEM }}</div>
+        </div>
       </div>
       <GateList :projectId="project.id"/>
       <!-- Brukes for å kunne ha ting på en linje etter listen -->
@@ -34,6 +44,7 @@
   import { useProjectsStore } from '@/stores/projects';
   import { useGatesStore } from '@/stores/gates';
   import { useTasksStore } from '@/stores/tasks';
+  import { ref, defineProps } from 'vue';
 
   const store = useProjectsStore();
   const gateStore = useGatesStore();
@@ -41,6 +52,22 @@
   const route = useRoute();
   const router = useRouter();
   const project = ref(null);
+  const editPODateMode = ref(false);
+  const editedPODate = ref('');
+
+  const enableEditPODateMode = () => {
+    editPODateMode.value = true;
+  }
+
+  function updatePODate() {
+    try {
+      store.updatePODate(project.value.id, editedPODate.value);
+    } catch (error) {
+      console.error("Failed to update the project:", error);
+    } finally {
+      editPODateMode.value = false;
+    }
+  };
 
   onMounted(async () => {
     const projectId = route.params.id; // parser routen til en int og spesifiserer base 10 
@@ -95,6 +122,11 @@ const formatEuropeanDate = (isoDate) => {
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 };
+
+const cancelEdit = () => {
+    editedPODate.value = '';
+    editPODateMode.value = false;
+  };
 </script>
 
 <style scoped>
@@ -124,4 +156,15 @@ const formatEuropeanDate = (isoDate) => {
 .customButton {
   margin: 10px;
 }
+
+textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
 </style>
