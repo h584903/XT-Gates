@@ -1,12 +1,34 @@
 <script setup>
-  // Får komponenten til å ta imot en String for datoen
-  const props = defineProps({
-    dateString: String
-  })
+import { computed } from 'vue';
+
+// Får komponenten til å ta imot en String for datoen
+const props = defineProps({
+  dateString: String
+});
+
+// Computed property to handle date formatting or fallback
+const formattedDate = computed(() => {
+  if (!props.dateString) {
+    // Return dashes if dateString is null or undefined
+    return '---';
+  }
+  
+  // Attempt to parse and format the date
+  const date = new Date(props.dateString);
+  
+  // Check if the date is valid
+  if (isNaN(date)) {
+    return '---';
+  }
+  
+  return date.toLocaleDateString();
+});
 </script>
+
 <template>
   <div>
-    <!-- Her oversettes datoen og gjøres om til riktig format ut ifra lokalet -->
-    {{ new Date(props.dateString).toLocaleDateString() }}
+    <!-- Display the formatted date or dashes -->
+    {{ formattedDate }}
   </div>
 </template>
+

@@ -8,8 +8,8 @@ export default defineEventHandler(async event => {
 
     //Oppretter prosjektet
     task = await connectAndQuery(`
-      INSERT INTO taskModel (prosjektID, gateID, step, title, responsiblePerson, onTime, progress, duration, comment, completeDate)
-      VALUES (${projectID}, ${gateID}, ${step}, '${title}', '${responsiblePerson}', 0, 0, ${duration}, '', '12-12-2024' )
+      INSERT INTO taskModel (prosjektID, gateID, step, title, responsiblePerson, onTime, progress, duration)
+      VALUES (${projectID}, ${gateID}, ${step}, '${title}', '${responsiblePerson}', 0, 0, ${duration})
     `);
 
     return { task };
