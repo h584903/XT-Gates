@@ -40,7 +40,9 @@ import PlanStatus from './PlanStatus.vue';
   }
   }) 
   const editedComment = ref(props.comment);
-
+  const editResponsiblePersonMode = ref(false);
+  const editedResponsiblePerson = ref(props.responsiblePerson);
+  
   // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
   const selectedProgress = ref(currentTask ? currentTask.progress : 0);
