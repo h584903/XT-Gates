@@ -30,6 +30,6 @@ body {
 }
 .sidebar_wrapper {
   width: 12%;
-  background-color: var(--sideBarColor);
+  flex: 1;
 }
 </style>
