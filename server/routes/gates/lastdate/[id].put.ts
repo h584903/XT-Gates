@@ -4,8 +4,6 @@ export default defineEventHandler(async event => {
         const body = await readBody(event);
         const { gateID, lastDate } = body;
 
-        console.log(lastDate)
-
         if (!gateID || !lastDate) {
             // Send an error if the request is invalid
             return createError({
