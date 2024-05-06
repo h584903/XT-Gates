@@ -70,6 +70,7 @@ import PlanStatus from './PlanStatus.vue';
   function enableEditMode() {
     editMode.value = true;
     editCommentMode.value = false;
+    editResponsiblePersonMode.value = false;
   }
   
   const taskDuration = ref(currentTask ? currentTask.duration : 0);
