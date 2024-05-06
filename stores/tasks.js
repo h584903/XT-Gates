@@ -80,6 +80,7 @@ export const useTasksStore = defineStore('tasks', () => {
 
     async function updateTaskProgress(taskID, newProgress) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+        console.log("This is newProgress: " + newProgress)
         if (taskIndex !== -1) {
             tasks.value[taskIndex].progress = newProgress;
         }
