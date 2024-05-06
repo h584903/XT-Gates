@@ -22,16 +22,13 @@
     <div class="personWrapper">
       <PersonInCharge :entryName="entryData.PEM"/>  
     </div>
-    <div class="commentWrapper">
-      <Modal @close="toggleModal" :modalActive="modalActive"> 
-        <div class="modal-content">
-          <h1>This is a modal header</h1>
-          <p>This is a modal message</p>
-          <button @click="toggleModal" class="smallButton">Save comment</button>
-          <button @click="toggleModal" class="smallButton">Cancel</button>
-        </div>
-      </Modal>
-      <button @click="toggleModal" class = "bigButton">{{entryData.comment}}</button>
+    <div class="w10">
+      <div v-if="commentEditMode">
+        <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" v-model="editedComment" @blur="updateComment" @keyup.enter="updateComment"></textarea>
+      </div>
+      <div v-else @click="enableCommentEditMode">
+        <span>{{ displayComment }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -48,14 +45,21 @@ const props = defineProps({
     required: true
   }
 });
-
+const editedComment = ref(props.entryData.comment);
 const editedTitle = ref(props.entryData.title);
 const editMode = ref(false);
+const commentEditMode = ref(false);
 const store = useProjectsStore();
 
 
 const enableEditMode = () => {
   editMode.value = true;
+  commentEditMode.value = false;
+};
+
+const enableCommentEditMode = () => {
+  commentEditMode.value = true;
+  editMode.value = false;
 };
 
 const updateTitle = async () => {
@@ -67,6 +71,24 @@ const updateTitle = async () => {
     editMode.value = false;
   }
 };
+
+const updateComment = async () => {
+  try {
+    await store.updateProjectComment(props.entryData.id, editedComment.value);
+  } catch (error) {
+    console.error("Failed to update the project comment:", error);
+  } finally {
+    commentEditMode.value = false;
+  }
+};
+
+const displayComment = computed(() => {
+  if (!props.entryData.comment || props.entryData.comment.trim() === "") {
+    return "No comment";
+  } else {
+    return props.entryData.comment;
+  }
+});
 
 // Må legge til for edit
 // const modalEdit
@@ -135,18 +157,6 @@ const toggleModal = () => {
   width: 10%;
   
   /* Fikse på innholdet */
-  .modal-content {
-    display: flex;
-    flex-direction: column;
-
-    h1, p {
-      margin-bottom: 16px;
-    }
-    h1 {font-size: 24px;}
-  }
-    p{ 
-      font-size: 16px;
-    }
 }
 /* Fikser på header og paragraf */
 .modal-content {
@@ -177,4 +187,17 @@ const toggleModal = () => {
   width: 100px;
   flex: auto;
 }
+.w10 {
+  width: 10%;
+}
+textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
 </style>

@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         progress: row.AverageProgress,
         onTime: row.onTime,
         PEM: row.PEM,
-        comment: row.comment,
+        comment: row.COMMENT,
         POdate: row.POdate,
         SFdate: row.SFdate,
         archive: row.archive,
