@@ -195,6 +195,30 @@ export const useTasksStore = defineStore('tasks', () => {
         return inTime;
     }
 
+    async function updateDate(taskID) {
+        var today = new Date();
+        var formattedDate = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+        try {
+            const response = await $fetch('/tasks/completeDate/' + taskID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newDate: formattedDate
+                })
+            });
+            const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+            if (taskIndex !== -1) {
+                tasks.value[taskIndex].completeDate = formattedDate;
+            }
+        } catch (error) {
+            console.error('Error updating date', error)
+        }
+        
+    }
+
 
     function setTasks(newTasks) {
         tasks.value = newTasks;
@@ -216,9 +240,10 @@ export const useTasksStore = defineStore('tasks', () => {
                 progress: task.progress,
                 duration: task.duration,
                 comment: task.comment,
-                completeDate: task.completeDate
+                completeDate: task.completeDate,
+                updateUser: task.updateUser
             }));
-
+            //console.log(tasks.value)
             setTasks(taskArray)
         } catch (error) {
             console.error('Error fetching tasks:', error);
@@ -262,5 +287,5 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    return { tasks, addTask, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask };
+    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask };
 });

@@ -31,7 +31,11 @@ import PlanStatus from './PlanStatus.vue';
   completeDate: {
       type: String,
       required: true
-    }
+    },
+  updateUser: {
+      type: String,
+      required: true
+  }
   }) 
   const editedComment = ref(props.comment);
 
@@ -40,6 +44,9 @@ import PlanStatus from './PlanStatus.vue';
   const selectedProgress = ref(currentTask ? currentTask.progress : 0);
 
   function updateProgress() {
+    if (parseInt(selectedProgress.value) === 100) {
+      updateMode.value = true;
+    }
     tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
     tasksStore.update
   }
@@ -99,6 +106,16 @@ import PlanStatus from './PlanStatus.vue';
     modalActive.value = !modalActive.value;
   };
 
+  const updateMode = ref(false);
+  const enterUpdate = () => {
+    updateMode.value = !updateMode.value;
+  }
+
+  function updateYes() {
+    tasksStore.updateDate(props.taskID)
+    enterUpdate();
+  }
+
   const deleteTaskHandler= () => {
     tasksStore.deleteTask(props.taskID);
     toggleModal();
@@ -117,10 +134,15 @@ import PlanStatus from './PlanStatus.vue';
       <span>{{ props.responsiblePerson }}</span>
     </div>
     <div class="w10">
-      <DateEntry :dateString = props.completeDate />
+      <div v-if="updateMode">Update completion date?</div>
+      <div v-else><DateEntry :dateString = props.completeDate /></div>
     </div>
     <div class="w10">
-      <span>Petter Tesdal</span>
+      <div v-if="updateMode">
+        <button @click="updateYes">Yes</button>
+        <button @click="enterUpdate">No</button>
+      </div>
+      <div v-else>{{ props.updateUser }}</div>
     </div>
     <div class="w5">
         <input type="range" min="0" max="100" step="25" v-model="selectedProgress" @change="debouncedUpdateProgress" />
