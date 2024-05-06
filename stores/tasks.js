@@ -196,7 +196,9 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     async function updateDate(taskID) {
+        const authStore = useAuthStore()
         var today = new Date();
+        var username = authStore.getUsername()
         var formattedDate = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         try {
             const response = await $fetch('/tasks/completeDate/' + taskID, {
@@ -215,6 +217,26 @@ export const useTasksStore = defineStore('tasks', () => {
             }
         } catch (error) {
             console.error('Error updating date', error)
+        }
+
+        try {
+            const response = await $fetch('/tasks/updateUser/' + taskID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newUser: username
+                })
+            });
+            console.log("USERNAME: " + username)
+            const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+            if (taskIndex !== -1) {
+                tasks.value[taskIndex].updateUser = username;
+            }
+        } catch (error) {
+            console.error('Error updating user', error)
         }
         
     }
