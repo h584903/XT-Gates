@@ -31,7 +31,7 @@ export const useProjectsStore = defineStore('projects', () => {
             const response = await $fetch('/projects', {
                 method: 'GET'
             });
-
+            console.log('Response Data:', response.data);
             const data = response.data;
             const projectsArray = Object.values(data).map(project => ({
                 id: project.ID,
@@ -45,7 +45,8 @@ export const useProjectsStore = defineStore('projects', () => {
                 archive: project.archive,
                 gates: project.gates
             }));
-
+            
+            console.log('Projects Array:', projectsArray);   
             setProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -165,7 +166,31 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }     
     
+    async function updateProjectComment(projectID, newComment) {
+        const projectIndex = projects.value.findIndex(project => project.id === projectID);
+        if (projectIndex !== -1) {
+            projects.value[projectIndex].comment = newComment;
+        }
+    
+        try {
+            const response = await fetch(`/projects/comment/${projectID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectID: projectID,
+                    newComment: newComment
+                })
+            });
+            // Assuming the backend successfully updates the comment, no further action is needed here.
+        } catch (error) {
+            console.error('Error updating project comment:', error);
+        }
+    }
+    
+    
 
-  return { getTemplate, filteredProjects, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle}
+  return { getTemplate, filteredProjects, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle, updateProjectComment}
 
 });
