@@ -43,7 +43,6 @@
       <GateList :projectId="project.id"/>
       <!-- Brukes for å kunne ha ting på en linje etter listen -->
       <div class="semi-footer">
-        <SaveButton />
       </div>
       <div>
         <ReusableModal @close="toggleModal" :modalActive="modalActive">

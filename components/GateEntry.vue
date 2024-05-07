@@ -117,7 +117,7 @@ const updateTitle = async () => {
   }
 
   function openCollapsable(event) {
-    if (!event.target.closest('.collapsable') && !event.target.closest('.title')) {
+    if (!event.target.closest('.collapsable') && !event.target.closest('.title')&& !event.target.closest('.delete')) {
         isOpen.value = !isOpen.value;
     }
   }

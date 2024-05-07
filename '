@@ -9,7 +9,6 @@
     <GateList />
     <!-- Brukes for å kunne ha ting på en linje etter listen -->
     <div class="semi-footer">
-      <SaveButton />
     </div>
   </div>
 </div>
