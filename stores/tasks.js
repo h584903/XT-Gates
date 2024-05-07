@@ -9,9 +9,10 @@ export const useTasksStore = defineStore('tasks', () => {
     // Pusher opp noen eksempel tasks
 
     // Funksjon for å legge til en task
-    async function addTask(taskID, gateID, step, title, responsiblePerson, duration) {
+    async function addTask(gateID, step, title, responsiblePerson, duration) {
 
-        const projectID = getProjectID(taskID);
+        const gateStore = useGatesStore();
+        const projectID = gateStore.getProjectID(gateID)
         console.log("Making Task: " + title + " with step: " + step + " in project: " + projectID + "and gate: " + gateID)
 
         const requestBody = {
