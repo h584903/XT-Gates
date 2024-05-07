@@ -21,7 +21,7 @@
           <span>{{daysToEnd}}</span>
         </div>
         <div class="completion">
-          <DateEntry :dateString = props.completionDate />
+          <span>{{ completionDate }}</span>
         </div>
         <div class="delete" @click.stop="toggleModal">
           <img src="/assets/x.svg" />
@@ -100,6 +100,7 @@ const updateTitle = async () => {
 
   const plannedDate = computed(() => gateStore.calculateDate(props.projectId, props.gateNR));
   const daysToEnd = computed(() => gateStore.calculateDaysToEnd(plannedDate.value));
+  const completionDate = computed(() => gateStore.calculateCompletionDate(props.gateID))
 
 
   const gateProgress = gateStore.getGateProgress(props.gateID);

@@ -178,7 +178,6 @@ export const useGatesStore = defineStore('gates', () => {
         
         try {
             const gslDateFormat = GSLD.toISOString().split('T')[0]; // Convert GSLD to ISO string format
-            console.log(gslDateFormat)
             const response = await fetch(`/gates/lastdate/${gateID}`, {
                 method: 'PUT',
                 headers: {
@@ -229,6 +228,25 @@ export const useGatesStore = defineStore('gates', () => {
         })
     }
 
+    function calculateCompletionDate(gateID) {
+        const taskStore = useTasksStore()
+        let completionDate = "";
+
+        const tasksWithGateID = [];
+        for (const task of taskStore.tasks) {
+            if (task.gateID === Number(gateID)) {
+                
+                if(task.completeDate === null) {
+                    return "---"
+                } else {
+                    tasksWithGateID.push(task);
+                }
+            }
+        }
+
+        return completionDate
+    }
+
     async function updateGateTitle(gateID, newTitle) {
         const gateIndex = gates.value.findIndex(gate => gate.ID === gateID);
         if (gateIndex !== -1) {
@@ -267,6 +285,6 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
 
-    return { gates, getPlannedDate, getProjectID, setGateScheduleLightDate, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, updateGateOrder, deleteGate };
+    return { gates, getPlannedDate, calculateCompletionDate, getProjectID, setGateScheduleLightDate, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, updateGateOrder, deleteGate };
 
 });
