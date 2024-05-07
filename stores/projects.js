@@ -37,7 +37,7 @@ export const useProjectsStore = defineStore('projects', () => {
                 id: project.ID,
                 title: project.title,
                 progress: project.progress,
-                onTime: project.onTime,
+                onTimeDate: project.onTimeDate,
                 PEM: project.PEM,
                 comment: project.comment,
                 POdate: project.POdate,
@@ -240,9 +240,33 @@ export const useProjectsStore = defineStore('projects', () => {
             console.error('Error updating project SFdate:', error);
         }
     }
-    
+    async function updatePEM(projectID, newPEM) {
+        // Find the project by ID
+        const projectIndex = projects.value.findIndex(project => project.id === projectID);
+        if (projectIndex !== -1) {
+            // Update the POdate property of the project
+            projects.value[projectIndex].PEM = newPEM;
+        }
+
+        try {
+            // Make a PUT request to update the POdate in the backend
+            const response = await fetch(`/projects/PEM/${projectID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectID: projectID,
+                    newPEM: newPEM
+                })
+            });
+            // Handle response if needed
+        } catch (error) {
+            console.error('Error updating project PEM:', error);
+        }
+    }
     
 
-  return { getTemplate, filteredProjects, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle, updateProjectComment, updatePODate, updateSFDate}
+  return { getTemplate, filteredProjects, template, project, projects, getProjects, getProjectById, addProject, setProjects, fetchProjects, getPODate, deleteProject, getSFDate, updateProjectTitle, updateProjectComment, updatePODate, updateSFDate, updatePEM}
 
 });

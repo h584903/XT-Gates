@@ -18,7 +18,7 @@
       <DateEntry :dateString = "entryData.POdate" />
     </div>
     <div class="statusWrapper">
-      <PlanStatus :onSchedule = "entryData.onTime" />
+      <PlanStatus :onSchedule = "calculateStatus" />
     </div>
     <div class="personWrapper">
       <PersonInCharge :entryName="entryData.PEM"/>  
@@ -58,6 +58,16 @@ const enableEditMode = () => {
   editMode.value = true;
   commentEditMode.value = false;
 };
+
+const calculateStatus = computed(() => {
+  //console.log("OYOYOYOYOYOYOY")
+  const today = new Date();
+  const onTimeDate = new Date(props.entryData.onTimeDate);
+  console.log("Comparing " + today)
+  console.log("and " + onTimeDate)
+  return onTimeDate >= today;
+});
+
 
 const enableCommentEditMode = () => {
   commentEditMode.value = true;

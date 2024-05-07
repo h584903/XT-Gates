@@ -1,16 +1,17 @@
 <script setup>
   // Henter ut progressnumber fra kallet av komponenten
-  defineProps({
+  const props = defineProps({
     progressNumber: Number
   });
+
 </script>
 
 
 <template>
-  <!--Dette er baren under progress-->
+    <!--Dette er baren under progress-->
   <div class="bar">
-    <!--Dette er baren for progress som har en dynamisk størrelse med tallet som er hentete-->
-    <div class="bar progress" :style="{ width: progressNumber + '%' }"></div>
+    <!--Dette er baren for progress som har en dynamisk størrelse med tallet som er hentet-->
+    <div class="bar progress" :style="{ width: props.progressNumber + '%' }"></div>
   </div>
 </template>
 

@@ -41,7 +41,6 @@
     duration: '',
     step: '',
     responsiblePerson: '',
-    ID: ''
   })
 
   const modalActive = ref(false);
@@ -49,16 +48,15 @@
     modalActive.value = !modalActive.value;
   };
 
-  function addTaskBetween(step, ID) {
+  function addTaskBetween(step) {
     console.log("Adding a task between tasks with NR:" + step);
     toggleModal();
     formData.value.step = step;
-    formData.value.ID = ID;
   };
 
   const submitForm = () => {
     toggleModal();
-    taskStore.addTask(formData.value.ID, props.gateID, formData.value.step,  formData.value.title, formData.value.responsiblePerson, formData.value.duration);
+    taskStore.addTask(props.gateID, formData.value.step,  formData.value.title, formData.value.responsiblePerson, formData.value.duration);
 
   }
 
@@ -71,15 +69,19 @@
     <div :key="element.ID">
       <GateTask :taskID="element.ID" :step="element.step" :title="element.title" :duration="element.duration" :responsiblePerson="element.responsiblePerson" :complete-date="element.completeDate" :updateUser="element.updateUser" :comment="element.comment || ''" />
       <div
-        @click="addTaskBetween(element.step, element.ID)"
+        @click="addTaskBetween(element.step)"
         class="task-divider">
       </div>
     </div>
   </template>
-  <div v-if="tasks.length === 0">
-    No tasks found for this gate
-  </div>
   </draggable>
+  <div v-if="tasks.length === 0">
+      <div
+        @click="addTaskBetween(1)"
+        class="task-divider" style="height: 50px">
+        No tasks found for this gate
+      </div>
+  </div>
   <Modal @close="toggleModal" :modalActive="modalActive">
     <h1>New Task</h1>
     <form @submit.prevent="submitForm">
@@ -106,6 +108,8 @@
   height: 8px;
   cursor: copy;
   background-color: transparent;
+  margin: auto;
+  text-align: center;
 }
 .list * {
   margin: auto;

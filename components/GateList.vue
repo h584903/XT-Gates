@@ -90,10 +90,12 @@
       </div>
     </div>
   </template>
-  <div v-if="gates.length === 0">
-    No gates found for this project
-  </div>
 </draggable>
+  <div class="emptylist"v-if="gates.length === 0">
+    No gates found for this project
+      <div class="gate-empty" @click="addGateBetween(1)">
+      </div>
+  </div>
 
   <Modal @close="toggleModal" :modalActive="modalActive">
     <h1>New Gate</h1>
@@ -121,6 +123,19 @@
   height: 8px;
   cursor: copy;
   background-color: transparent;
+}
+
+.gate-empty {
+  left: 0;
+  right: 0;
+  height: 50px;
+  cursor: copy;
+  background-color: transparent;
+}
+
+.emptylist {
+  flex-direction: column;
+  margin: auto;
 }
 
 .add-task-button {

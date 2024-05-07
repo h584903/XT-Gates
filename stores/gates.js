@@ -51,8 +51,9 @@ export const useGatesStore = defineStore('gates', () => {
                 projectID: gate.prosjektID.toString(),
                 gateNR: gate.gateNR,
                 title: gate.gateTitle,
-                plannedDate: "2024-07-07",
-                completionDate: "2024-06-07"
+                plannedDate: "1000-07-07",
+                completionDate: "1000-07-07",
+                progress: gate.progress
             }));
 
             setGates(gateArray);
@@ -81,7 +82,7 @@ export const useGatesStore = defineStore('gates', () => {
 
             console.log("calling fetchgates")
             await fetchGates(projectID);
-            
+
         } catch (error) {
             return createError({
                 statusCode: 500,
@@ -148,6 +149,26 @@ export const useGatesStore = defineStore('gates', () => {
         return filteredGates;
     }
 
+    async function saveGateProgress(gateID, progress) {
+        // Assuming you have a function to save gate progress to the database
+        console.log("Saving gateprogress in database")
+        try {
+            const response = await fetch(`/gates/progress/${gateID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    gateID: gateID,
+                    progress: progress
+                })
+            });
+        } catch (error) {
+            console.error('Error updating gateProgress:', error);
+        }
+
+    }
+
     function getGateProgress(gateID) {
         const taskStore = useTasksStore();
         return computed(() => {
@@ -159,23 +180,43 @@ export const useGatesStore = defineStore('gates', () => {
             const totalDuration = tasks.reduce((total, task) => {
                 return total + task.duration
             }, 0);
-            const answer = totalDuration > 0 ? (totalWeightedProgress / totalDuration) * 100 : 0
-            setGateScheduleLightDate(gateID, answer)
-            return answer;
-            
+            return totalDuration > 0 ? (totalWeightedProgress / totalDuration) * 100 : 0;
         });
     }
+
+
+    function updateGateProgress(gateID) {
+        console.log("In update gateProgress for: " + gateID);
+        const taskStore = useTasksStore();
+
+        console.log("In return");
+        const tasks = taskStore.getGateTasks(gateID);
+
+        if (tasks.length === 0) return 0;
+
+        const totalDuration = tasks.reduce((total, task) => total + task.duration, 0);
+        const totalWeightedProgress = tasks.reduce((total, task) => total + (task.progress / 100) * task.duration, 0);
+
+        const answer = totalDuration > 0 ? (totalWeightedProgress / totalDuration) * 100 : 0;
+    
+        saveGateProgress(gateID, answer);
+        setGateScheduleLightDate(gateID, answer);
+
+        return answer;
+    }
+
+
 
     async function setGateScheduleLightDate(gateID, progress) {
         const taskStore = useTasksStore();
         const PD = getPlannedDate(gateID);
         const maxTaskDur = taskStore.maxTaskDuration(getProjectID(gateID), getGateNR(gateID) - 1);
         const remainingDays = maxTaskDur - (progress / 100) * maxTaskDur;
-        
+
         const PDDate = new Date(PD);
         const GSLD = new Date(PDDate.getTime() - remainingDays * 24 * 60 * 60 * 1000);
-        
-        
+
+
         try {
             const gslDateFormat = GSLD.toISOString().split('T')[0]; // Convert GSLD to ISO string format
             const response = await fetch(`/gates/lastdate/${gateID}`, {
@@ -192,9 +233,16 @@ export const useGatesStore = defineStore('gates', () => {
             console.error('Error updating GSLD:', error);
         }
     }
-    
 
-    function getGateNR(searchID) {
+
+    function getGateNR(searchid) {
+        for(let i = 0; i<gates.value.length; i++) {
+            if(searchid === Number(gates.value[i].ID)) {
+                return gates.value[i].gateNR;
+            }
+        }
+    }
+    function getGateNRNew(searchID) {
         const gate = gates.value.find(gate => gate.ID === searchID.toString());
         if (gate) {
             return gate.gateNR;
@@ -208,14 +256,14 @@ export const useGatesStore = defineStore('gates', () => {
         const gate = gates.value.find(gate => gate.ID === gateID);
         return gate ? gate.plannedDate : null;
     }
-    
-    
+
+
 
     function getProjectID(gateID) {
         const gate = gates.value.find(gate => gate.ID === gateID);
         return gate ? gate.projectID : null;
     }
-    
+
 
     function calculateDaysToEnd(plannedDate) {
         return computed(() => {
@@ -278,13 +326,13 @@ export const useGatesStore = defineStore('gates', () => {
             });
             // If the deletion from the backend is successful, remove the project from the store
             await fetchGates(projectID);
-            
+
         } catch (error) {
             console.error("Failed to delete gate:", error);
         }
     }
 
 
-    return { gates, getPlannedDate, calculateCompletionDate, getProjectID, setGateScheduleLightDate, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateTitle, updateGateOrder, deleteGate };
+    return { gates, getPlannedDate, calculateCompletionDate, getProjectID, setGateScheduleLightDate, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateProgress, updateGateTitle, updateGateOrder, deleteGate };
 
 });

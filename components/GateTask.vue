@@ -55,12 +55,19 @@ const editResponsiblePersonMode = ref(false);
   const selectedProgress = ref(currentTask ? currentTask.progress : 0);
 
   function updateProgress() {
-    if (parseInt(selectedProgress.value) === 100) {
-      updateMode.value = true;
+  console.log("Updateprogress run")
+  if (currentTask && currentTask.duration !== undefined && currentTask.progress !== undefined) {
+    // Check if duration or progress has changed from their initial values
+    if (currentTask.duration !== props.duration || currentTask.progress !== props.step) {
+      if (parseInt(selectedProgress.value) === 100) {
+        updateMode.value = true;
+      }
+        tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
+      }
     }
-    tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
-    tasksStore.update
   }
+
+
 
   const planStatus = computed(() => {
     if(tasksStore.completedInTime(props.completeDate, props.taskID)) {

@@ -5,29 +5,44 @@
         <h1>{{ project.title }}</h1>
         <!--Skal oppdateres med komponent etter merge-->
         <div class="info">
-          <div v-if="editPODateMode">
-            <input type="date" v-model="editedPODate" @blur="updatePODate" @keyup.enter="updatePODate" @keyup.esc="cancelEdit" />
-            <button @click="cancelEdit">Cancel</button>
+          <!-- PO Date -->
+          <div>
+            <label>PO Date:</label>
+            <div v-if="editPODateMode">
+              <input type="date" v-model="editedPODate" @blur="updatePODate" @keyup.enter="updatePODate" @keyup.esc="cancelEdit" />
+              <button @click="cancelEdit">Cancel</button>
+            </div>
+            <div v-else @click="enableEditPODateMode">
+              <span>{{ formatEuropeanDate(project.POdate) }}</span>
+            </div>
           </div>
-          <div v-else @click="enableEditPODateMode">
-            <span>PO Date: {{ formatEuropeanDate(project.POdate) }}</span>
+          <!-- SF Date -->
+          <div>
+            <label>SF Date:</label>
+            <div v-if="editSFDateMode">
+              <input type="date" v-model="editedSFDate" @blur="updateSFDate" @keyup.enter="updateSFDate" @keyup.esc="cancelEdit" />
+              <button @click="cancelEdit">Cancel</button>
+            </div>
+            <div v-else @click="enableEditSFDateMode">
+              <span>{{ formatEuropeanDate(project.SFdate) }}</span>
+            </div>
           </div>
-          
-          <div v-if="editSFDateMode">
-            <input type="date" v-model="editedSFDate" @blur="updateSFDate" @keyup.enter="updateSFDate" @keyup.esc="cancelEdit" />
-            <button @click="cancelEdit">Cancel</button>
+          <!-- PEM -->
+           <div>
+            <label>PEM:</label>
+            <div v-if="editPEM_Mode">
+              <input type="text" v-model="editedPEM" @blur="updatePEM" @keyup.enter="updatePEM" @keyup.esc="cancelEdit" />
+              <button @click="cancelEdit">Cancel</button>
+            </div>
+            <div v-else @click="enableEditPEM_Mode">
+              <span>{{ displayedPEM }}</span>
+            </div>
           </div>
-          <div v-else @click="enableEditSFDateMode">
-            <span>SF Date: {{ formatEuropeanDate(project.SFdate) }}</span>
           </div>
-
-          <div>PEM: {{ project.PEM }}</div>
-        </div>
       </div>
       <GateList :projectId="project.id"/>
       <!-- Brukes for å kunne ha ting på en linje etter listen -->
       <div class="semi-footer">
-        <SaveButton />
       </div>
       <div>
         <ReusableModal @close="toggleModal" :modalActive="modalActive">
@@ -63,9 +78,13 @@
   const editedPODate = ref('');
   const editSFDateMode = ref(false);
   const editedSFDate = ref('');
+  const editPEM_Mode = ref(false);
+  const editedPEM = ref('');
 
   const enableEditPODateMode = () => {
     editPODateMode.value = true;
+    editSFDateMode.value = false;
+    editPEM_Mode.value = false;
   }
   function updatePODate() {
     try {
@@ -79,6 +98,8 @@
 
   const enableEditSFDateMode = () => {
     editSFDateMode.value = true;
+    editPODateMode.value = false;
+    editPEM_Mode.value = false;
   }
   function updateSFDate() {
     try {
@@ -90,6 +111,21 @@
     }
   };
 
+  const enableEditPEM_Mode = () => {
+  editedPEM.value = project.value.PEM;
+  editPEM_Mode.value = true;
+  editPODateMode.value = false;
+  editSFDateMode.value = false;
+}
+function updatePEM() {
+    try {
+      store.updatePEM(project.value.id, editedPEM.value);
+    } catch (error) {
+      console.error("Failed to update the project:", error);
+    } finally {
+      editPEM_Mode.value = false;
+    }
+  };
   onMounted(async () => {
     const projectId = route.params.id; // parser routen til en int og spesifiserer base 10 
     if (!projectId) {
@@ -143,12 +179,21 @@ const formatEuropeanDate = (isoDate) => {
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 };
+const displayedPEM = computed(() => {
+    if (!project.value || !project.value.PEM || !project.value.PEM.trim()) {
+      return "No PEM";
+    } else {
+      return project.value.PEM;
+    }
+  });
 
 const cancelEdit = () => {
     editedPODate.value = '';
     editPODateMode.value = false;
     editedSFDate.value = '';
     editSFDateMode.value = false;
+    editedPEM.value = '';
+    editPEM_Mode.value = false;
   };
 </script>
 
@@ -190,4 +235,20 @@ textarea {
     border-radius: 4px;
     box-sizing: border-box;
   }
+  .wrapper .info {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper .info > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.wrapper .info label {
+  min-width: 100px;
+  margin-right: 1px; 
+}
+
 </style>

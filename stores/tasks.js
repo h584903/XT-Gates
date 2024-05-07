@@ -9,9 +9,11 @@ export const useTasksStore = defineStore('tasks', () => {
     // Pusher opp noen eksempel tasks
 
     // Funksjon for å legge til en task
-    async function addTask(taskID, gateID, step, title, responsiblePerson, duration, completeDate) {
 
-        const projectID = getProjectID(taskID);
+    async function addTask(gateID, step, title, responsiblePerson, duration) {
+
+        const gateStore = useGatesStore();
+        const projectID = gateStore.getProjectID(gateID)
         console.log("Making Task: " + title + " with step: " + step + " in project: " + projectID + "and gate: " + gateID)
 
         const requestBody = {
@@ -97,6 +99,9 @@ export const useTasksStore = defineStore('tasks', () => {
                     newProgress: newProgress
                 })
             });
+            const gateStore = useGatesStore();
+            console.log("Starting up updateGateProgress")
+            gateStore.updateGateProgress(getGateID(taskID));
         } catch (error) {
             console.error('Error updating task progress:', error);
         }
@@ -120,6 +125,8 @@ export const useTasksStore = defineStore('tasks', () => {
                     newDuration: newDuration
                     })
             });
+            const gateStore = useGatesStore();
+            gateStore.updateGateProgress(getGateID(taskID));
         } catch (error) {
             console.error('Error updating task duration:', error);
         }
