@@ -9,6 +9,7 @@ export const useTasksStore = defineStore('tasks', () => {
     // Pusher opp noen eksempel tasks
 
     // Funksjon for å legge til en task
+
     async function addTask(gateID, step, title, responsiblePerson, duration) {
 
         const gateStore = useGatesStore();
@@ -21,7 +22,8 @@ export const useTasksStore = defineStore('tasks', () => {
             step: step,
             title: title,
             responsiblePerson: responsiblePerson,
-            duration: duration
+            duration: duration,
+            completeDate :completeDate
         };
 
         try {
@@ -247,7 +249,7 @@ export const useTasksStore = defineStore('tasks', () => {
         
     }
 
-        async function updateTaskResponsiblePerson(taskID, newResponsiblePerson) {
+    async function updateTaskResponsiblePerson(taskID, newResponsiblePerson) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].responsiblePerson = newResponsiblePerson;
@@ -325,6 +327,7 @@ export const useTasksStore = defineStore('tasks', () => {
             console.error('Error updating task comment:', error);
         }
     }
+
 
     async function updateTaskTitle(taskID, newTitle) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
