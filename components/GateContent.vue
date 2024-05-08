@@ -87,7 +87,9 @@
     <form @submit.prevent="submitForm">
       <label>Task title: </label>
       <input type="text" id="title" v-model="formData.title" required><br>
+      <label>Responsible role: </label>
       <input type="text" id="responsiblePerson" v-model="formData.responsiblePerson" required><br>
+      <label>Duration: </label>
       <input type="number" id="duration" v-model="formData.duration" required><br>
       <button type="submit" class="addButton">Create Task</button>
     </form>
