@@ -44,13 +44,12 @@
   </template>
 
 <script setup>
-  // Henter task storen
   import { useTasksStore } from '@/stores/tasks';
   import {useGatesStore} from '@/stores/gates';
-  const taskStore = useTasksStore();
-  // Henter de ulike variablene fra gaten
-  const gateStore = useGatesStore();
 
+  const taskStore = useTasksStore();
+  const gateStore = useGatesStore();
+  
   const props = defineProps({
     gateID: {
       type: String,
@@ -81,13 +80,14 @@
       required: true
     }
   });
+  // Editor for å redigere tittel i gates
   const editing = ref(false);
   const editedTitle = ref(props.title);
-
+  // Kalles for å åpne editoren
   const enableEditMode = () => {
   editing.value = true;
 };
-
+  // Metode for å oppdatere tittelen til gate, bruker updateGateTitle fra stores/gates.js
 const updateTitle = async () => {
   try {
     await gateStore.updateGateTitle(props.gateID, editedTitle.value);
@@ -97,16 +97,15 @@ const updateTitle = async () => {
     editing.value = false;
   }
 };
-
+  
   const plannedDate = computed(() => gateStore.calculateDate(props.projectId, props.gateNR));
   const daysToEnd = computed(() => gateStore.calculateDaysToEnd(plannedDate.value));
   const completionDate = computed(() => gateStore.calculateCompletionDate(props.gateID))
 
-
   const gateProgress = gateStore.getGateProgress(props.gateID);
   const isOpen = ref(false);
 
-// Delete modal
+  // Delete modal
   const modalActive = ref(false);
   const toggleModal = () => {
     modalActive.value = !modalActive.value;
@@ -122,8 +121,9 @@ const updateTitle = async () => {
         isOpen.value = !isOpen.value;
     }
   }
-
 </script>
+
+<!-- CSS -->
 <style scoped>
 .mb-8 {
   width: 100;

@@ -28,7 +28,6 @@
 
 <script setup>
   import Modal from "@/components/ReusableModal.vue"
-  // importerer prosjekt storen
   import {ref, onMounted} from 'vue'
   import { useProjectsStore } from '@/stores/projects'
   import {useGatesStore} from '@/stores/gates'
