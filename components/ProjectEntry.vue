@@ -36,9 +36,7 @@
 </template>
 
 <script setup>
-// Imports
 import {ref} from "vue";
-import Modal from "@/components/ReusableModal.vue";
 import { useProjectsStore } from "@/stores/projects";
 
 const props = defineProps({
@@ -47,31 +45,17 @@ const props = defineProps({
     required: true
   }
 });
+
 const editedComment = ref(props.entryData.comment);
+const commentEditMode = ref(false); // editMode for comment
 const editedTitle = ref(props.entryData.title);
-const editMode = ref(false);
-const commentEditMode = ref(false);
+const editMode = ref(false); // editorMode for title
 const store = useProjectsStore();
 
-
+// Håndtering av å editte tittel til prosjekt
 const enableEditMode = () => {
   editMode.value = true;
   commentEditMode.value = false;
-};
-
-const calculateStatus = computed(() => {
-  //console.log("OYOYOYOYOYOYOY")
-  const today = new Date();
-  const onTimeDate = new Date(props.entryData.onTimeDate);
-  console.log("Comparing " + today)
-  console.log("and " + onTimeDate)
-  return onTimeDate >= today;
-});
-
-
-const enableCommentEditMode = () => {
-  commentEditMode.value = true;
-  editMode.value = false;
 };
 
 const updateTitle = async () => {
@@ -82,6 +66,12 @@ const updateTitle = async () => {
   } finally {
     editMode.value = false;
   }
+};
+
+// Håndtering av editte comment på et prosjekt
+const enableCommentEditMode = () => {
+  commentEditMode.value = true;
+  editMode.value = false;
 };
 
 const updateComment = async () => {
@@ -101,19 +91,15 @@ const displayComment = computed(() => {
     return props.entryData.comment;
   }
 });
-
-// Må legge til for edit
-// const modalEdit
-
-// Metode for toggle modalen - settes til false by default
-const modalActive = ref(false);
-const toggleModal = () => {
-  modalActive.value = !modalActive.value;
-};
-
+// computed for status på et prosjekt
+const calculateStatus = computed(() => {
+  const today = new Date();
+  const onTimeDate = new Date(props.entryData.onTimeDate);
+  console.log("Comparing " + today)
+  console.log("and " + onTimeDate)
+  return onTimeDate >= today;
+});
 </script>
-
-
 
 <style scoped>
 
@@ -136,7 +122,6 @@ a {
     background-color: white;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
-
 
 .titleWrapper {
   margin: auto;

@@ -81,11 +81,13 @@
   const editPEM_Mode = ref(false);
   const editedPEM = ref('');
 
+  // Åpne editor for PODate i et prosjekt
   const enableEditPODateMode = () => {
     editPODateMode.value = true;
     editSFDateMode.value = false;
     editPEM_Mode.value = false;
   }
+  // Funksjon for å forsøke å oppdatere PODate for et prosjekt
   function updatePODate() {
     try {
       store.updatePODate(project.value.id, editedPODate.value);
@@ -96,11 +98,14 @@
     }
   };
 
+  // Åpne editor for SFDate i et prosjekt
   const enableEditSFDateMode = () => {
     editSFDateMode.value = true;
     editPODateMode.value = false;
     editPEM_Mode.value = false;
   }
+
+  // Funksjon for å forsøke å oppdatere SFDate for et prosjekt
   function updateSFDate() {
     try {
       store.updateSFDate(project.value.id, editedSFDate.value);
@@ -111,12 +116,14 @@
     }
   };
 
+  // Åpne editor for PEM - Setter input boksen til å inneholde eksisterende PEM
   const enableEditPEM_Mode = () => {
   editedPEM.value = project.value.PEM;
   editPEM_Mode.value = true;
   editPODateMode.value = false;
   editSFDateMode.value = false;
 }
+  // Funksjon for å forsøke å oppdaterePEM, bruker projectStore
 function updatePEM() {
     try {
       store.updatePEM(project.value.id, editedPEM.value);
@@ -126,6 +133,7 @@ function updatePEM() {
       editPEM_Mode.value = false;
     }
   };
+
   onMounted(async () => {
     const projectId = route.params.id; // parser routen til en int og spesifiserer base 10 
     if (!projectId) {
@@ -171,11 +179,11 @@ const deleteProjectHandler= () => {
   toggleModal();
   router.push('/projectlist');
 }
-
+// Metode for å formatere datoen til europeisk format DD.MM.YYYY
 const formatEuropeanDate = (isoDate) => {
   const date = new Date(isoDate);
   const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 };
@@ -187,6 +195,7 @@ const displayedPEM = computed(() => {
     }
   });
 
+  // Metode for funksjonalitet for "Cancel" button
 const cancelEdit = () => {
     editedPODate.value = '';
     editPODateMode.value = false;
@@ -197,6 +206,7 @@ const cancelEdit = () => {
   };
 </script>
 
+<!-- CSS -->
 <style scoped>
 .wrapper {
   width: 100%;
