@@ -280,18 +280,33 @@ export const useGatesStore = defineStore('gates', () => {
         const taskStore = useTasksStore()
         let completionDate = "";
 
-        const tasksWithGateID = [];
+        const competingDates = [];
         for (const task of taskStore.tasks) {
             if (task.gateID === Number(gateID)) {
                 
                 if(task.completeDate === null) {
                     return "---"
                 } else {
-                    tasksWithGateID.push(task);
+                    competingDates.push(task.completeDate);
                 }
             }
         }
+        if (competingDates.length === 0) {
+            return "---"
+        }
+        for(const dato of competingDates) {
+            if(completionDate === "") {
+                completionDate = dato
+            } else if(dato > completionDate) {
+                completionDate = dato
+            }
+        }
+        completionDate = new Date(completionDate)
+        const day = completionDate.getDate().toString().padStart(2, '0');
+        const month = (completionDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = completionDate.getFullYear();
 
+        completionDate = `${day}.${month}.${year}`;
         return completionDate
     }
 
