@@ -1,11 +1,43 @@
-<script setup>
+<template>
+  <div class="descWrapper">
+    <GateDesc/>
+  </div>
+  <hr class="solid"/>
+  <draggable class="gatelist" v-model="gates" @end="onEndDrag" group="gates" item-key="ID" handle=".handle" animation="300"> 
+  <template #item="{ element, index }">
+    <div :key="element.ID">
+      <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" :responsiblePerson="element.responsiblePerson || ''" />
+      <div
+        v-if="index < gates.length - 1"
+        @click="addGateBetween(element.gateNR)"
+        class="gate-divider">
+      </div>
+    </div>
+  </template>
+</draggable>
+  <div class="emptylist"v-if="gates.length === 0">
+    No gates found for this project
+      <div class="gate-empty" @click="addGateBetween(1)">
+      </div>
+  </div>
+  <!-- Modal for å opprette Gate -->
+  <Modal @close="toggleModal" :modalActive="modalActive">
+    <h1>New Gate</h1>
+    <form @submit.prevent="submitForm">
+      <label>Gate title: </label>
+      <input type="text" id="title" v-model="formData.title" required><br>
+      <button type="submit" class="addButton">Create Gate</button>
+    </form>
+    <button class="closeButton" @click="toggleModal">Cancel</button>
+  </Modal>
 
+</template>
+
+<script setup>
   import { ref, onMounted } from 'vue';
   import { useGatesStore } from '@/stores/gates';
   import Modal from "@/components/ReusableModal.vue"
   import draggable from 'vuedraggable'; //Henter vue sin draggable
-
-  
 
   const props = defineProps({
     projectId: {
@@ -15,17 +47,13 @@
   });
 
   const gateStore = useGatesStore();
-
   const computedGates = computed(() => gateStore.getProjectGates(props.projectId));
-
-  // lager en non-reactive copy
-  const gates = ref([]);
+  const gates = ref([]); // lager en non-reactive copy
 
 // ser etter forandringer
   watch(computedGates, (newGates) => {
     gates.value = [...newGates];
   });
-
 
   const hoverIndex = ref(-1); // Index of the gate being hovered over
     
@@ -38,7 +66,6 @@
   };
 
   // Logic to add a gate between gates
-
   const formData = ref({
     NR: '',
     title: ''
@@ -74,40 +101,6 @@
 
 </script>
 
-<template>
-  <div class="descWrapper">
-    <GateDesc/>
-  </div>
-  <hr class="solid"/>
-  <draggable class="gatelist" v-model="gates" @end="onEndDrag" group="gates" item-key="ID" handle=".handle" animation="300"> 
-  <template #item="{ element, index }">
-    <div :key="element.ID">
-      <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" :responsiblePerson="element.responsiblePerson || ''" />
-      <div
-        v-if="index < gates.length - 1"
-        @click="addGateBetween(element.gateNR)"
-        class="gate-divider">
-      </div>
-    </div>
-  </template>
-</draggable>
-  <div class="emptylist"v-if="gates.length === 0">
-    No gates found for this project
-      <div class="gate-empty" @click="addGateBetween(1)">
-      </div>
-  </div>
-
-  <Modal @close="toggleModal" :modalActive="modalActive">
-    <h1>New Gate</h1>
-    <form @submit.prevent="submitForm">
-      <label>Gate title: </label>
-      <input type="text" id="title" v-model="formData.title" required><br>
-      <button type="submit" class="addButton">Create Gate</button>
-    </form>
-    <button class="closeButton" @click="toggleModal">Cancel</button>
-  </Modal>
-
-</template>
 
 <style scoped>
 
