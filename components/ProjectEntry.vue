@@ -1,6 +1,5 @@
 <template>
   <!-- Følger prototypen til figma -->
-  <NuxtLink :to="'projectList/' + entryData.id">
   <div class="list project-card">
     <div class="titleWrapper" @click="enableEditMode" v-if="!editMode">
       <span>{{ entryData.title }}</span>
@@ -8,36 +7,37 @@
     <div class="titleWrapper" v-else>
       <input type="text" v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
     </div>
-    <div class="progressWrapper">
+    <div class="progressWrapper" @click="redirect">
       <ProgressBar :progressNumber="entryData.progress" />
     </div>
-    <div class="dateWrapper">
+    <div class="dateWrapper" @click="redirect">
       <DateEntry :dateString = "entryData.SFdate" />
     </div>
-    <div class="dateWrapper">
+    <div class="dateWrapper" >
       <DateEntry :dateString = "entryData.POdate" />
     </div>
-    <div class="statusWrapper">
+    <div class="statusWrapper" @click="redirect">
       <PlanStatus :onSchedule = "calculateStatus" />
     </div>
-    <div class="personWrapper">
+    <div class="personWrapper" @click="redirect">
       <PersonInCharge :entryName="entryData.PEM"/>  
     </div>
-    <div class="w10">
+    <div class=".commentWrapper w10" @click="enableCommentEditMode">
       <div v-if="commentEditMode">
         <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" v-model="editedComment" @blur="updateComment" @keyup.enter="updateComment"></textarea>
       </div>
-      <div v-else @click="enableCommentEditMode">
-        <span>{{ displayComment }}</span>
+      <div v-else>
+        <span>{{ props.entryData.comment }}</span>
       </div>
     </div>
   </div>
-  </NuxtLink>
 </template>
 
 <script setup>
 import {ref} from "vue";
 import { useProjectsStore } from "@/stores/projects";
+import { useRouter } from 'vue-router';
+
 
 const props = defineProps({
   entryData: {
@@ -46,6 +46,7 @@ const props = defineProps({
   }
 });
 
+const router = useRouter();
 const editedComment = ref(props.entryData.comment);
 const commentEditMode = ref(false); // editMode for comment
 const editedTitle = ref(props.entryData.title);
@@ -84,13 +85,6 @@ const updateComment = async () => {
   }
 };
 
-const displayComment = computed(() => {
-  if (!props.entryData.comment || props.entryData.comment.trim() === "") {
-    return "No comment";
-  } else {
-    return props.entryData.comment;
-  }
-});
 // computed for status på et prosjekt
 const calculateStatus = computed(() => {
   const today = new Date();
@@ -99,6 +93,11 @@ const calculateStatus = computed(() => {
   console.log("and " + onTimeDate)
   return onTimeDate >= today;
 });
+// Metode for å redirecte til et prosjekt når man trykker på det
+const redirect = (event) => {
+    router.push(`/projectList/${props.entryData.id}`);
+  };
+
 </script>
 
 <style scoped>
@@ -136,28 +135,31 @@ a {
   margin: auto;
   text-align: center;
   width: 40%;
+  cursor: pointer;
 }
 .dateWrapper {
   margin: auto;
   text-align: center;
   width: 10%;
+  cursor: pointer;
 }
 .statusWrapper {
   margin: auto;
   text-align: center;
-  width: 5%
+  width: 5%;
+  cursor: pointer;
 }
 .personWrapper {
   margin: auto;
   text-align: center;
-  width: 15%
+  width: 15%;
+  cursor: pointer;
 }
 .commentWrapper {
   display:flex;
   margin: auto;
   text-align: flex;
-  width: 10%;
-  
+  width: 10%;  
   /* Fikse på innholdet */
 }
 /* Fikser på header og paragraf */
@@ -191,6 +193,7 @@ a {
 }
 .w10 {
   width: 10%;
+  cursor: text;
 }
 textarea {
     width: 100%;
