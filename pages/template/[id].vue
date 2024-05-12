@@ -1,5 +1,5 @@
 <template>
-  <div> event id: {{ route.params.id}}
+  <div>
     <div class="wrapper" v-if="project">
       <div class="title">
         <h1>{{ project.title }}</h1>
