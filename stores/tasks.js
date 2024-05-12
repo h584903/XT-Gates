@@ -16,6 +16,7 @@ export const useTasksStore = defineStore('tasks', () => {
         const projectID = gateStore.getProjectID(gateID)
         console.log("Making Task: " + title + " with step: " + step + " in project: " + projectID + "and gate: " + gateID)
 
+
         const requestBody = {
             projectID: projectID,
             gateID: gateID,
@@ -23,8 +24,9 @@ export const useTasksStore = defineStore('tasks', () => {
             title: title,
             responsiblePerson: responsiblePerson,
             duration: duration,
-            completeDate :completeDate
+            completeDate :null
         };
+        console.log(requestBody)
 
         try {
             const response = await $fetch('/tasks', {
