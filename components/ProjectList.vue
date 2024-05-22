@@ -48,16 +48,16 @@ const index = ref(0);
 const currentPage = ref(1);
 const projectsPerPage = 15;
 
+const filteredProjects = computed(() => {
+  return projects.value.filter(project => !project.archive);
+});
+
 const totalPages = computed(() => Math.ceil(filteredProjects.value.length / projectsPerPage));
 
 const paginatedProjects = computed(() => {
   const start = (currentPage.value - 1) * projectsPerPage;
   const end = start + projectsPerPage;
-  return filteredProjects.value.slice(start, end);
-});
-
-const filteredProjects = computed(() => {
-  return projects.value.filter(project => !project.archive);
+  return filteredProjects.value.slice().reverse().slice(start, end);
 });
 
 onMounted(() => {
@@ -103,6 +103,7 @@ const nextPage = () => {
   }
 };
 </script>
+
 
 <style scoped>
 .list-wrapper {

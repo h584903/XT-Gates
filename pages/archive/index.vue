@@ -22,30 +22,25 @@
 </template>
 
 <script setup>
-import Modal from "@/components/ReusableModal.vue";
 import { ref, onMounted, computed, watchEffect } from 'vue';
 import { useProjectsStore } from '@/stores/projects';
-import { useGatesStore } from '@/stores/gates';
-import { v4 as uuid } from 'uuid';
 
 const store = useProjectsStore();
-const gateStore = useGatesStore();
 const projects = ref(store.getProjects());
-const index = ref(0);
 
 const currentPage = ref(1);
 const projectsPerPage = 15;
+
+const filteredProjects = computed(() => {
+  return projects.value.filter(project => project.archive);
+});
 
 const totalPages = computed(() => Math.ceil(filteredProjects.value.length / projectsPerPage));
 
 const paginatedProjects = computed(() => {
   const start = (currentPage.value - 1) * projectsPerPage;
   const end = start + projectsPerPage;
-  return filteredProjects.value.slice(start, end);
-});
-
-const filteredProjects = computed(() => {
-  return projects.value.filter(project => project.archive);
+  return filteredProjects.value.slice().reverse().slice(start, end);
 });
 
 onMounted(() => {
@@ -57,27 +52,6 @@ onMounted(() => {
 watchEffect(() => {
   projects.value = store.getProjects();
 });
-
-const formData = ref({
-  title: '',
-  PO: '',
-  SF: '',
-  PEM: ''
-});
-
-const submitForm = () => {
-  const projectId = uuid();
-  store.addProject(projectId, formData.value.title, 0, formData.value.SF.toString().replace(/-/g, ''), formData.value.PO.toString().replace(/-/g, ''), true, formData.value.PEM, "comment");
-  index.value++;
-  toggleModal();
-};
-
-projects.value = store.getProjects();
-
-const modalActive = ref(false);
-const toggleModal = () => {
-  modalActive.value = !modalActive.value;
-};
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -130,5 +104,10 @@ const nextPage = () => {
 .pagination button:disabled {
   background-color: #888;
   cursor: not-allowed;
+}
+
+hr.solid {
+  width: 100%;
+  border-top: 1px solid grey;
 }
 </style>

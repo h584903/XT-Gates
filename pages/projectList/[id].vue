@@ -64,7 +64,8 @@
       </div>
     </div>
     <div v-else>
-      loading project...
+      Loading project...
+      If this takes more than a few seconds, try returning to the project page.
     </div>
   </div>
 </template>
