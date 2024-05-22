@@ -1,9 +1,9 @@
 <template>
   <div class="sidebar"> <!-- listen over linker-->
-    <NuxtLink to="/" class="hoverlink">Dashboard</NuxtLink>
-    <NuxtLink to="/Archive" class="hoverlink">Archive</NuxtLink>
-    <NuxtLink to="/projectList" class="hoverlink">Active Projects</NuxtLink>
-    <LinkList /> <!--Listen over aktive prosjekter-->
+    <NuxtLink to="/" class="hoverlink font">Dashboard</NuxtLink>
+    <NuxtLink to="/Archive" class="hoverlink font">Archive</NuxtLink>
+    <NuxtLink to="/projectList" class="hoverlink font">Active Projects</NuxtLink>
+    <LinkList class="font"/> <!--Listen over aktive prosjekter-->
   </div>
 </template>
 
@@ -35,6 +35,10 @@
 .sidebar a:hover{
   color: grey;
   text-decoration: none;
+}
+.font{
+    font-family: sans-serif;
+    font-weight: 300;
 }
 
 </style>

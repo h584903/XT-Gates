@@ -7,7 +7,14 @@
         <div>Enter username:</div>
         <input type="text" v-model="inputText" placeholder="Enter text" />
         <div>
-          <button @click="saveUsername">Save</button>
+          <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
+          <label for="acceptCookies">
+            I accept the 
+            <nuxt-link to="/cookiepolicy" @click="toggleModal">cookie policy</nuxt-link>
+          </label>
+        </div>
+        <div>
+          <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
           <button @click="toggleModal">Cancel</button>
         </div>
       </ReusableModal>
@@ -18,11 +25,13 @@
   import { ref, onMounted, computed } from 'vue';
   import { useAuthStore } from '@/stores/auth'; // Import the auth store
   import ReusableModal from "@/components/ReusableModal.vue";
+  import { useRouter } from 'vue-router';
   
   const authStore = useAuthStore();
   
   const username = computed(() => authStore.getUsername());
   const inputText = ref('');
+  const acceptCookies = ref(false);
   
   const modalActive = ref(false);
   const toggleModal = () => {
@@ -30,9 +39,11 @@
   };
   
   const saveUsername = () => {
-    authStore.setUsername(inputText.value);
-    document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 7 days (Last int is amount of days)
-    toggleModal();
+    if (acceptCookies.value) {
+      authStore.setUsername(inputText.value);
+      document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
+      toggleModal();
+    }
   };
   
   const getCookie = (name) => {
@@ -68,9 +79,18 @@
     transform: translateY(-2px);
   }
   
+  button:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+  }
+  
   button:active {
     background-color: #003f7f;
     transform: translateY(0);
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 10px;
   }
   </style>
   
