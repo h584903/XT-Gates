@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectNameList">
     <!-- Vise listene i sidebar -->
-    <NuxtLink v-for="project in projects" :key="project.id" :to="`/projectList/${project.id}`">
+    <NuxtLink v-for="project in filteredProjects" :key="project.id" :to="`/projectList/${project.id}`">
       {{ project.title }}
     </NuxtLink>
   </div>
@@ -20,6 +20,9 @@ watchEffect(() => {
   console.log(projects.value);
 });
 
+const filteredProjects = computed(() => {
+  return projects.value.filter(project => !project.archive);
+});
 </script>
 <style scoped>
 .ProjectNameList {

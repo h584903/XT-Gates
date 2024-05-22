@@ -49,11 +49,19 @@
           <h1>Delete Project?</h1>
           <p>Deleting a project is absolute, and cannot be reversed. Make certain this is necessary before doing so.</p>
           <p>Delete project {{ project.title }}?</p>
-          <button @click="deleteProjectHandler" deleteProject class="customButton">Yes</button>
-          <button @click="toggleModal" class="customButton">No</button>
+          <button @click="deleteProjectHandler" deleteProject class="deleteButton">Yes</button>
+          <button @click="toggleModal" class="cancelButton">No</button>
         </ReusableModal>
       </div>
-      <button @click="toggleModal" type = "button">Delete project</button>
+      <div class="button-container">
+        <button @click="toggleModal" type="button" class="customButton deleteColor">Delete project</button>
+        <div v-if="!project.archive">
+          <button @click="archiveProjectHandler" type="button" class="customButton archiveButton">Archive project</button>
+        </div>
+        <div v-else>
+          <button @click="archiveProjectHandler" type="button" class="customButton archiveButton">Reactivate project</button>
+        </div>
+      </div>
     </div>
     <div v-else>
       loading project...
@@ -104,6 +112,7 @@
     editPODateMode.value = false;
     editPEM_Mode.value = false;
   }
+
 
   // Funksjon for å forsøke å oppdatere SFDate for et prosjekt
   function updateSFDate() {
@@ -179,6 +188,17 @@ const deleteProjectHandler= () => {
   toggleModal();
   router.push('/projectlist');
 }
+
+// Metode for å arkivere prosjektet
+const archiveProjectHandler = async () => {
+  try {
+    console.log("Archiving project..")
+    await store.archiveProject(project.value.id);
+  } catch (error) {
+    console.error('Failed to archive the project:', error);
+  }
+}
+
 // Metode for å formatere datoen til europeisk format DD.MM.YYYY
 const formatEuropeanDate = (isoDate) => {
   const date = new Date(isoDate);
@@ -187,6 +207,7 @@ const formatEuropeanDate = (isoDate) => {
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
 };
+
 const displayedPEM = computed(() => {
     if (!project.value || !project.value.PEM || !project.value.PEM.trim()) {
       return "No PEM";
@@ -233,6 +254,47 @@ const cancelEdit = () => {
 
 .customButton {
   margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.deleteColor {
+  background-color: rgb(255, 140, 140);
+}
+
+.deleteButton {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #000000;
+  background-color: #ffdada; /* Red */
+}
+
+.archiveButton {
+  background-color: #4caf50; /* Green */
+}
+
+.cancelButton {
+  margin: 10px;
+  padding: 20px 40px; /* Further increase padding */
+  border: none;
+  border-radius: 10px; /* Further increase border radius */
+  cursor: pointer;
+  color: #fff;
+  background-color: #00a2ff; /* Gray */
+  font-size: 20px; /* Further increase font size */
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 textarea {
@@ -244,8 +306,9 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-  }
-  .wrapper .info {
+}
+
+.wrapper .info {
   display: flex;
   flex-direction: column;
 }

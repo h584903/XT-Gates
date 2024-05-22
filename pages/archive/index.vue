@@ -1,35 +1,40 @@
 <template>
-  <div class="list-wrapper">
-    <ListDesc/>
-    <hr class="solid">
-    <!-- Oppretter et entry for hvert prosjekt i store.projects -->
-    <div v-for="project in paginatedProjects" :key="project.id">
-      <ProjectEntry :entryData="project" />
-    </div> 
+  <div>
+    <u>
+      <h1>ARCHIVED PROJECTS</h1>
+    </u>
+    <div class="list-wrapper">
+      <ListDesc />
+      <hr class="solid">
+      <!--Oppretter et entry for hvert prosjekt i store.projects-->
+      <div v-for="project in paginatedProjects" :key="project.id">
+        <ProjectEntry :entryData="project" />
+      </div> 
 
-    <!-- Pagination Controls -->
-    <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-button">Previous</button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-button">Next</button>
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1" class="pagination-button">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-button">Next</button>
+      </div>
+
+      <Modal @close="toggleModal" :modalActive="modalActive">
+        <h1>New Project</h1>
+        <form @submit.prevent="submitForm">
+          <label>Project title: </label>
+          <input type="text" id="title" v-model="formData.title" required><br>
+          <label>PO-date: </label>
+          <input type="date" id="PO" v-model="formData.PO" required><br>
+          <label>Scheduled finish: </label>
+          <input type="date" id="SF" v-model="formData.SF" required><br>
+          <label>PEM: </label>
+          <input type="text" id="PEM" v-model="formData.PEM" required><br>
+          <button type="submit" class="addButton">Create Project</button>
+        </form>
+        <button class="closeButton" @click="toggleModal">Cancel</button>
+      </Modal>
+      <button @click="toggleModal" type="button" class="add-project-button">Add Project</button>
     </div>
-
-    <Modal @close="toggleModal" :modalActive="modalActive">
-      <h1>New Project</h1>
-      <form @submit.prevent="submitForm">
-        <label>Project title: </label>
-        <input type="text" id="title" v-model="formData.title" required><br>
-        <label>PO-date: </label>
-        <input type="date" id="PO" v-model="formData.PO" required><br>
-        <label>Scheduled finish: </label>
-        <input type="date" id="SF" v-model="formData.SF" required><br>
-        <label>PEM: </label>
-        <input type="text" id="PEM" v-model="formData.PEM" required><br>
-        <button type="submit" class="addButton">Create Project</button>
-      </form>
-      <button class="closeButton" @click="toggleModal">Cancel</button>
-    </Modal>
-    <button @click="toggleModal" type="button" class="add-project-button">Add Project</button>
   </div>
 </template>
 
@@ -57,7 +62,7 @@ const paginatedProjects = computed(() => {
 });
 
 const filteredProjects = computed(() => {
-  return projects.value.filter(project => !project.archive);
+  return projects.value.filter(project => project.archive);
 });
 
 onMounted(() => {
@@ -110,7 +115,6 @@ const nextPage = () => {
   flex-direction: column;
   width: 100%;
 }
-
 .addButton, .closeButton, .add-project-button, .pagination-button {
   background-color: #007BFF;
   color: white;
@@ -143,10 +147,5 @@ const nextPage = () => {
 .pagination button:disabled {
   background-color: #888;
   cursor: not-allowed;
-}
-
-hr.solid {
-  width: 100%;
-  border-top: 1px solid grey;
 }
 </style>
