@@ -5,9 +5,10 @@
       <sideBar />
     </div>
     <div class="slot_wrapper">
-      <div v-if="!isLoggedIn" class="login-prompt">
+      <div v-if="shouldShowLoginPrompt" class="login-prompt">
         <h1>Welcome to XT Gates</h1>
         <p>Please register a username to ensure proper logging of work.</p>
+        <NuxtLink to="/cookiepolicy" class="cookie-policy-link">View our Cookie Policy</NuxtLink>
       </div>
       <slot v-else /> <!-- Her ligger siden som hentes fra page mappen -->
     </div>
@@ -16,12 +17,16 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import sideBar from '@/components/sideBar.vue';
 
 const authStore = useAuthStore();
+const route = useRoute();
+
 const username = computed(() => authStore.getUsername());
 const isLoggedIn = computed(() => username.value !== 'John Doe' && username.value !== '---');
+const shouldShowLoginPrompt = computed(() => !isLoggedIn.value && route.path !== '/cookiepolicy');
 </script>
 
 <style scoped>
@@ -62,5 +67,17 @@ body {
 .login-prompt p {
   font-size: 1.2em;
   color: #555;
+}
+
+.cookie-policy-link {
+  display: block;
+  margin-top: 20px;
+  font-size: 1em;
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.cookie-policy-link:hover {
+  text-decoration: underline;
 }
 </style>
