@@ -17,23 +17,6 @@
         <span>Page {{ currentPage }} of {{ totalPages }}</span>
         <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-button">Next</button>
       </div>
-
-      <Modal @close="toggleModal" :modalActive="modalActive">
-        <h1>New Project</h1>
-        <form @submit.prevent="submitForm">
-          <label>Project title: </label>
-          <input type="text" id="title" v-model="formData.title" required><br>
-          <label>PO-date: </label>
-          <input type="date" id="PO" v-model="formData.PO" required><br>
-          <label>Scheduled finish: </label>
-          <input type="date" id="SF" v-model="formData.SF" required><br>
-          <label>PEM: </label>
-          <input type="text" id="PEM" v-model="formData.PEM" required><br>
-          <button type="submit" class="addButton">Create Project</button>
-        </form>
-        <button class="closeButton" @click="toggleModal">Cancel</button>
-      </Modal>
-      <button @click="toggleModal" type="button" class="add-project-button">Add Project</button>
     </div>
   </div>
 </template>
