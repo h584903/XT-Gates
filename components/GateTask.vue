@@ -45,14 +45,16 @@
           {{ taskDuration }} days
         </div>
       </div>
-      <div class="w10 edit">
-        <div v-if="editCommentMode">
-          <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
-        </div>
-        <div v-else @click="enableCommentEditMode">
-          <span>{{ commentDisplay }}</span>
-        </div>
-      </div>
+      <div class="commentWrapper w10" @click="enableCommentEditMode">
+    <input v-if="!props.comment" type="text" style="opacity: 0; width: 100%; height: 100%; position: absolute; cursor: text;">
+    <div v-if="editCommentMode">
+        <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
+    </div>
+    <div v-else>
+        <span>{{ editedComment }}</span>
+    </div>
+</div>
+
       <div class="delete" @click="toggleModal">
         <img src="assets/x.svg" />
       </div>
@@ -172,11 +174,6 @@ const editResponsiblePersonMode = ref(false);
     editCommentMode.value = false;
   }
 
-  const commentDisplay = computed(() => {
-  const trimmedComment = editedComment.value.trim();
-  return trimmedComment === "" ? "No comment" : trimmedComment;
-});
-
   // Håndtering av editte task title
   function enableTitleEditMode() {
     editTitleMode.value = true;
@@ -264,7 +261,12 @@ const responsiblePersonDisplay = computed(() => {
 .edit {
   cursor: pointer;
 }
-
+.commentWrapper {
+  display:flex;
+  margin: auto;
+  text-align: flex;
+  width: 10%;
+}
 textarea {
     width: 100%;
     min-height: 80px;
