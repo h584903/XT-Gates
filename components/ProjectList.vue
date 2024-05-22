@@ -29,7 +29,7 @@
       </form>
       <button class="closeButton" @click="toggleModal">Cancel</button>
     </Modal>
-    <button @click="toggleModal" type="button" class="add-project-button">Add Project</button>
+    <button v-if="!modalActive" @click="toggleModal" type="button" class="add-project-button">Add Project</button>
   </div>
 </template>
 
