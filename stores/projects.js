@@ -23,12 +23,10 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     async function fetchNonArchivedProjects() {
-        console.log("PÅ RETT SPOR");
         try {
             const response = await $fetch('/projects', {
                 method: 'GET'
             });
-            console.log('Response Data:', response.data);
             const data = response.data;
             const projectsArray = Object.values(data).map(project => ({
                 id: project.ID,
@@ -43,7 +41,6 @@ export const useProjectsStore = defineStore('projects', () => {
                 gates: project.gates
             }));
 
-            console.log('Projects Array:', projectsArray);
             setProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -55,7 +52,6 @@ export const useProjectsStore = defineStore('projects', () => {
             const response = await $fetch('/projects', {
                 method: 'GET'
             });
-            console.log('Response Data:', response.data);
             const data = response.data;
             const projectsArray = Object.values(data).map(project => ({
                 id: project.ID,
@@ -70,7 +66,6 @@ export const useProjectsStore = defineStore('projects', () => {
                 gates: project.gates
             }));
 
-            console.log('Projects Array:', projectsArray);
             setProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -293,6 +288,21 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
+    async function calculateWorkDuration(prosjektID){
+        const gateStore = useGatesStore()
+        const taskStore = useTasksStore()
+        let workDuration = 0
+        console.log("INIT")
+        let filteredGates = gateStore.getProjectGates(prosjektID)
+        console.log(filteredGates)
+        for (const gate of filteredGates) {
+            const maxDuration = await taskStore.maxTaskWorkDuration(prosjektID, gate.ID);
+            console.log("Attempting to add:", maxDuration);
+            workDuration += maxDuration;
+        }
+        return workDuration
+    }
+
     return {
         getTemplate,
         filteredProjects,
@@ -313,6 +323,7 @@ export const useProjectsStore = defineStore('projects', () => {
         updateSFDate,
         updatePEM,
         fetchNonArchivedProjects,
-        archiveProject
+        archiveProject,
+        calculateWorkDuration
     };
 });

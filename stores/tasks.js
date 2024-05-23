@@ -1,21 +1,13 @@
 import { ref, computed } from 'vue';
-import { packProject } from '@/utils/packProject.js';
 import { defineStore } from "pinia";
 
 export const useTasksStore = defineStore('tasks', () => {
-    // Vanlig Ref
     const tasks = ref([]);
 
-    // Pusher opp noen eksempel tasks
-
-    // Funksjon for å legge til en task
-
     async function addTask(gateID, step, title, responsiblePerson, duration) {
-
         const gateStore = useGatesStore();
-        const projectID = gateStore.getProjectID(gateID)
-        console.log("Making Task: " + title + " with step: " + step + " in project: " + projectID + "and gate: " + gateID)
-
+        const projectID = gateStore.getProjectID(gateID);
+        console.log("Making Task: " + title + " with step: " + step + " in project: " + projectID + "and gate: " + gateID);
 
         const requestBody = {
             projectID: projectID,
@@ -24,9 +16,9 @@ export const useTasksStore = defineStore('tasks', () => {
             title: title,
             responsiblePerson: responsiblePerson,
             duration: duration,
-            completeDate :null
+            completeDate: null
         };
-        console.log(requestBody)
+        console.log(requestBody);
 
         try {
             const response = await $fetch('/tasks', {
@@ -42,7 +34,7 @@ export const useTasksStore = defineStore('tasks', () => {
             let sortedTasks = getGateTasks(gateID).sort((a, b) => a.step - b.step);
             sortedTasks.forEach((task, index) => {
                 task.step = index + 1;
-            })
+            });
             updateTasksOrder(sortedTasks);
             await fetchTasks(projectID);
         } catch (error) {
@@ -56,42 +48,35 @@ export const useTasksStore = defineStore('tasks', () => {
 
     function maxTaskDuration(prosjektID, gateNR) {
         let maxDuration = 0;
-        const gates = useGatesStore()
-        for (let i = 0; i<tasks.value.length; i++) {
+        const gates = useGatesStore();
+        for (let i = 0; i < tasks.value.length; i++) {
             let rettGate = false;
             let rettProsjekt = false;
 
-            rettProsjekt = (tasks.value[i].prosjektID === Number(prosjektID))
-            rettGate = (gates.getGateNR(tasks.value[i].gateID) === (gateNR+1))
-            if(tasks.value[i].duration>maxDuration && rettGate && rettProsjekt) {
-                maxDuration = tasks.value[i].duration
+            rettProsjekt = (tasks.value[i].prosjektID === Number(prosjektID));
+            rettGate = (gates.getGateNR(tasks.value[i].gateID) === (gateNR + 1));
+            if (tasks.value[i].duration > maxDuration && rettGate && rettProsjekt) {
+                maxDuration = tasks.value[i].duration;
             }
         }
         return maxDuration;
     }
 
-
-
-
-    // Du oppgir gateID, så vil den filtrere ut alle gates som starter med sammeID som gateID
     function getGateTasks(gateID) {
-        // Substring henter ut string fra starten og frem til lengden av gateID som ble oppgitt
-        // Denne funksjonen funker nå også for prosjekt, og kan hente alle prosjektene til et prosjekt hvis man oppgir en prosjekt id
         const filteredTasks = tasks.value.filter(task => task.gateID == gateID);
         filteredTasks.sort((a, b) => a.step - b.step);
         return filteredTasks;
     }
 
-
     async function updateTaskProgress(taskID, newProgress) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
-        console.log("This is newProgress: " + newProgress)
+        console.log("This is newProgress: " + newProgress);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].progress = newProgress;
         }
-        // Her oppdaterer jeg tasken i databasen gjennom PUT api
+
         try {
-            const response = await fetch(`/tasks/progress/`+taskID, {
+            const response = await fetch(`/tasks/progress/` + taskID, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +87,7 @@ export const useTasksStore = defineStore('tasks', () => {
                 })
             });
             const gateStore = useGatesStore();
-            console.log("Starting up updateGateProgress")
+            console.log("Starting up updateGateProgress");
             gateStore.updateGateProgress(getGateID(taskID));
         } catch (error) {
             console.error('Error updating task progress:', error);
@@ -115,9 +100,8 @@ export const useTasksStore = defineStore('tasks', () => {
             tasks.value[taskIndex].duration = newDuration;
         }
 
-        // Her oppdaterer jeg tasken i databasen gjennom PUT api
         try {
-            const response = await fetch(`/tasks/`+taskID, {
+            const response = await fetch(`/tasks/` + taskID, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -125,7 +109,7 @@ export const useTasksStore = defineStore('tasks', () => {
                 body: JSON.stringify({
                     taskID: taskID,
                     newDuration: newDuration
-                    })
+                })
             });
             const gateStore = useGatesStore();
             gateStore.updateGateProgress(getGateID(taskID));
@@ -135,8 +119,6 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     async function updateTasksOrder(newTasks) {
-
-        // Sender de nye stepsene til databasen
         try {
             const response = await fetch(`/tasks/order`, {
                 method: 'PUT',
@@ -158,13 +140,13 @@ export const useTasksStore = defineStore('tasks', () => {
         let today = new Date();
         let duration = getTaskDuration(taskID);
         let progress = getTaskProgress(taskID);
-        let remainderTime = duration - (duration * progress / 100)
+        let remainderTime = duration - (duration * progress / 100);
         let SF = new Date(today.getTime() + (remainderTime * 86400000));
-        let PF = gateStore.getSFG(getGateID(taskID))
+        let PF = gateStore.getSFG(getGateID(taskID));
 
-        onTime = (PF >= SF.toISOString())
+        onTime = (PF >= SF.toISOString());
 
-        return onTime
+        return onTime;
     }
 
     function getTaskDuration(taskID) {
@@ -177,7 +159,6 @@ export const useTasksStore = defineStore('tasks', () => {
         return task ? task.progress : null;
     }
 
-    
     function getProjectID(taskID) {
         const task = tasks.value.find(task => task.ID === taskID);
         return task ? task.prosjektID : null;
@@ -191,9 +172,9 @@ export const useTasksStore = defineStore('tasks', () => {
     function completedInTime(date, taskID) {
         const gateStore = useGatesStore();
         let inTime = false;
-    
+
         const task = tasks.value.find(task => task.ID === taskID);
-    
+
         if (task) {
             const gateID = task.gateID;
             const supposedDate = gateStore.getSFG(gateID);
@@ -201,14 +182,14 @@ export const useTasksStore = defineStore('tasks', () => {
                 inTime = true;
             }
         }
-    
+
         return inTime;
     }
 
     async function updateDate(taskID) {
-        const authStore = useAuthStore()
+        const authStore = useAuthStore();
         var today = new Date();
-        var username = authStore.getUsername()
+        var username = authStore.getUsername();
         var formattedDate = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         try {
             const response = await $fetch('/tasks/completeDate/' + taskID, {
@@ -226,7 +207,7 @@ export const useTasksStore = defineStore('tasks', () => {
                 tasks.value[taskIndex].completeDate = formattedDate;
             }
         } catch (error) {
-            console.error('Error updating date', error)
+            console.error('Error updating date', error);
         }
 
         try {
@@ -240,15 +221,27 @@ export const useTasksStore = defineStore('tasks', () => {
                     newUser: username
                 })
             });
-            console.log("USERNAME: " + username)
+            console.log("USERNAME: " + username);
             const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
             if (taskIndex !== -1) {
                 tasks.value[taskIndex].updateUser = username;
             }
         } catch (error) {
-            console.error('Error updating user', error)
+            console.error('Error updating user', error);
         }
-        
+    }
+
+    async function maxTaskWorkDuration(prosjektID, gateID) {
+        let maxWork = 0;
+        const filteredTasks = getGateTasks(gateID)
+
+        filteredTasks.forEach(task => {
+            if(task.duration - (task.duration * task.progress/100) > maxWork) {
+                maxWork = task.duration - (task.duration * task.progress/100);
+            }
+        });
+
+        return maxWork;
     }
 
     async function updateTaskResponsiblePerson(taskID, newResponsiblePerson) {
@@ -275,10 +268,10 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-
     function setTasks(newTasks) {
         tasks.value = newTasks;
     }
+
     async function fetchTasks(projectID) {
         try {
             const response = await $fetch('/tasks/' + projectID, {
@@ -299,8 +292,7 @@ export const useTasksStore = defineStore('tasks', () => {
                 completeDate: task.completeDate,
                 updateUser: task.updateUser
             }));
-            //console.log(tasks.value)
-            setTasks(taskArray)
+            setTasks(taskArray);
         } catch (error) {
             console.error('Error fetching tasks:', error);
         }
@@ -311,7 +303,7 @@ export const useTasksStore = defineStore('tasks', () => {
         if (taskIndex !== -1) {
             tasks.value[taskIndex].comment = newComment;
         }
-    
+
         try {
             const response = await fetch(`/tasks/comment/${taskID}`, {
                 method: 'PUT',
@@ -323,20 +315,19 @@ export const useTasksStore = defineStore('tasks', () => {
                     newComment: newComment
                 })
             });
-            
+
             const data = await response.json();
         } catch (error) {
             console.error('Error updating task comment:', error);
         }
     }
 
-
     async function updateTaskTitle(taskID, newTitle) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].title = newTitle;
         }
-    
+
         try {
             const response = await fetch(`/tasks/title/${taskID}`, {
                 method: 'PUT',
@@ -352,19 +343,38 @@ export const useTasksStore = defineStore('tasks', () => {
             console.error('Error updating task title:', error);
         }
     }
-    
-    
+
     async function deleteTask(taskID, step) {
         try {
-            // Attempt to delete the task by making an API call
             const response = await $fetch(`/tasks/${taskID}`, {
                 method: 'DELETE'
             });
-            fetchTasks(getProjectID(taskID))
-
+            fetchTasks(getProjectID(taskID));
         } catch (error) {
             console.error("Failed to delete task:", error);
         }
     }
-    return { tasks, addTask, updateDate, getGateID, getProjectID, getGateTasks, getTaskProgress, getTaskDuration, inTime, updateTaskProgress, updateTaskDuration, updateTasksOrder, maxTaskDuration, fetchTasks,updateTaskComment, completedInTime, deleteTask, updateTaskResponsiblePerson, updateTaskTitle };
+
+    return { 
+        tasks,
+        addTask, 
+        updateDate, 
+        getGateID, 
+        getProjectID, 
+        getGateTasks, 
+        getTaskProgress, 
+        getTaskDuration, 
+        inTime, 
+        updateTaskProgress, 
+        updateTaskDuration,
+        updateTasksOrder, 
+        maxTaskDuration, 
+        fetchTasks,
+        updateTaskComment,
+        completedInTime,
+        deleteTask,
+        updateTaskResponsiblePerson,
+        updateTaskTitle,
+        maxTaskWorkDuration
+    };
 });

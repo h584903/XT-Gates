@@ -35,8 +35,6 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     function setGates(newGates) {
-        console.log("gateStore: " + newGates)
-        // måtte legge til .value her
         gates.value = newGates;
     }
 
