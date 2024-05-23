@@ -89,8 +89,6 @@ const updateComment = async () => {
 const calculateStatus = computed(() => {
   const today = new Date();
   const onTimeDate = new Date(props.entryData.onTimeDate);
-  console.log("Comparing " + today)
-  console.log("and " + onTimeDate)
   return onTimeDate >= today;
 });
 // Metode for å redirecte til et prosjekt når man trykker på det
