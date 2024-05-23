@@ -231,7 +231,7 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    async function maxTaskWorkDuration(prosjektID, gateID) {
+    function maxTaskWorkDuration(prosjektID, gateID) {
         let maxWork = 0;
         const filteredTasks = getGateTasks(gateID)
 

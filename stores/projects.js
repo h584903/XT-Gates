@@ -296,7 +296,7 @@ export const useProjectsStore = defineStore('projects', () => {
         let filteredGates = gateStore.getProjectGates(prosjektID)
         console.log(filteredGates)
         for (const gate of filteredGates) {
-            const maxDuration = await taskStore.maxTaskWorkDuration(prosjektID, gate.ID);
+            const maxDuration = taskStore.maxTaskWorkDuration(prosjektID, gate.ID);
             console.log("Attempting to add:", maxDuration);
             workDuration += maxDuration;
         }
