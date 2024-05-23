@@ -46,14 +46,13 @@
         </div>
       </div>
       <div class="commentWrapper w10" @click="enableCommentEditMode">
-    <input v-if="!props.comment" type="text" style="opacity: 0; width: 100%; height: 100%; position: absolute; cursor: text;">
-    <div v-if="editCommentMode">
-        <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" :value="editedComment" @input="editedComment = $event.target.value" @blur="updateComment" @keyup.enter="updateComment"></textarea>
-    </div>
-    <div v-else>
+      <div v-if="editCommentMode">
+        <textarea rows="2" maxlength="30" v-model="editedComment" @blur="updateComment" @keyup.enter="updateComment"></textarea>
+      </div>
+      <div v-else>
         <span>{{ editedComment }}</span>
+      </div>
     </div>
-</div>
 
       <div class="delete" @click="toggleModal">
         <img src="assets/x.svg" />
@@ -163,10 +162,8 @@ const editResponsiblePersonMode = ref(false);
 
   // Håndtering av å editte task comment, hvis de deler editMode går begge inn i redigeringsmodus når du trykker på en av de
     function enableCommentEditMode() {
+      closeAllEditModes();
       editCommentMode.value = true;
-      editMode.value = false;
-      editTitleMode.value = false;
-      editResponsiblePersonMode.value = false;
   }
 
   function updateComment() {
@@ -218,6 +215,14 @@ const responsiblePersonDisplay = computed(() => {
     };
   }
 
+  function closeAllEditModes() {
+    console.log("Closing all edit modes...");
+  editMode.value = false;
+  editCommentMode.value = false;
+  editTitleMode.value = false;
+  editResponsiblePersonMode.value = false;
+}
+
   const debouncedUpdateProgress = debounce(updateProgress, 1500);
 
   // Delete modal
@@ -262,11 +267,14 @@ const responsiblePersonDisplay = computed(() => {
   cursor: pointer;
 }
 .commentWrapper {
-  display:flex;
-  margin: auto;
-  text-align: flex;
-  width: 10%;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  min-height: 40px;
+  cursor: text;
 }
+
 textarea {
     width: 100%;
     min-height: 80px;
