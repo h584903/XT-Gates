@@ -37,13 +37,13 @@
           <div class="info-item">
             <label>PO-Float:</label>
             <span :class="{'negative-float': poFloat < 0, 'positive-float': poFloat >= 0}">
-              {{ poFloat }} days
+              {{ poFloat}} days
             </span>
           </div>
           <div class="info-item">
             <label>Schedule-float:</label>
             <span :class="{'negative-float': float < 0, 'positive-float': float >= 0}">
-              {{ float }} days
+              {{ float}} days
             </span>
           </div>
         </div>
@@ -100,6 +100,9 @@
   const editedSFDate = ref('');
   const editPEM_Mode = ref(false);
   const editedPEM = ref('');
+  const float = ref(0);
+  // const poFloat = ref(0);
+  const poFloat = computed(() => calculatePOFloat());
 
   const enableEditPODateMode = () => {
     editPODateMode.value = true;
@@ -225,10 +228,6 @@
     editPEM_Mode.value = false;
   };
 
-  // Reactive variables for float values
-  const float = ref(0);
-  const poFloat = ref(0);
-
   // Watch for project changes and update float values
   watchEffect(async () => {
     if (project.value) {
@@ -239,15 +238,12 @@
 
   const calculateFloat = async () => {
   if (!project.value) return null;
-
   // Fetch the SF date and work duration
   const sfDate = new Date(project.value.SFdate);
   const workDuration = await store.calculateWorkDuration(project.value.id);
-
   if (workDuration == 0) {
     return 0
   }
-
   // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
   const newDate = new Date(sfDate);
   newDate.setDate(sfDate.getDate() - workDuration);
@@ -261,39 +257,24 @@
   console.log(newDate)
 
   if(today>newDate) {
-    return -diffDays
+    return -diffDays+1
   }
   return diffDays;
 };
 
-  const calculatePOFloat = async () => {
-  if (!project.value) return null;
+function calculatePOFloat() {
+    if (!project.value || !project.value.POdate) return null;
 
-  // Fetch the SF date and work duration
-  const poDate = new Date(project.value.POdate);
-  const workDuration = await store.calculateWorkDuration(project.value.id);
+    const poDate = new Date(project.value.POdate);
+    const today = new Date();
 
-  if (workDuration == 0) {
-    return 0
+    // Calculate the difference in milliseconds between today and POdate
+    const differenceInMs = today - poDate;
+
+    // Convert milliseconds to days
+    const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+    return -differenceInDays;
   }
-
-  // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
-  const newDate = new Date(poDate);
-  newDate.setDate(poDate.getDate() - workDuration);
-  newDate.setHours(23, 59, 0, 0);
-
-  const today = new Date();
-  const diffTime = Math.abs(newDate - today);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  console.log(today)
-  console.log(newDate)
-
-  if(today>newDate) {
-    return -diffDays
-  }
-  return diffDays;
-};
 </script>
 
 
