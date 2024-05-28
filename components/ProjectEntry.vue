@@ -100,7 +100,6 @@ const calculateStatus = computed(() => {
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate()-2);
   const onTimeDate = new Date(props.entryData.onTimeDate);
-  console.log("SE HER KRISTOFFER: " +onTimeDate + tomorrow)
   return onTimeDate >= tomorrow;
 });
 
