@@ -97,9 +97,12 @@ const updateComment = async () => {
 // Compute the project status
 const calculateStatus = computed(() => {
   const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate()-2);
   const onTimeDate = new Date(props.entryData.onTimeDate);
-  return onTimeDate >= today;
+  return onTimeDate >= tomorrow;
 });
+
 
 // Redirect to the project page
 const redirect = () => {
@@ -166,7 +169,7 @@ a {
   text-align: flex;
   width: 10%;
   cursor: text;
-  min-height: 4px;
+  min-height: 1rem;
 }
 
 textarea {
