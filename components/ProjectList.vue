@@ -42,11 +42,16 @@ import { v4 as uuid } from 'uuid';
 
 const store = useProjectsStore();
 const gateStore = useGatesStore();
-const projects = ref(store.getProjects());
+const projects = ref([]);
 const index = ref(0);
 
 const currentPage = ref(1);
 const projectsPerPage = 15;
+
+const fetchProjects = () => {
+  store.fetchProjects();
+  projects.value = store.getProjects();
+};
 
 const filteredProjects = computed(() => {
   return projects.value.filter(project => !project.archive);
@@ -61,9 +66,7 @@ const paginatedProjects = computed(() => {
 });
 
 onMounted(() => {
-  if (store.getProjects().length === 1) {
-    store.fetchProjects();
-  }
+  fetchProjects();
 });
 
 watchEffect(() => {
