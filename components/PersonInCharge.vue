@@ -11,7 +11,7 @@ const props = defineProps({
   }
 });
 
-const name = abrName(props.entryName)
+const name = props.entryName
 </script>
 
 

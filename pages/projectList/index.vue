@@ -12,10 +12,7 @@ import { useProjectsStore } from '@/stores/projects';
 
 const store = useProjectsStore();
 
-onMounted(() => {
-  // Må endres til 0 hvis testprosjekt fjernes
-    store.fetchNonArchivedProjects();
-  });
+
 </script>
 <style scoped>
 /* Style er scoped for å beholde singleFileComponent struktur */
