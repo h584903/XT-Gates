@@ -1,8 +1,7 @@
 <template>
-  <!-- Følger prototypen til figma -->
   <div class="list project-card">
     <div class="titleWrapper" @click="enableEditMode" v-if="!editMode">
-      <span>{{ entryData.title }}</span>
+      <span>{{ editedTitle }}</span>
     </div>
     <div class="titleWrapper" v-else>
       <input type="text" v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
@@ -11,33 +10,32 @@
       <ProgressBar :progressNumber="entryData.progress" />
     </div>
     <div class="dateWrapper" @click="redirect">
-      <DateEntry :dateString = "entryData.SFdate" />
+      <DateEntry :dateString="entryData.SFdate" />
     </div>
-    <div class="dateWrapper" >
-      <DateEntry :dateString = "entryData.POdate" />
+    <div class="dateWrapper">
+      <DateEntry :dateString="entryData.POdate" />
     </div>
     <div class="statusWrapper" @click="redirect">
-      <PlanStatus :onSchedule = "calculateStatus" />
+      <PlanStatus :onSchedule="calculateStatus" />
     </div>
     <div class="personWrapper" @click="redirect">
-      <PersonInCharge :entryName="entryData.PEM"/>  
+      <PersonInCharge :entryName="entryData.PEM" />
     </div>
-    <div class=".commentWrapper w10" @click="enableCommentEditMode">
+    <div class="commentWrapper w10" @click="enableCommentEditMode">
       <div v-if="commentEditMode">
         <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" v-model="editedComment" @blur="updateComment" @keyup.enter="updateComment"></textarea>
       </div>
       <div v-else>
-        <span>{{ props.entryData.comment }}</span>
+        <span>{{ editedComment }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
-import { useProjectsStore } from "@/stores/projects";
+import { ref, computed, watch } from 'vue';
+import { useProjectsStore } from '@/stores/projects';
 import { useRouter } from 'vue-router';
-
 
 const props = defineProps({
   entryData: {
@@ -47,13 +45,24 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const editedComment = ref(props.entryData.comment);
-const commentEditMode = ref(false); // editMode for comment
-const editedTitle = ref(props.entryData.title);
-const editMode = ref(false); // editorMode for title
 const store = useProjectsStore();
 
-// Håndtering av å editte tittel til prosjekt
+const editedTitle = ref(props.entryData.title);
+const editedComment = ref(props.entryData.comment);
+const editMode = ref(false); // editorMode for title
+const commentEditMode = ref(false); // editMode for comment
+
+// Watch for changes in props.entryData and update local state
+watch(
+  () => props.entryData,
+  (newData) => {
+    editedTitle.value = newData.title;
+    editedComment.value = newData.comment;
+  },
+  { immediate: true, deep: true }
+);
+
+// Handle title edit
 const enableEditMode = () => {
   editMode.value = true;
   commentEditMode.value = false;
@@ -63,13 +72,13 @@ const updateTitle = async () => {
   try {
     await store.updateProjectTitle(props.entryData.id, editedTitle.value);
   } catch (error) {
-    console.error("Failed to update the project:", error);
+    console.error('Failed to update the project:', error);
   } finally {
     editMode.value = false;
   }
 };
 
-// Håndtering av editte comment på et prosjekt
+// Handle comment edit
 const enableCommentEditMode = () => {
   commentEditMode.value = true;
   editMode.value = false;
@@ -79,29 +88,26 @@ const updateComment = async () => {
   try {
     await store.updateProjectComment(props.entryData.id, editedComment.value);
   } catch (error) {
-    console.error("Failed to update the project comment:", error);
+    console.error('Failed to update the project comment:', error);
   } finally {
     commentEditMode.value = false;
   }
 };
 
-// computed for status på et prosjekt
+// Compute the project status
 const calculateStatus = computed(() => {
   const today = new Date();
   const onTimeDate = new Date(props.entryData.onTimeDate);
-  console.log("Comparing " + today)
-  console.log("and " + onTimeDate)
   return onTimeDate >= today;
 });
-// Metode for å redirecte til et prosjekt når man trykker på det
-const redirect = (event) => {
-    router.push(`/projectList/${props.entryData.id}`);
-  };
 
+// Redirect to the project page
+const redirect = () => {
+  router.push(`/projectList/${props.entryData.id}`);
+};
 </script>
 
 <style scoped>
-
 .list {
   display: flex;
   justify-content: space-between;
@@ -109,17 +115,16 @@ const redirect = (event) => {
 }
 
 a {
-    text-decoration: none;
-    color: black;
+  text-decoration: none;
+  color: black;
 }
-.project-card {
 
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 5px;
-    
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.project-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 5px;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .titleWrapper {
@@ -156,53 +161,21 @@ a {
   cursor: pointer;
 }
 .commentWrapper {
-  display:flex;
+  display: flex;
   margin: auto;
   text-align: flex;
-  width: 10%;  
-  /* Fikse på innholdet */
-}
-/* Fikser på header og paragraf */
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  h1,p {
-    margin-bottom: 16px;
-  }
-
-  h1 {
-    font-size: 32px;
-  }
-  p {font-size: 16px;}
-/* Knappen som vises i prosjektsiden*/
-}
-
-.bigButton {
-  padding: 10px 10px;
-  border: none;
-  font-size: 16px;
-  background-color: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
-  cursor: pointer;
-}
-
-.smallButton {
-  margin: 10px;
-  width: 100px;
-  flex: auto;
-}
-.w10 {
   width: 10%;
   cursor: text;
 }
+
 textarea {
-    width: 100%;
-    min-height: 80px;
-    resize: vertical;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
 </style>

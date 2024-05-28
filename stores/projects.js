@@ -72,6 +72,119 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
+    async function updateOnTime(projectID, float) {
+        if (isNaN(float)) {
+            console.log("ERRRORFLOAT: "+float)
+            console.error('Invalid float value:', float);
+            return;
+        }
+
+        const today = new Date();
+        const onTimeDate = new Date(today);
+        onTimeDate.setDate(today.getDate() + float);
+
+        if (isNaN(onTimeDate.getTime())) {
+            console.error('Invalid onTimeDate:', onTimeDate);
+            return;
+        }
+
+        try {
+            await fetch(`/projects/onTimeDate/${projectID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectID: projectID,
+                    onTimeDate: onTimeDate.toISOString().split('T')[0] // Format date to 'YYYY-MM-DD'
+                })
+            });
+
+            // Update the local state in the store
+            const projectIndex = projects.value.findIndex(project => project.id === projectID);
+            if (projectIndex !== -1) {
+                projects.value[projectIndex].onTimeDate = onTimeDate.toISOString().split('T')[0];
+            }
+        } catch (error) {
+            console.error('Error updating project onTimeDate:', error);
+        }
+    }
+
+    async function calculateWorkDuration(prosjektID) {
+        const gateStore = useGatesStore();
+        const taskStore = useTasksStore();
+        let workDuration = 0;
+        console.log("INIT");
+        let filteredGates = gateStore.getProjectGates(prosjektID);
+        console.log(filteredGates);
+        for (const gate of filteredGates) {
+            const maxDuration = taskStore.maxTaskWorkDuration(prosjektID, gate.ID);
+            console.log("Attempting to add:", maxDuration);
+            workDuration += maxDuration;
+        }
+        return workDuration;
+    }
+
+    async function calculateFloat(projectID) {
+        const project = projects.value.find(project => project.id === String(projectID));
+        if (!project) {
+            console.log("PROJECTID ERROR WITH ID: "+ projectID)
+            return null
+        };
+    
+        // Fetch the SF date and work duration
+        const sfDate = new Date(project.SFdate);
+        const workDuration = await calculateWorkDuration(String(projectID));
+    
+        if (workDuration === 0) {
+            console.log("Workduration is 0")
+            return 0;
+        }
+    
+        // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
+        const newDate = new Date(sfDate);
+        newDate.setDate(sfDate.getDate() - workDuration);
+        newDate.setHours(23, 59, 0, 0);
+    
+        const today = new Date();
+        const diffTime = Math.abs(newDate - today);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (today > newDate) {
+            return -diffDays;
+        }
+        return diffDays;
+    }
+    
+    
+
+    async function calculatePOFloat(projectID) {
+        const project = projects.value.find(project => project.id === projectID);
+        if (!project) return null;
+
+        // Fetch the PO date and work duration
+        const poDate = new Date(project.POdate);
+        const workDuration = await calculateWorkDuration(String(projectID));
+
+        if (workDuration === 0) {
+            return 0;
+        }
+
+        // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
+        const newDate = new Date(poDate);
+        newDate.setDate(poDate.getDate() - workDuration);
+        newDate.setHours(23, 59, 0, 0);
+
+        const today = new Date();
+        const diffTime = Math.abs(newDate - today);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (today > newDate) {
+            return -diffDays;
+        }
+        return diffDays;
+    }
+
     async function updateProjectTitle(projectID, newTitle) {
         const projectIndex = projects.value.findIndex(project => project.id === projectID);
         if (projectIndex !== -1) {
@@ -288,21 +401,6 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
-    async function calculateWorkDuration(prosjektID){
-        const gateStore = useGatesStore()
-        const taskStore = useTasksStore()
-        let workDuration = 0
-        console.log("INIT")
-        let filteredGates = gateStore.getProjectGates(prosjektID)
-        console.log(filteredGates)
-        for (const gate of filteredGates) {
-            const maxDuration = taskStore.maxTaskWorkDuration(prosjektID, gate.ID);
-            console.log("Attempting to add:", maxDuration);
-            workDuration += maxDuration;
-        }
-        return workDuration
-    }
-
     return {
         getTemplate,
         filteredProjects,
@@ -324,6 +422,9 @@ export const useProjectsStore = defineStore('projects', () => {
         updatePEM,
         fetchNonArchivedProjects,
         archiveProject,
-        calculateWorkDuration
+        calculateWorkDuration,
+        updateOnTime,
+        calculateFloat,
+        calculatePOFloat
     };
 });
