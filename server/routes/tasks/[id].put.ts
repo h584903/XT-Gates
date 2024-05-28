@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
 
 
     // Update the task in the database
-    await connectAndQuery(`UPDATE taskModel SET duration = ${newDuration} WHERE ID = ${taskID}`);
+    await connectAndQuery(`UPDATE gates.db_owner.taskModel SET duration = ${newDuration} WHERE ID = ${taskID}`);
 
     // Return success response
     return { updated: true };

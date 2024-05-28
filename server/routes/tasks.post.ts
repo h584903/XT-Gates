@@ -8,13 +8,13 @@ export default defineEventHandler(async event => {
 
     //Oppretter prosjektet
     task = await connectAndQuery(`
-      INSERT INTO taskModel (prosjektID, gateID, step, title, responsiblePerson, onTime, progress, duration)
+      INSERT INTO gates.db_owner.taskModel (prosjektID, gateID, step, title, responsiblePerson, onTime, progress, duration)
       VALUES (${projectID}, ${gateID}, ${step}, '${title}', '${responsiblePerson}', 0, 0, ${duration})
     `);
 
     return { task };
   } catch (error) {
-    console.log("error: " + error)
+    console.log("nå error: " + error)
     return createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',

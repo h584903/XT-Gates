@@ -60,12 +60,6 @@ const paginatedProjects = computed(() => {
   return filteredProjects.value.slice().reverse().slice(start, end);
 });
 
-onMounted(() => {
-  if (store.getProjects().length === 1) {
-    store.fetchProjects();
-  }
-});
-
 watchEffect(() => {
   projects.value = store.getProjects();
 });

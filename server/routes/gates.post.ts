@@ -8,7 +8,7 @@ export default defineEventHandler(async event => {
 
     //Oppretter prosjektet
     gate = await connectAndQuery(`
-      EXEC AdjustAndInsertGate
+      EXEC gates.db_owner.AdjustAndInsertGate
       @ProsjektID = ${projectID},
       @GateNR = ${gateNR},
       @GateTitle = '${title}';

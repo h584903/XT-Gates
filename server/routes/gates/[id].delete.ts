@@ -13,7 +13,7 @@ export default defineEventHandler (async (event) => {
             });
 		} else {
 		const result = await connectAndQuery(`
-			EXEC DeleteGate @GateID = ${id};
+			EXEC gates.db_owner.DeleteGate @GateID = ${id};
 		`);
 		}
 	} catch (error) {

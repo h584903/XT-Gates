@@ -8,12 +8,13 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test:unit": "vitest --environment jsdom"
+    "test:unit": "vitest --environment jsdom",
+    "start": "nuxt start"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
     "mssql": "^10.0.2",
-    "nuxt": "^3.10.3",
+    "nuxt": "^3.11.2",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-draggable-next": "^2.2.1",

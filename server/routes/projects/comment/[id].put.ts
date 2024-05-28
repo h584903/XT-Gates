@@ -13,7 +13,7 @@ export default defineEventHandler(async event => {
         });
       }
       // Update the task in the database
-      await connectAndQuery(`UPDATE projectModel SET COMMENT = '${newComment}' WHERE ID = ${projectID}`);
+      await connectAndQuery(`UPDATE gates.db_owner.projectModel SET COMMENT = '${newComment}' WHERE ID = ${projectID}`);
 
       // Return success response
       return { updated: true };

@@ -13,7 +13,7 @@ export default defineEventHandler(async event => {
         });
       }
 
-      await connectAndQuery(`UPDATE gateModel SET gateTitle = '${newTitle}' WHERE ID = ${gateID}`);
+      await connectAndQuery(`UPDATE gates.db_owner.gateModel SET gateTitle = '${newTitle}' WHERE ID = ${gateID}`);
       return { updated: true };
     } catch (error) {
       console.error('Failed to update the gate:', error);

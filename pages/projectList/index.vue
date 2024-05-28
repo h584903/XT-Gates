@@ -14,9 +14,7 @@ const store = useProjectsStore();
 
 onMounted(() => {
   // Må endres til 0 hvis testprosjekt fjernes
-  if (store.getProjects().length === 1) {
     store.fetchNonArchivedProjects();
-  }
   });
 </script>
 <style scoped>

@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
 
     // Oppdaterer tasks i databasen
     const updatePromises = tasks.map(task =>
-      connectAndQuery(`UPDATE taskModel SET step = ${task.step} WHERE ID = ${task.ID}`)
+      connectAndQuery(`UPDATE gates.db_owner.taskModel SET step = ${task.step} WHERE ID = ${task.ID}`)
     );
 
     await Promise.all(updatePromises);

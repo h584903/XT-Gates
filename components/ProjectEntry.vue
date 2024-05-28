@@ -166,6 +166,7 @@ a {
   text-align: flex;
   width: 10%;
   cursor: text;
+  min-height: 1rem;
 }
 
 textarea {

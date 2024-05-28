@@ -3,7 +3,7 @@ import sql from 'mssql';
 export default defineEventHandler(async (event) => {
   let projects;
   try {
-    projects = await connectAndQuery("SELECT * FROM projectModel WHERE ID = 1;");
+    projects = await connectAndQuery("SELECT * FROM gates.db_owner.projectModel WHERE ID = 1;");
 
   } catch (error) {
     // Handle error, for example, by returning an error status and message

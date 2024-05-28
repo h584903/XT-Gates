@@ -16,7 +16,7 @@ export default defineEventHandler(async event => {
     console.log("This is newProgress in API: " + progress)
 
     // Update the task in the database
-    await connectAndQuery(`UPDATE gateModel SET progress = ${progress} WHERE ID = ${gateID}`);
+    await connectAndQuery(`UPDATE gates.db_owner.gateModel SET progress = ${progress} WHERE ID = ${gateID}`);
 
 
     // Return success response
