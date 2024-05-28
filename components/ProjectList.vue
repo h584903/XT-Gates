@@ -39,6 +39,7 @@ import { ref, onMounted, computed, watchEffect } from 'vue';
 import { useProjectsStore } from '@/stores/projects';
 import { useGatesStore } from '@/stores/gates';
 import { v4 as uuid } from 'uuid';
+import { useIntervalFn } from '@vueuse/core' // VueUse helper, install it
 
 const store = useProjectsStore();
 const gateStore = useGatesStore();
@@ -47,6 +48,11 @@ const index = ref(0);
 
 const currentPage = ref(1);
 const projectsPerPage = 15;
+
+useIntervalFn(() => {
+  console.log(`refreshing the data`)
+  fetchProjects() // will call the 'todos' endpoint, just above
+}, 120000) // call it back every 3s
 
 const fetchProjects = () => {
   store.fetchProjects();
