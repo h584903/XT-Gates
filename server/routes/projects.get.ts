@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   let organizedData = {};
 
   try {
-    projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress, podv.onTimeDate FROM projectModel pm LEFT JOIN ProjectAverageProgress pavg ON pm.ID = pavg.ID LEFT JOIN ProjectOnTimeDateView podv ON pm.ID = podv.prosjektID;")
+    projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress FROM projectModel pm LEFT JOIN ProjectAverageProgress pavg ON pm.ID = pavg.ID;")
 
   } catch (error) {
     return createError({

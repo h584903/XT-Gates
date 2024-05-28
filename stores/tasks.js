@@ -86,8 +86,16 @@ export const useTasksStore = defineStore('tasks', () => {
                     newProgress: newProgress
                 })
             });
+
+            const projectStore = useProjectsStore();
             const gateStore = useGatesStore();
-            console.log("Starting up updateGateProgress");
+            const projectID = getProjectID(tasks.value[taskIndex].ID);
+
+            const float = await projectStore.calculateFloat(projectID);
+            console.log("Calculated float: ", float);
+
+            await projectStore.updateOnTime(projectID, float);
+
             gateStore.updateGateProgress(getGateID(taskID));
         } catch (error) {
             console.error('Error updating task progress:', error);
