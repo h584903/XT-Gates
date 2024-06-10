@@ -5,17 +5,6 @@ export const useProjectsStore = defineStore('projects', () => {
     const project = ref();
     const projects = ref([]);
     const template = ref(1);
-    projects.value.push({
-        id: "0",
-        title: "Test Project",
-        progress: 50,
-        SFdate: "2024-12-12",
-        POdate: "2024-12-12",
-        onTime: 1,
-        PEM: "Petter Tesdal",
-        comment: "This is a test project",
-        archive: false // Add the archive status here
-    });
     const index = ref(0);
 
     function setProjects(newProjects) {
