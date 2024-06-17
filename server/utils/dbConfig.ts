@@ -12,7 +12,7 @@ const dbConfig = {
             }
         },
         options: {
-            encrypt: true,
+            encrypt: process.env.DB_ENCRYPT,
             database: process.env.DB_NAME,
             port: parseInt(process.env.DB_PORT as string, 10),
         }
