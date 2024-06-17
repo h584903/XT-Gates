@@ -20,6 +20,10 @@
       <div class="gate-empty" @click="addGateBetween(1)">
       </div>
   </div>
+  <div class="gatedivider"v-if="gates.length === 1">
+      <div class="gate-empty" @click="addGateBetween(2)">
+      </div>
+  </div>
   <!-- Modal for å opprette Gate -->
   <Modal @close="toggleModal" :modalActive="modalActive">
     <h1>New Gate</h1>
