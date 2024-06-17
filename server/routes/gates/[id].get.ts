@@ -13,7 +13,7 @@ export default defineEventHandler (async (event) => {
                 data: 'Invalid or missing project ID',
             });
         }
-        gateList = await connectAndQuery(`SELECT * FROM gateModel WHERE prosjektID = ${id}`)
+        gateList = await connectAndQuery(`SELECT * FROM gates.db_owner.gateModel WHERE prosjektID = ${id}`)
     } catch (error) {
         return createError({
             statusCode: 500,

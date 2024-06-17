@@ -4,9 +4,10 @@ export default defineEventHandler(async (event) => {
   let organizedData = {};
 
   try {
-    projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress FROM projectModel pm LEFT JOIN ProjectAverageProgress pavg ON pm.ID = pavg.ID;")
+    projects = await connectAndQuery("SELECT pm.*, pavg.AverageProgress FROM gates.db_owner.projectModel pm LEFT JOIN gates.db_owner.ProjectAverageProgress pavg ON pm.ID = pavg.ID;")
 
   } catch (error) {
+    console.log(error)
     return createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',

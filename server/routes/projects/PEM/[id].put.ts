@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
 
 
       // Update the task in the database
-      await connectAndQuery(`UPDATE projectModel SET PEM = '${newPEM}' WHERE ID = ${projectID}`);
+      await connectAndQuery(`UPDATE gates.db_owner.projectModel SET PEM = '${newPEM}' WHERE ID = ${projectID}`);
 
 
       // Return success response

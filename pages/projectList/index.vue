@@ -12,6 +12,7 @@ import { useProjectsStore } from '@/stores/projects';
 
 const store = useProjectsStore();
 
+
 </script>
 <style scoped>
 /* Style er scoped for å beholde singleFileComponent struktur */

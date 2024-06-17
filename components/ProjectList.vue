@@ -71,6 +71,7 @@ const paginatedProjects = computed(() => {
   return filteredProjects.value.slice().reverse().slice(start, end);
 });
 
+
 onMounted(() => {
   fetchProjects();
 });

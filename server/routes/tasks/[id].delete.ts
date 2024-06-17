@@ -13,7 +13,7 @@ export default defineEventHandler (async (event) => {
             });
 		} else {
 		const result = await connectAndQuery(`
-			EXEC DeleteTask @TaskID = ${id};
+			EXEC gates.db_owner.DeleteTask @TaskID = ${id};
 		`);
 		}
 	} catch (error) {

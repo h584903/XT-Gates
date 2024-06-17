@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 
     //Oppretter prosjektet
     projects = await connectAndQuery(`
-      EXEC DuplicateProject
+      EXEC gates.db_owner.DuplicateProject
       @OldProjectID = 1,
       @NewProjectTitle = '${title}',
       @PEMName = '${PEM}',

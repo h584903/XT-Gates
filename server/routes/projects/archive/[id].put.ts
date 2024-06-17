@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
     const archiveBit = archive ? 1 : 0;
 
     // Update the archive status in the database
-    await connectAndQuery(`UPDATE projectModel SET archive = ${archiveBit} WHERE ID = ${projectID}`);
+    await connectAndQuery(`UPDATE gates.db_owner.projectModel SET archive = ${archiveBit} WHERE ID = ${projectID}`);
 
     // Return success response
     return { updated: true };

@@ -13,7 +13,7 @@ export default defineEventHandler(async event => {
         });
       }
       
-      await connectAndQuery(`UPDATE taskModel SET title = '${newTitle}' WHERE ID = ${taskID}`);
+      await connectAndQuery(`UPDATE gates.db_owner.taskModel SET title = '${newTitle}' WHERE ID = ${taskID}`);
       return { updated: true };
     } catch (error) {
       console.error('Failed to update the task:', error);
