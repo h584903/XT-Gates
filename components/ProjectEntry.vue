@@ -132,7 +132,7 @@ a {
 
 .titleWrapper {
   margin: auto;
-  text-align: center;
+  text-align: left;
   width: 20%;
 }
 .titleWrapper input {
