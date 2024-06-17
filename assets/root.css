@@ -1,0 +1,23 @@
+:root {
+    --background: #A5CCFF;
+    --foreground: #232320;
+    --sideBarColor: #d8e1ec; /* Fargen til sidebar */
+    --headerHeight: 4.5rem;
+}
+@font-face {
+  font-family: 'Raleway';
+  src: url('/fonts/Raleway-Regular.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+body{
+    font-size: 16px;
+    margin: 0; /*Fikser problemer med at siden har en margin*/
+    font-family: 'Raleway', sans-serif;
+}

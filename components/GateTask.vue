@@ -280,7 +280,7 @@ textarea {
     min-height: 80px;
     resize: vertical;
     padding: 8px;
-    font-size: 16px;
+    font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;

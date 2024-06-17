@@ -40,7 +40,7 @@ const truncateTitle = (title) => {
   flex-direction: column;
   margin: 0;
   margin-left: 10px;
-  font-size: 20px;
+  font-size: 1rem;
 }
 
 .Thin-Line{
