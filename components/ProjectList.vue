@@ -68,7 +68,7 @@ const totalPages = computed(() => Math.ceil(filteredProjects.value.length / proj
 const paginatedProjects = computed(() => {
   const start = (currentPage.value - 1) * projectsPerPage;
   const end = start + projectsPerPage;
-  return filteredProjects.value.slice().reverse().slice(start, end);
+  return filteredProjects.value.slice().slice(start, end);
 });
 
 
