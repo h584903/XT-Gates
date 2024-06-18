@@ -8,7 +8,7 @@
 </script>
 
 <style>
-@import '~/assets/colors.css';
+@import '~/assets/root.css';
 body {
 
   background-color: whitesmoke;

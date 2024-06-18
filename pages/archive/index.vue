@@ -78,7 +78,7 @@ const nextPage = () => {
   cursor: pointer;
   border: none;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 1rem;
   margin: 10px;
   border-radius: 5px;
   transition: background-color 0.3s, transform 0.3s;

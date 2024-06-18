@@ -9,7 +9,6 @@
 </template>
 
 <script setup>
-  // Må endres til å hente ut en faktisk id som settes til et prosjekt
 </script>
 
 <style scoped>
@@ -19,7 +18,7 @@
   position: fixed;
   margin: 0;
   height: 100%;
-  font-size: 25px;
+  font-size: 1.2rem;
   min-height: 100vh; /* Minste størrelsen er på størrelsen med skjermen */
   z-index: 700; /* Beholder komponenten fremst */
   display: flex;

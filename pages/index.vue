@@ -69,7 +69,6 @@ const getCookie = (name) => {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
   text-align: center;
   position: relative; /* Ensure relative positioning for the absolute edit button */
 }
@@ -104,7 +103,7 @@ const getCookie = (name) => {
   cursor: pointer;
   border: none;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 1rem;
   border-radius: 5px;
   transition: background-color 0.3s, transform 0.3s;
   position: fixed; /* Fixed positioning */
@@ -131,7 +130,7 @@ const getCookie = (name) => {
   cursor: pointer;
   border: none;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 1rem;
   margin: 10px;
   border-radius: 5px;
   transition: background-color 0.3s, transform 0.3s;
