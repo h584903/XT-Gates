@@ -205,7 +205,18 @@ export const useProjectsStore = defineStore('projects', () => {
     });
 
     function getProjects() {
+        sortProjects((x, y) => new Date(x.SFdate) - new Date(y.SFdate));
         return filteredProjects.value;
+    }
+
+    function sortProjects(comparator) {
+        console.log("Unsorted:");
+        console.log(projects.value);
+    
+        projects.value.sort(comparator);
+    
+        console.log("Sorted:");
+        console.log(projects.value);
     }
 
     function getPODate(projectID) {
