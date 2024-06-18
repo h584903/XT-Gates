@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
   import { useGatesStore } from '@/stores/gates';
   import Modal from "@/components/ReusableModal.vue"
   import draggable from 'vuedraggable'; //Henter vue sin draggable
@@ -94,14 +94,11 @@
 
   function onEndDrag(event) {
     let updatedGates = [...gates.value];
-
-    // (Etter endret liste finner den ut av hvordan de nye stepsene skal se ut)
     updatedGates.forEach((gate, index) => {
-      gate.gateNR = index + 1;
+        gate.gateNR = index + 1;
     });
-    // Oppdaterer tasks i databasen
     gateStore.updateGateOrder(updatedGates);
-  }
+}
 
 </script>
 
