@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
+    dbServer: '',
+    dbUser: '',
+    dbPass: '',
+    dbName: '',
+    dbPort: '',
+    dbEncrypt: '',
   },
   modules: [
     '@pinia/nuxt',
