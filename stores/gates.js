@@ -2,25 +2,26 @@ import { ref, computed } from 'vue';
 import { packProject } from '@/utils/packProject.js';
 import { defineStore } from "pinia";
 
+
 export const useGatesStore = defineStore('gates', () => {
     // Vanlig Ref
     const gates = ref([]);
-    function calculateDate(prosjektID, nr){
+
+    function calculateDate(prosjektID, nr) {
         const projectStore = useProjectsStore();
-        let index;
-        for (let i = 0; i < gates.value.length; i++) {
-            if (gates.value[i].projectID === prosjektID && gates.value[i].gateNR === nr) {
-                index = i;
-            }
-        }
+        const gateIndex = gates.value.findIndex(gate => gate.projectID === prosjektID && gate.gateNR === nr);
+
+        if (gateIndex === -1) return null; 
+
         if (lastGate(prosjektID, nr)) {
-            gates.value[index].plannedDate = projectStore.getSFDate(prosjektID)
-            return projectStore.getSFDate(prosjektID)
+            const sfDate = projectStore.getSFDate(prosjektID);
+            gates.value[gateIndex].plannedDate = sfDate;
+            return sfDate;
         } else {
             return computed(() => {
-                gates.value[index].plannedDate = getNextGateDate(prosjektID, nr)
-                return (getNextGateDate(prosjektID, nr))
-            })
+                const nextGateDate = getNextGateDate(prosjektID, nr);
+                return nextGateDate;
+            });
         }
     }
 
