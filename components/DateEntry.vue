@@ -17,7 +17,6 @@ const formattedDate = computed(() => {
     return '---';
   }
   
-  console.log("Date String: " + props.dateString)
 
   // Attempt to parse and format the date
   const date = new Date(props.dateString);
