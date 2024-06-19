@@ -7,34 +7,14 @@ export const useProjectsStore = defineStore('projects', () => {
     const template = ref(1);
     const index = ref(0);
 
+    const filteredProjects = computed(() => {
+        return projects.value.filter(project => project.id != template.value);
+    });
+
     function setProjects(newProjects) {
         projects.value = newProjects;
     }
 
-    async function fetchNonArchivedProjects() {
-        try {
-            const response = await $fetch('/projects', {
-                method: 'GET'
-            });
-            const data = response.data;
-            const projectsArray = Object.values(data).map(project => ({
-                id: project.ID,
-                title: project.title,
-                progress: project.progress,
-                onTimeDate: project.onTimeDate,
-                PEM: project.PEM,
-                comment: project.comment,
-                POdate: project.POdate,
-                SFdate: project.SFdate,
-                archive: project.archive,
-                gates: project.gates
-            }));
-
-            setProjects(projectsArray);
-        } catch (error) {
-            console.error('Error fetching projects:', error);
-        }
-    }
 
     async function fetchProjects() {
         try {
@@ -200,9 +180,6 @@ export const useProjectsStore = defineStore('projects', () => {
         return template.value;
     }
 
-    const filteredProjects = computed(() => {
-        return projects.value.filter(project => project.id != template.value);
-    });
 
     function getProjects() {
         sortProjects((x, y) => new Date(x.SFdate) - new Date(y.SFdate));
@@ -420,7 +397,6 @@ export const useProjectsStore = defineStore('projects', () => {
         updatePODate,
         updateSFDate,
         updatePEM,
-        fetchNonArchivedProjects,
         archiveProject,
         calculateWorkDuration,
         updateOnTime,

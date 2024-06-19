@@ -44,9 +44,6 @@ const paginatedProjects = computed(() => {
 });
 
 onMounted(() => {
-  if (store.getProjects().length === 1) {
-    store.fetchProjects();
-  }
 });
 
 watchEffect(() => {

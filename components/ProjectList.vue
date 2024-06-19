@@ -58,6 +58,9 @@ const fetchProjects = () => {
   store.fetchProjects();
   projects.value = store.getProjects();
 };
+onMounted(() => {
+  store.fetchProjects();
+})
 
 const filteredProjects = computed(() => {
   return projects.value.filter(project => !project.archive);

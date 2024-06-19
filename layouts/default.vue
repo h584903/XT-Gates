@@ -23,10 +23,8 @@ import sideBar from '@/components/sideBar.vue';
 
 const authStore = useAuthStore();
 const route = useRoute();
-
 const username = computed(() => authStore.getUsername());
-const isLoggedIn = computed(() => username.value !== 'John Doe' && username.value !== '---');
-const shouldShowLoginPrompt = computed(() => !isLoggedIn.value && route.path !== '/cookiepolicy');
+const shouldShowLoginPrompt = computed(() => !authStore.isLoggedIn && route.path !== '/cookiepolicy');
 </script>
 
 <style scoped>
