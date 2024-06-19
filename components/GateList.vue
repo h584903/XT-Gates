@@ -38,9 +38,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, computed } from 'vue';
   import { useGatesStore } from '@/stores/gates';
-  import Modal from "@/components/ReusableModal.vue"
   import draggable from 'vuedraggable'; //Henter vue sin draggable
 
   const props = defineProps({
