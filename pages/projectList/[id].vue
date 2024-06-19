@@ -86,7 +86,6 @@
   import { useGatesStore } from '@/stores/gates';
   import { useTasksStore } from '@/stores/tasks';
   import { ref, computed, watchEffect } from 'vue';
-import DateEntry from '~/components/DateEntry.vue';
   
 
   const store = useProjectsStore();
