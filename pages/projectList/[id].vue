@@ -11,7 +11,7 @@
               <button @click="cancelEdit">Cancel</button>
             </div>
             <div v-else @click="enableEditPODateMode">
-              <span>{{ formatEuropeanDate(project.POdate) }}</span>
+              <DateEntry :dateString = project.POdate />
             </div>
           </div>
           <div class="info-item">
@@ -21,7 +21,7 @@
               <button @click="cancelEdit">Cancel</button>
             </div>
             <div v-else @click="enableEditSFDateMode">
-              <span>{{ formatEuropeanDate(project.SFdate) }}</span>
+              <DateEntry :dateString = project.SFdate />
             </div>
           </div>
           <div class="info-item">
