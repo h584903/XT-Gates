@@ -72,14 +72,6 @@ const paginatedProjects = computed(() => {
 });
 
 
-onMounted(() => {
-  fetchProjects();
-});
-
-watchEffect(() => {
-  projects.value = store.getProjects();
-});
-
 const formData = ref({
   title: '',
   PO: '',
