@@ -39,6 +39,7 @@
 
 <script setup>
   import { useGatesStore } from '@/stores/gates';
+  import Modal from "@/components/ReusableModal.vue" // Ikke slett, henter modal
   import draggable from 'vuedraggable'; //Henter vue sin draggable
 
   const props = defineProps({

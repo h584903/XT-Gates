@@ -24,8 +24,8 @@ const formattedDate = computed(() => {
   if (isNaN(date)) {
     return '---';
   }
-  
-  return date.toLocaleDateString();
+  console.log(navigator.language);
+  return date.toLocaleDateString(navigator.language);
 });
 </script>
 
