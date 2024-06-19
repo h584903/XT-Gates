@@ -17,6 +17,7 @@ const formattedDate = computed(() => {
     return '---';
   }
   
+
   // Attempt to parse and format the date
   const date = new Date(props.dateString);
   
@@ -24,15 +25,13 @@ const formattedDate = computed(() => {
   if (isNaN(date)) {
     return '---';
   }
-  console.log(navigator.language);
-  return date.toLocaleDateString(navigator.language);
+  
+  return date.toLocaleDateString('nb-NO', {day: '2-digit', month: '2-digit', year: 'numeric'});
 });
 </script>
 
 <template>
-  <div>
-    <!-- Display the formatted date or dashes -->
-    {{ formattedDate }}
-  </div>
+  <!-- Display the formatted date or dashes -->
+  {{ formattedDate }}
 </template>
 

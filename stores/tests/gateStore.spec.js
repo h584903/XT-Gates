@@ -15,7 +15,7 @@ const mockProjectsStore = {
   getSFDate: vi.fn(),
 };
 
-//setter opp mock stores, tilsvarende å kalle på stores i praksis
+//setter opp mock stores for andre stores enn den som testes
 vi.mock('@/stores/tasks', () => ({
   useTasksStore: () => mockTasksStore,
 }));
