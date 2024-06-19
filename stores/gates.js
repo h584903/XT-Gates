@@ -299,13 +299,7 @@ export const useGatesStore = defineStore('gates', () => {
                 completionDate = dato
             }
         }
-        completionDate = new Date(completionDate)
-        const day = completionDate.getDate().toString().padStart(2, '0');
-        const month = (completionDate.getMonth() + 1).toString().padStart(2, '0');
-        const year = completionDate.getFullYear();
-
-        completionDate = `${day}.${month}.${year}`;
-        return completionDate
+        return "" + completionDate.toString()
     }
 
     async function updateGateTitle(gateID, newTitle) {

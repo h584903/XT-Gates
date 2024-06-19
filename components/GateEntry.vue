@@ -21,7 +21,7 @@
           <span>{{daysToEnd}}</span>
         </div>
         <div class="completion">
-          <span>{{ completionDate }}</span>
+          <DateEntry :dateString = completionDate />
         </div>
         <div class="delete" @click.stop="toggleModal">
           <img src="/assets/x.svg" />

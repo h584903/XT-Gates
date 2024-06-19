@@ -17,6 +17,8 @@ const formattedDate = computed(() => {
     return '---';
   }
   
+  console.log("Date String: " + props.dateString)
+
   // Attempt to parse and format the date
   const date = new Date(props.dateString);
   
@@ -25,14 +27,12 @@ const formattedDate = computed(() => {
     return '---';
   }
   
-  return date.toLocaleDateString();
+  return date.toLocaleDateString('nb-NO', {day: '2-digit', month: '2-digit', year: 'numeric'});
 });
 </script>
 
 <template>
-  <div>
-    <!-- Display the formatted date or dashes -->
-    {{ formattedDate }}
-  </div>
+  <!-- Display the formatted date or dashes -->
+  {{ formattedDate }}
 </template>
 
