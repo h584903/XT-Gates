@@ -81,4 +81,17 @@ describe('useGatesStore', () => {
       },
     ]);
   });
+
+  it('should substract days', async () => {
+    const gatesStore = useGatesStore();
+
+    let response = gatesStore.substractDays("2000-01-11", 10)
+    expect(response).toBe("2000-01-01")
+
+    response = gatesStore.substractDays("1900-03-28", 10)
+    expect(response).toBe("1900-03-18")
+
+    response = gatesStore.substractDays("2024-03-10", 10)
+    expect(response).toBe("2024-02-29")
+  })
 });
