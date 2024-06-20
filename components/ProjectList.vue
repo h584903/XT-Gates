@@ -47,7 +47,7 @@ const projects = ref([]);
 const index = ref(0);
 
 const currentPage = ref(1);
-const projectsPerPage = 15;
+const projectsPerPage = 25;
 
 useIntervalFn(() => {
   console.log(`refreshing the data`)
