@@ -1,27 +1,29 @@
 <template>
-  <div class="list project-card">
+  <div class="list project-card" @click="redirect">
     <div class="titleWrapper" @click="enableEditMode" v-if="!editMode">
       <span>{{ editedTitle }}</span>
     </div>
     <div class="titleWrapper" v-else>
       <input type="text" v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
     </div>
-    <div class="progressWrapper" @click="redirect">
+    <div class="progressWrapper">
       <ProgressBar :progressNumber="entryData.progress" />
     </div>
-    <div class="dateWrapper" @click="redirect">
-      <DateEntry :dateString="entryData.SFdate" />
+    <div 
+      class="dateWrapper"
+      :class="{'late': islate, 'onTime': !islate}" >
+        <DateEntry :dateString="entryData.SFdate"/>
     </div>
     <div class="dateWrapper">
       <DateEntry :dateString="entryData.POdate" />
     </div>
-    <div class="statusWrapper" @click="redirect">
+    <div class="statusWrapper">
       <PlanStatus :onSchedule="calculateStatus" />
     </div>
-    <div class="personWrapper" @click="redirect">
+    <div class="personWrapper">
       <PersonInCharge :entryName="entryData.PEM" />
     </div>
-    <div class="commentWrapper w10" @click="enableCommentEditMode">
+    <div class="commentWrapper w10" @click.stop="enableCommentEditMode">
       <div v-if="commentEditMode">
         <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" v-model="editedComment" @blur="updateComment" @keyup.enter="updateComment"></textarea>
       </div>
@@ -51,6 +53,9 @@ const editedTitle = ref(props.entryData.title);
 const editedComment = ref(props.entryData.comment);
 const editMode = ref(false); // editorMode for title
 const commentEditMode = ref(false); // editMode for comment
+
+let islate;
+islate = (props.entryData.SFdate>props.entryData.POdate)
 
 // Watch for changes in props.entryData and update local state
 watch(
@@ -128,6 +133,7 @@ a {
   padding: 5px;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .titleWrapper {
@@ -151,6 +157,15 @@ a {
   width: 10%;
   cursor: pointer;
 }
+.dateWrapper.late {
+  background-color: yellow;
+  padding: 5px;
+  margin-left: 5px;
+}
+.dateWrapper.onTime {
+  padding: 5px;
+  margin-left: 5px;
+}
 .statusWrapper {
   margin: auto;
   text-align: center;
@@ -170,6 +185,7 @@ a {
   width: 10%;
   cursor: text;
   min-height: 1rem;
+  z-index: 100;
 }
 
 textarea {
