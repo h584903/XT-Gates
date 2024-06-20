@@ -1,6 +1,6 @@
 <template>
   <div class="list project-card" @click="redirect">
-    <div class="titleWrapper" @click="enableEditMode" v-if="!editMode">
+    <div class="titleWrapper" @click.stop="enableEditMode" v-if="!editMode">
       <span>{{ editedTitle }}</span>
     </div>
     <div class="titleWrapper" v-else>
@@ -14,7 +14,9 @@
       :class="{'late': islate, 'onTime': !islate}" >
         <DateEntry :dateString="entryData.SFdate"/>
     </div>
-    <div class="dateWrapper">
+    <div 
+      class="dateWrapper"
+      :class="{'late2': islate, 'onTime': !islate}" >
       <DateEntry :dateString="entryData.POdate" />
     </div>
     <div class="statusWrapper">
@@ -140,6 +142,7 @@ a {
   margin: auto;
   text-align: center;
   width: 20%;
+  cursor: text;
 }
 .titleWrapper input {
   width: 75%;
@@ -161,6 +164,11 @@ a {
   background-color: yellow;
   padding: 5px;
   margin-left: 5px;
+}
+.dateWrapper.late2 {
+  background-color: yellow;
+  padding: 5px;
+  margin-right: 5px;
 }
 .dateWrapper.onTime {
   padding: 5px;
