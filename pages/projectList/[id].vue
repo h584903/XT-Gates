@@ -46,6 +46,12 @@
               {{ float}} days
             </span>
           </div>
+          <div class="info-item">
+            <label>Days to PO:</label>
+            <span class="positive-float">
+              {{ daysToPO }}
+            </span>
+          </div>
         </div>
       </div>
       <GateList :projectId="project.id"/>
@@ -85,8 +91,7 @@
   import { useProjectsStore } from '@/stores/projects';
   import { useGatesStore } from '@/stores/gates';
   import { useTasksStore } from '@/stores/tasks';
-  import { ref, computed, watchEffect } from 'vue';
-  
+  import { ref, computed, watch, onMounted } from 'vue';
 
   const store = useProjectsStore();
   const gateStore = useGatesStore();
@@ -101,8 +106,8 @@
   const editPEM_Mode = ref(false);
   const editedPEM = ref('');
   const float = ref(0);
-  // const poFloat = ref(0);
-  const poFloat = computed(() => calculatePOFloat());
+  const poFloat = ref(0);
+  const daysToPO = computed(() => calculateDaysToPO());
 
   const enableEditPODateMode = () => {
     editPODateMode.value = true;
@@ -118,7 +123,7 @@
     } finally {
       editPODateMode.value = false;
     }
-  };
+  }
 
   const enableEditSFDateMode = () => {
     editSFDateMode.value = true;
@@ -134,7 +139,7 @@
     } finally {
       editSFDateMode.value = false;
     }
-  };
+  }
 
   const enableEditPEM_Mode = () => {
     editedPEM.value = project.value.PEM;
@@ -151,7 +156,7 @@
     } finally {
       editPEM_Mode.value = false;
     }
-  };
+  }
 
   onMounted(async () => {
     const projectId = route.params.id;
@@ -186,7 +191,7 @@
   const modalActive = ref(false);
   const toggleModal = () => {
     modalActive.value = !modalActive.value;
-  };
+  }
 
   const deleteProjectHandler = () => {
     store.deleteProject(project.value.id);
@@ -203,14 +208,6 @@
     }
   }
 
-  const formatEuropeanDate = (isoDate) => {
-    const date = new Date(isoDate);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-  };
-
   const displayedPEM = computed(() => {
     if (!project.value || !project.value.PEM || !project.value.PEM.trim()) {
       return "No PEM";
@@ -226,25 +223,35 @@
     editSFDateMode.value = false;
     editedPEM.value = '';
     editPEM_Mode.value = false;
-  };
+  }
 
-  // Watch for project changes and update float values
-  watchEffect(async () => {
-    if (project.value) {
-      float.value = await calculateFloat();
+// Watch for changes in PO date and update poFloat
+watch(
+  () => project.value && project.value.POdate,
+  async (newPODate) => {
+    if (newPODate) {
       poFloat.value = await calculatePOFloat();
     }
-  });
+  }
+);
 
-  const calculateFloat = async () => {
+// Watch for changes in SF date and update float
+watch(
+  () => project.value && project.value.SFdate,
+  async (newSFDate) => {
+    if (newSFDate) {
+      float.value = await calculateFloat();
+    }
+  }
+);
+
+const calculateFloat = async () => {
   if (!project.value) return null;
-  // Fetch the SF date and work duration
   const sfDate = new Date(project.value.SFdate);
   const workDuration = await store.calculateWorkDuration(project.value.id);
   if (workDuration == 0) {
-    return 0
+    return 0;
   }
-  // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
   const newDate = new Date(sfDate);
   newDate.setDate(sfDate.getDate() - workDuration);
   newDate.setHours(23, 59, 0, 0);
@@ -253,29 +260,45 @@
   const diffTime = Math.abs(newDate - today);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
-  console.log(today)
-  console.log(newDate)
-
-  if(today>newDate) {
-    return -diffDays+1
+  if (today > newDate) {
+    return -diffDays + 1;
   }
   return diffDays;
 };
 
-function calculatePOFloat() {
-    if (!project.value || !project.value.POdate) return null;
-
-    const poDate = new Date(project.value.POdate);
-    const today = new Date();
-
-    // Calculate the difference in milliseconds between today and POdate
-    const differenceInMs = today - poDate;
-
-    // Convert milliseconds to days
-    const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
-    return -differenceInDays;
+const calculatePOFloat = async () => {
+  if (!project.value) return null;
+  const poDate = new Date(project.value.POdate);
+  const workDuration = await store.calculateWorkDuration(project.value.id);
+  if (workDuration == 0) {
+    return 0;
   }
+  const newDate = new Date(poDate);
+  newDate.setDate(poDate.getDate() - workDuration);
+  newDate.setHours(23, 59, 0, 0);
+
+  const today = new Date();
+  const diffTime = Math.abs(newDate - today);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (today > newDate) {
+    return -diffDays + 1;
+  }
+  return diffDays;
+};
+
+function calculateDaysToPO() {
+  if (!project.value || !project.value.POdate) return null;
+
+  const poDate = new Date(project.value.POdate);
+  const today = new Date();
+
+  const differenceInMs = today - poDate;
+  const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+  return -differenceInDays;
+}
 </script>
+
 
 
 <style scoped>
