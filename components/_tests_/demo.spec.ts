@@ -12,7 +12,7 @@ describe("DateEntry", () => {
         });
 
         // Find the element that displays the formatted date
-        const dateElement = await screen.findByText("3/18/2024");
+        const dateElement = await screen.findByText("18.03.2024");
 
         // Assert that the element exists
         expect(dateElement).not.toBeNull();
