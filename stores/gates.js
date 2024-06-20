@@ -11,7 +11,7 @@ export const useGatesStore = defineStore('gates', () => {
         const projectStore = useProjectsStore();
         const gateIndex = gates.value.findIndex(gate => gate.projectID === prosjektID && gate.gateNR === nr);
 
-        if (gateIndex === -1) return null; 
+        if (gateIndex === -1) return null;
 
         if (lastGate(prosjektID, nr)) {
             const sfDate = projectStore.getSFDate(prosjektID);
@@ -240,6 +240,7 @@ export const useGatesStore = defineStore('gates', () => {
                 return gates.value[i].gateNR;
             }
         }
+        return null
     }
     function getGateNRNew(searchID) {
         const gate = gates.value.find(gate => gate.ID === searchID.toString());
@@ -341,6 +342,27 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
 
-    return { gates, getPlannedDate, calculateCompletionDate, getProjectID, setGateScheduleLightDate, calculateDaysToEnd, getSFG, addGate, getProjectGates, calculateDate, lastGate, substractDays, getGateProgress, fetchGates, getGateNR, updateGateProgress, updateGateTitle, updateGateOrder, deleteGate };
+    return { 
+        gates, 
+        getPlannedDate, 
+        calculateCompletionDate, 
+        getProjectID, 
+        setGates,
+        setGateScheduleLightDate, 
+        calculateDaysToEnd, 
+        getSFG, 
+        addGate, 
+        getProjectGates, 
+        calculateDate, 
+        lastGate, 
+        substractDays, 
+        getGateProgress, 
+        fetchGates, 
+        getGateNR, 
+        updateGateProgress, 
+        updateGateTitle, 
+        updateGateOrder, 
+        deleteGate
+    };
 
 });

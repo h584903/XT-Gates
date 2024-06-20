@@ -383,6 +383,7 @@ export const useTasksStore = defineStore('tasks', () => {
         deleteTask,
         updateTaskResponsiblePerson,
         updateTaskTitle,
-        maxTaskWorkDuration
+        maxTaskWorkDuration,
+        setTasks
     };
 });
