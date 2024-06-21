@@ -210,13 +210,7 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     function sortProjects(comparator) {
-        console.log("Unsorted:");
-        console.log(projects.value);
-    
         projects.value.sort(comparator);
-    
-        console.log("Sorted:");
-        console.log(projects.value);
     }
 
     function getPODate(projectID) {
