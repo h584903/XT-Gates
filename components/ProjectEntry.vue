@@ -1,10 +1,13 @@
 <template>
   <div class="list project-card" @click="redirect">
-    <div class="titleWrapper" @click.stop="enableEditMode" v-if="!editMode">
+    <div class="titleWrapper" @click.stop="enableEditMode" v-if="!editMode&&admin">
       <span>{{ editedTitle }}</span>
     </div>
-    <div class="titleWrapper" v-else>
-      <input type="text" v-model="editedTitle" @keyup.enter="updateTitle" @blur="updateTitle" />
+    <div class="titleWrapper" v-else-if="admin">
+      <input type="text" v-model="editedTitle" @keyup.enter="updateTitle" @click.stop @blur="updateTitle" />
+    </div>
+    <div class="titleWrapper cursorPointer" v-else>
+      <span>{{ editedTitle }}</span>
     </div>
     <div class="progressWrapper">
       <ProgressBar :progressNumber="entryData.progress" />
@@ -50,11 +53,14 @@ const props = defineProps({
 
 const router = useRouter();
 const store = useProjectsStore();
+const authStore = useAuthStore();
 
 const editedTitle = ref(props.entryData.title);
 const editedComment = ref(props.entryData.comment);
 const editMode = ref(false); // editorMode for title
 const commentEditMode = ref(false); // editMode for comment
+
+const admin = computed(() => authStore.isAdmin());
 
 let islate;
 islate = (props.entryData.SFdate>props.entryData.POdate)
@@ -194,6 +200,10 @@ a {
   cursor: text;
   min-height: 1rem;
   z-index: 100;
+}
+
+.cursorPointer {
+  cursor: pointer;
 }
 
 textarea {

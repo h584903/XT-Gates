@@ -7,20 +7,21 @@
   <template #item="{ element, index }">
     <div :key="element.ID">
       <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" :responsiblePerson="element.responsiblePerson || ''" />
+      <div v-if="!admin" class="gate-divider cursorDefault"></div>
       <div
-        v-if="index < gates.length - 1"
+        v-else-if="index < gates.length - 1"
         @click="addGateBetween(element.gateNR)"
-        class="gate-divider">
+        class="gate-divider cursorCopy">
       </div>
     </div>
   </template>
 </draggable>
   <div class="emptylist"v-if="gates.length === 0">
     No gates found for this project
-      <div class="gate-empty" @click="addGateBetween(1)">
+      <div v-if="admin" class="gate-empty" @click="addGateBetween(1)">
       </div>
   </div>
-  <div class="gatedivider"v-if="gates.length === 1">
+  <div class="gatedivider"v-if="gates.length === 1&&admin">
       <div class="gate-empty" @click="addGateBetween(2)">
       </div>
   </div>
@@ -50,8 +51,11 @@
   });
 
   const gateStore = useGatesStore();
+  const authStore = useAuthStore();
+
   const computedGates = computed(() => gateStore.getProjectGates(props.projectId));
   const gates = ref([]); // lager en non-reactive copy
+  const admin = computed(() => authStore.isAdmin());
 
 // ser etter forandringer
   watch(computedGates, (newGates) => {
@@ -114,7 +118,6 @@
   left: 0;
   right: 0;
   height: 8px;
-  cursor: copy;
   background-color: transparent;
 }
 
@@ -129,6 +132,14 @@
 .emptylist {
   flex-direction: column;
   margin: auto;
+}
+
+.cursorDefault {
+  cursor: default;
+}
+
+.cursorCopy {
+  cursor: copy;
 }
 
 .add-task-button {

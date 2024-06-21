@@ -1,22 +1,29 @@
   <template>
     <div class="list task-card">
-      <div class="handle">☰</div>
+      <div class="handle" @mousedown="startGrab" @mouseup="endGrab" v-if="admin">☰</div>
+      <div class="handlereplacement" v-else></div>
       <div class="w5">
         <span>{{ props.step }}</span>
       </div>
       <div class="w15 edit">
-        <div v-if="editTitleMode">
-          <input type="text" v-model="editedTitle" @blur="updateTitle" @keyup.enter="updateTitle" />
+        <div class="cursorDefault" v-if="!admin">
+          {{ titleDisplay }}
         </div>
-        <div v-else @click="enableTitleEditMode">
+        <div v-else-if="editTitleMode">
+          <input type="text" v-model="editedTitle" @blur="updateTitle" @keyup.enter="updateTitle" class="cursorText"/>
+        </div>
+        <div v-else @click="enableTitleEditMode" class="cursorText">
           {{ titleDisplay }}
         </div>
       </div>
       <div class="w10 edit">
-              <div v-if="editResponsiblePersonMode">
-          <input type="text" v-model="editedResponsiblePerson" @blur="updateResponsiblePerson" @keyup.enter="updateResponsiblePerson" />
+        <div class="cursorDefault" v-if="!admin">
+          {{ responsiblePersonDisplay }}
         </div>
-        <div v-else @click="enableResponsiblePersonEditMode">
+        <div v-else-if="editResponsiblePersonMode">
+          <input type="text" v-model="editedResponsiblePerson" @blur="updateResponsiblePerson" @keyup.enter="updateResponsiblePerson" class="cursorText"/>
+        </div>
+        <div v-else @click="enableResponsiblePersonEditMode" class="cursorText">
           {{ responsiblePersonDisplay }}
         </div>
       </div>
@@ -38,10 +45,13 @@
         <PlanStatus :onSchedule=planStatus />
       </div>
       <div class="w5 edit">
-        <div v-if="editMode">
+        <div class="cursorDefault" v-if="!admin">
+          {{ taskDuration }}
+        </div>
+        <div v-else-if="editMode">
           <input type="number" v-model.number="taskDuration" @blur="updateDuration" @keyup.enter="updateDuration">
         </div>
-        <div v-else @click="enableEditMode">
+        <div v-else @click="enableEditMode" class="cursorText">
           {{ taskDuration }} days
         </div>
       </div>
@@ -53,10 +63,10 @@
         <span>{{ editedComment }}</span>
       </div>
     </div>
-
-      <div class="delete" @click="toggleModal">
-        <img src="assets/x.svg" />
+      <div class="delete" @click.stop="toggleModal" v-if="admin">
+        <img src="/assets/x.svg" />
       </div>
+      <div class="deletereplacement" v-else></div>
     </div>
       <ReusableModal @close="toggleModal" :modalActive="modalActive">
         <h1>Delete Task?</h1>
@@ -70,8 +80,6 @@
 <script setup>
   import { useTasksStore } from '@/stores/tasks';
   import PlanStatus from './PlanStatus.vue';
-
-  const tasksStore = useTasksStore();
 
   const props = defineProps({
   taskID: {
@@ -109,6 +117,10 @@ updateUser: {
   required: true
 }
 }) 
+
+const tasksStore = useTasksStore();
+const authStore = useAuthStore();
+
 // Ulike editors for ulike verdier
 const editMode = ref(false);
 const editedComment = ref(props.comment);
@@ -117,6 +129,9 @@ const editedTitle = ref(props.title);
 const editTitleMode = ref(false);
 const editedResponsiblePerson = ref(props.responsiblePerson);
 const editResponsiblePersonMode = ref(false);
+
+
+const admin = computed(() => authStore.isAdmin());
 
   // Henter ut tasken som dette er
   const currentTask = tasksStore.tasks.find(t => t.ID === props.taskID);
@@ -262,6 +277,15 @@ const responsiblePersonDisplay = computed(() => {
   max-width: 50%; 
   max-height: 50%;
 }
+.deletereplacement {
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
 .edit {
   cursor: pointer;
@@ -287,11 +311,27 @@ textarea {
   }
 
 .handle {
-  cursor: move; /* Cursor indicates movement */
+  cursor: grab; /* Cursor indicates movement */
   padding: 10px;
   text-align: center;
 }
 
+.handlereplacement {
+  color: white;
+  padding: 20px;
+}
+
+.cursorDefault {
+  cursor: default;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.cursorText {
+  cursor: text;
+}
 .task-card {
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -326,6 +366,5 @@ textarea {
 }
 .w10 input {
   width: 100%;
-  cursor: pointer;
 }
 </style>

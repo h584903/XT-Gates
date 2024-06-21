@@ -18,5 +18,30 @@ export const useAuthStore = defineStore('auth', () => {
         username.value = newName;
     }
 
-    return {username, getUsername, setUsername}
+    //Metode som returnerer true om en innlogget bruker er en administratorbruker
+    //Må kobles mot databasen senere, foreløpig veldig enkel.
+    function isAdmin() {
+        let user = username.value;
+
+        //Array over de brukernavn som skal godkjennes som administratorer
+        let acceptedAdmins = [
+            "Kristoffer Madsen",
+            "Petter Tesdal",
+            "Eirik Sangiorgi",
+            "Morten Wilhelmsen",
+            "admin",
+            "Admin",
+            "ADMIN"
+        ]
+        if(acceptedAdmins.includes(user)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return {username, 
+        getUsername, 
+        setUsername, 
+        isAdmin}
 })
