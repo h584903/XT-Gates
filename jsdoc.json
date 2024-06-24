@@ -1,0 +1,45 @@
+{
+  
+  "source": {
+
+    "include": ["./stores"],
+
+    "includePattern": ".+\\.js(doc)?$",
+
+    "includePattern": "\\.(vue|js)$",
+
+    "excludePattern": "(^|\\/|\\\\)_"
+
+  },
+
+  "opts": {
+
+    "destination": "./docs",
+
+    "recurse": true
+
+  },
+
+  "plugins": [
+
+    "plugins/markdown",
+    "node_modules/jsdoc-vuejs"
+
+  ],
+
+  "markdown": {
+
+    "parser": "gfm",
+
+    "hardwrap": true
+
+  },
+
+  "templates": {
+
+    "cleverLinks": false,
+
+    "monospaceLinks": false
+
+  }
+}
