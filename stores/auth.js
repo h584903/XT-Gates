@@ -93,17 +93,7 @@ export const useAuthStore = defineStore('auth', () => {
     function isAdmin() {
         let user = username.value;
 
-        //Array over de brukernavn som skal godkjennes som administratorer
-        let acceptedAdmins = [
-            "Kristoffer Madsen",
-            "Petter Tesdal",
-            "Eirik Sangiorgi",
-            "Morten Wilhelmsen",
-            "admin",
-            "Admin",
-            "ADMIN"
-        ]
-        if(acceptedAdmins.includes(user)) {
+        if(role.value == 2) {
             return true;
         } else {
             return false;
