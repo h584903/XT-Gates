@@ -6,7 +6,10 @@
         <div class="info-grid">
           <div class="info-item">
             <label>PO Date:</label>
-            <div v-if="editPODateMode">
+            <div v-if="!admin">
+              <DateEntry :dateString = project.POdate />
+            </div>
+            <div v-else-if="editPODateMode">
               <input type="date" v-model="editedPODate" @blur="updatePODate" @keyup.enter="updatePODate" @keyup.esc="cancelEdit" />
               <button @click="cancelEdit">Cancel</button>
             </div>
@@ -16,7 +19,10 @@
           </div>
           <div class="info-item">
             <label>Scheduled finish:</label>
-            <div v-if="editSFDateMode">
+            <div v-if="!admin">
+              <DateEntry :dateString = project.SFdate />
+            </div>
+            <div v-else-if="editSFDateMode">
               <input type="date" v-model="editedSFDate" @blur="updateSFDate" @keyup.enter="updateSFDate" @keyup.esc="cancelEdit" />
               <button @click="cancelEdit">Cancel</button>
             </div>
@@ -26,7 +32,10 @@
           </div>
           <div class="info-item">
             <label>PEM:</label>
-            <div v-if="editPEM_Mode">
+            <div v-if="!admin">
+              <span>{{ displayedPEM }}</span>
+            </div>
+            <div v-else-if="editPEM_Mode">
               <input type="text" v-model="editedPEM" @blur="updatePEM" @keyup.enter="updatePEM" @keyup.esc="cancelEdit" />
               <button @click="cancelEdit">Cancel</button>
             </div>
@@ -48,16 +57,15 @@
           </div>
           <div class="info-item">
             <label>Days to PO:</label>
-            <span class="positive-float">
-              {{ daysToPO }}
-            </span>
+            <span v-if="daysToPO>=0">{{ daysToPO }}</span>
+            <span v-else-if="daysToPO<=0">{{ -daysToPO }} days ago</span>
           </div>
         </div>
       </div>
       <GateList :projectId="project.id"/>
       <div class="semi-footer"></div>
       <div>
-        <ReusableModal @close="toggleModal" :modalActive="modalActive">
+        <ReusableModal @close="toggleModal" :modalActive="modalActive" v-if="admin">
           <h1>Delete Project?</h1>
           <p>Deleting a project is absolute, and cannot be reversed. Make certain this is necessary before doing so.</p>
           <p>Delete project {{ project.title }}?</p>
@@ -66,12 +74,12 @@
         </ReusableModal>
       </div>
       <div class="button-container">
-        <button @click="toggleModal" type="button" class="customButton deleteColor">Delete project</button>
+        <button v-if="admin" @click="toggleModal" type="button" class="customButton deleteColor">Delete project</button>
         <div v-if="!project.archive">
-          <button @click="archiveProjectHandler" type="button" class="customButton archiveButton">Archive project</button>
+          <button v-if="admin" @click="archiveProjectHandler" type="button" class="customButton archiveButton">Archive project</button>
         </div>
         <div v-else>
-          <button @click="archiveProjectHandler" type="button" class="customButton archiveButton">Reactivate project</button>
+          <button v-if="admin" @click="archiveProjectHandler" type="button" class="customButton archiveButton">Reactivate project</button>
         </div>
       </div>
     </div>
@@ -96,6 +104,8 @@
   const store = useProjectsStore();
   const gateStore = useGatesStore();
   const taskStore = useTasksStore();
+  const authStore = useAuthStore();
+
   const route = useRoute();
   const router = useRouter();
   const project = ref(null);
@@ -108,6 +118,7 @@
   const float = ref(0);
   const poFloat = ref(0);
   const daysToPO = computed(() => calculateDaysToPO());
+  const admin = computed(() => authStore.isAdmin());
 
   const enableEditPODateMode = () => {
     editPODateMode.value = true;

@@ -22,7 +22,7 @@
       </div>
     </ReusableModal>
     
-    <button @click="toggleModal" class="edit-button">Edit Template</button>
+    <button v-if="admin" @click="toggleModal" class="edit-button">Edit Template</button>
   </div>
 </template>
 
@@ -37,6 +37,7 @@ const store = useProjectsStore();
 const authStore = useAuthStore();
 const router = useRouter();
 
+const admin = computed(() => authStore.isAdmin());
 const username = computed(() => authStore.getUsername());
 const isLoggedIn = computed(() => username.value !== 'John Doe' && username.value !== '---');
 

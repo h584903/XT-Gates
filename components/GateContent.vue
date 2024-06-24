@@ -4,17 +4,24 @@
       <template #item="{element, index}">
         <div :key="element.ID">
           <GateTask :taskID="element.ID" :step="element.step" :title="element.title" :duration="element.duration" :responsiblePerson="element.responsiblePerson" :complete-date="element.completeDate" :updateUser="element.updateUser" :comment="element.comment || ''" />
-          <div
+          <div v-if="admin"
             @click="addTaskBetween(element.step)"
+            class="task-divider cursorCopy">
+          </div>
+          <div v-else
             class="task-divider">
           </div>
         </div>
       </template>
       </draggable>
       <div v-if="tasks.length === 0">
-          <div
+          <div v-if="admin"
             @click="addTaskBetween(1)"
-            class="task-divider" style="height: 50px">
+            class="task-divider cursorCopy" style="padding: 30px">
+            No tasks found for this gate
+          </div>
+          <div v-else
+            class="task-divider" style="padding: 30px">
             No tasks found for this gate
           </div>
       </div>
@@ -50,8 +57,12 @@
 
   // Initialiserer Tasks listen, 
   const taskStore = useTasksStore();
+  const authStore = useAuthStore();
+
   const computedTasks = computed(() => taskStore.getGateTasks(props.gateID));  //Setter computedTasks
   const tasks = ref(computedTasks.value);  // for å ikke manipulere computed tasks direkte
+  
+  const admin = computed(() => authStore.isAdmin());
 
   // Oppdaterer som vanlig hvis de blir forandret
   watch(computedTasks, (newTasks) => {
@@ -105,11 +116,19 @@
   left: 0;
   right: 0;
   height: 8px;
-  cursor: copy;
   background-color: transparent;
   margin: auto;
   text-align: center;
 }
+
+.cursorCopy {
+  cursor: copy;
+}
+
+.cursorDefault {
+  cursor: default;
+}
+
 .list * {
   margin: auto;
   text-align: center;
@@ -127,7 +146,7 @@
   width: 5%;
 }
 .descWrapper{
-  width: 84%;
+  width: 100%;
   margin: auto;
 }
 hr.solid {
