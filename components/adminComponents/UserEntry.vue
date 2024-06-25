@@ -2,13 +2,13 @@
     <div class="user-card">
         <div class="username">{{ props.entryData.username }}</div>
         <div class="input-container">
-            <select name="team" id="team" class="team">
+            <select name="team" id="team" class="team" @change="updateTeam($event.target.value)">
                 <option>{{ props.entryData.team }}</option>
                 <option v-for="team in filteredTeams" :key="team.id">{{ team.team }}</option>
             </select>
         </div>
         <div class="input-container">
-            <select name="role" id="role" class="role" v-if="superadmin">
+            <select name="role" id="role" class="role" @change="updateRole($event.target.value)" v-if="superadmin">
                 <option>{{ props.entryData.role }}</option>
                 <option v-for="role in filteredRoles" :key="role.id">{{ role.role }}</option>
             </select>
@@ -26,13 +26,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import { useTeamsStore } from '@/stores/teams';
-import { useRolesStore } from '@/stores/roles';
+import usersGet from '~/server/routes/users.get';
 
 const authStore = useAuthStore();
 const teamStore = useTeamsStore();
 const roleStore = useRolesStore();
+const userStore = useUsersStore();
 
 const superadmin = ref(authStore.isSuperAdmin());
 const teams = ref([]);
@@ -69,6 +68,21 @@ function filterOutCurrentRole() {
 const toggleModal = () => {
     // Implement your toggle modal logic here
 };
+
+
+function updateTeam(teamName) {
+    const teamId = teamStore.getTeamId(teamName);
+    if (teamId !== null) {
+        userStore.updateTeam(teamId, props.entryData.id);
+    }
+}
+
+function updateRole(roleName) {
+    const roleId = roleStore.getRoleId(roleName);
+    if (roleId !== null) {
+        userStore.updateRole(roleId, props.entryData.id)
+    }
+}
 </script>
 
 

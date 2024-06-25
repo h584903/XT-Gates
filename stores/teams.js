@@ -21,14 +21,21 @@ export const useTeamsStore = defineStore('teams', () => {
             console.error('Error fetching teams', error);
         }
     }
+    
 
     function getTeams() {
         return teams.value;
     }
 
+    function getTeamId(teamName) {
+        const team = teams.value.find(t => t.team === teamName);
+        return team ? team.id : null;
+    }
+
     return {
         teams,
         fetchTeams,
-        getTeams
+        getTeams,
+        getTeamId
     };
 });

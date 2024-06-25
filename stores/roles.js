@@ -25,9 +25,15 @@ export const useRolesStore = defineStore('roles', () => {
         return roles.value;
     }
 
+    function getRoleId(roleName) {
+        const role = roles.value.find(r => r.role === roleName);
+        return role ? role.id : null;
+    }
+
     return {
         roles,
         fetchRoles,
-        getRoles
+        getRoles,
+        getRoleId
     };
 });

@@ -36,10 +36,85 @@ export const useUsersStore = defineStore('users', () => {
         });
     }
 
+    async function updateRole(roleId, userId) {
+        console.log("New role ID: " + roleId + " for user: " + userId);
+        const userToUpdate = users.value.find(user => user.id === userId);
+        if (!userToUpdate) {
+            console.error('User not found for update');
+            return;
+        }
+    
+        const requestBody = {
+            userID: userId,
+            newRole: roleId
+        };
+    
+        try {
+            const response = await fetch(`/users/role`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+    
+            if (response.ok) {
+                // Update the local store if the request was successful
+                userToUpdate.role = roleId;
+                console.log('User role updated successfully');
+            } else {
+                const responseData = await response.json();
+                console.error('Failed to update user role:', responseData.data);
+            }
+        } catch (error) {
+            console.error('Error updating user role. Please reload the page and try again.', error);
+        }
+    }
+    
+    
+
+    async function updateTeam(teamId, userId) {
+        console.log("New team ID: " + teamId + " for user: " + userId);
+        const userToUpdate = users.value.find(user => user.id === userId);
+        if (!userToUpdate) {
+            console.error('User not found for update');
+            return;
+        }
+    
+        const requestBody = {
+            userID: userId,
+            newTeam: teamId
+        };
+    
+        try {
+            const response = await fetch(`/users/team`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+    
+            if (response.ok) {
+                // Update the local store if the request was successful
+                userToUpdate.team = teamId;
+                console.log('User team updated successfully');
+            } else {
+                const responseData = await response.json();
+                console.error('Failed to update user team:', responseData.data);
+            }
+        } catch (error) {
+            console.error('Error updating user team. Please reload the page and try again.', error);
+        }
+    }
+    
+
     return {
         users,
         fetchUsers,
         getUsers,
-        sortUsersAlphabetically
+        sortUsersAlphabetically,
+        updateRole,
+        updateTeam
     };
 });
