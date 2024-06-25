@@ -1,22 +1,32 @@
 export default defineEventHandler(async event => {
-    try {
-      // gjør klar body
-      const body = await readBody(event);
-      const {} = body;
+  let users;
+  let organizedData = {};
 
-      // Update the task in the database
-      await connectAndQuery(`SELECT gates.db_owner.validUsers SET responsiblePerson = '${newResponsiblePerson}' WHERE ID = ${taskID}`);
+  try {
+    users = await connectAndQuery("SELECT u.id, u.username, ur.role, ut.team FROM [db_owner].[validUsers] u LEFT JOIN [db_owner].[user_roles] ur ON u.role = ur.id LEFT JOIN [db_owner].[user_teams] ut on u.team = ut.id;")
+  } catch (error) {
+    console.log(error)
+    return createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      data: 'Failed to retrieve user records.',
+    });
+  }
 
-      // Return success response
-      return { updated: true };
-    } catch (error) {
-      // If there's an error during the database operation, return an internal server error
-      console.error('Failed to update the task:', error);
-      return createError({
-        statusCode: 500,
-        statusMessage: 'Internal Server Error',
-        data: 'Failed to update the task',
-      });
+  // Organize the data into an object
+  users.forEach(row => {
+    if (!organizedData[row.id]) {
+      organizedData[row.id] = {
+        ID: row.id,
+        username: row.username,
+        team: row.team,
+        role: row.role
+      };
     }
   });
 
+  return {
+    status: 'success',
+    data: organizedData
+  };
+});
