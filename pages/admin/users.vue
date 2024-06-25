@@ -7,6 +7,7 @@
         <div v-for="user in users" :key="user.id">
             <AdminComponentsUserEntry :entryData="user"></AdminComponentsUserEntry>
         </div>
+        <div class="bottom-spacer"></div>
     </div>
     <div v-else>This is an admin only page, please do not attempt to access it without being logged in as an admin.</div>
 </template>
@@ -55,5 +56,8 @@ async function fetchRoles() {
     width: 40%;
 }
 
+.bottom-spacer {
+    height: 50px;
+}
 
 </style>

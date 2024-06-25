@@ -107,6 +107,25 @@ export const useUsersStore = defineStore('users', () => {
             console.error('Error updating user team. Please reload the page and try again.', error);
         }
     }
+
+    async function deleteUser(userId) {
+        try {
+            const response = await fetch(`/users/${userId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                // Remove the deleted user from the local store
+                users.value = users.value.filter(user => user.id !== userId);
+                console.log('User deleted successfully');
+            } else {
+                const responseData = await response.json();
+                console.error('Failed to delete user:', responseData.data);
+            }
+        } catch (error) {
+            console.error('Error deleting user. Please reload the page and try again.', error);
+        }
+    }
     
 
     return {
@@ -115,6 +134,7 @@ export const useUsersStore = defineStore('users', () => {
         getUsers,
         sortUsersAlphabetically,
         updateRole,
-        updateTeam
+        updateTeam,
+        deleteUser
     };
 });

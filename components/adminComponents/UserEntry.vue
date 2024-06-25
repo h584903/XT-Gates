@@ -3,30 +3,34 @@
         <div class="username">{{ props.entryData.username }}</div>
         <div class="input-container">
             <select name="team" id="team" class="team" @change="updateTeam($event.target.value)">
-                <option>{{ props.entryData.team }}</option>
+                <option v-if="teamUnedited">{{ props.entryData.team }}</option>
                 <option v-for="team in filteredTeams" :key="team.id">{{ team.team }}</option>
             </select>
         </div>
         <div class="input-container">
             <select name="role" id="role" class="role" @change="updateRole($event.target.value)" v-if="superadmin">
-                <option>{{ props.entryData.role }}</option>
+                <option v-if="roleUnedited">{{ props.entryData.role }}</option>
                 <option v-for="role in filteredRoles" :key="role.id">{{ role.role }}</option>
             </select>
             <div class="role-text" v-else>
                 {{ props.entryData.role }}
             </div>
         </div>
-        <div class="delete" @click.stop="toggleModal">
+        <div class="delete" @click.stop="toggleModal" v-if="superadmin">
             <img src="/assets/x.svg" alt="Delete" />
         </div>
+        <Modal @close="toggleModal" :modalActive="modalActive" v-if="superadmin">
+            <p>Delete user "{{ props.entryData.username }}"?</p>
+            <button @click="deleteUserHandler" class="deleteButton">Yes</button>
+            <button @click="toggleModal" class="cancelButton">No</button>
+        </Modal>
     </div>
 </template>
 
-
-
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import usersGet from '~/server/routes/users.get';
+import Modal from "@/components/ReusableModal.vue";
 
 const authStore = useAuthStore();
 const teamStore = useTeamsStore();
@@ -36,6 +40,8 @@ const userStore = useUsersStore();
 const superadmin = ref(authStore.isSuperAdmin());
 const teams = ref([]);
 const roles = ref([]);
+const teamUnedited = ref(true); // Initialize as true initially
+const roleUnedited = ref(true); // Initialize as true initially
 
 const props = defineProps({
     entryData: {
@@ -44,34 +50,31 @@ const props = defineProps({
     }
 });
 
-const filteredTeams = ref([]);
-const filteredRoles = ref([]);
+const filteredTeams = computed(() => {
+    return teams.value.filter(team => team.team !== props.entryData.team);
+});
+
+const filteredRoles = computed(() => {
+    return roles.value.filter(role => role.role !== props.entryData.role);
+});
 
 onMounted(async () => {
     await teamStore.fetchTeams();
     teams.value = teamStore.teams;
-    filterOutCurrentTeam();
 
     await roleStore.fetchRoles();
     roles.value = roleStore.roles;
-    filterOutCurrentRole();
 });
 
-function filterOutCurrentTeam() {
-    filteredTeams.value = teams.value.filter(team => team.team !== props.entryData.team);
-}
 
-function filterOutCurrentRole() {
-    filteredRoles.value = roles.value.filter(role => role.role !== props.entryData.role);
-}
-
+const modalActive = ref(false);
 const toggleModal = () => {
-    // Implement your toggle modal logic here
+  modalActive.value = !modalActive.value;
 };
-
 
 function updateTeam(teamName) {
     const teamId = teamStore.getTeamId(teamName);
+    teamUnedited.value = false; // Update the reactive flag
     if (teamId !== null) {
         userStore.updateTeam(teamId, props.entryData.id);
     }
@@ -79,13 +82,18 @@ function updateTeam(teamName) {
 
 function updateRole(roleName) {
     const roleId = roleStore.getRoleId(roleName);
+    roleUnedited.value = false; // Update the reactive flag
     if (roleId !== null) {
         userStore.updateRole(roleId, props.entryData.id)
     }
 }
+
+function deleteUserHandler() {
+    const userId = props.entryData.id;
+    userStore.deleteUser(userId);
+    toggleModal();
+}
 </script>
-
-
 
 <style scoped>
 .user-card {
