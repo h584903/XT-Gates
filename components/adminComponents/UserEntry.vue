@@ -28,8 +28,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import usersGet from '~/server/routes/users.get';
 import Modal from "@/components/ReusableModal.vue";
 
 const authStore = useAuthStore();
