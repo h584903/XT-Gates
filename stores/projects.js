@@ -236,9 +236,7 @@ export const useProjectsStore = defineStore('projects', () => {
                 pro = projects.value[i];
             }
         }
-        return computed(() => {
-            return pro.SFdate;
-        });
+        return pro.SFdate;
     }
 
     async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {

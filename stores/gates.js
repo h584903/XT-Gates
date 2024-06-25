@@ -7,24 +7,36 @@ export const useGatesStore = defineStore('gates', () => {
     // Vanlig Ref
     const gates = ref([]);
 
-    function calculateDate(prosjektID, nr) {
+    function calculateDate() {
         const projectStore = useProjectsStore();
-        const gateIndex = gates.value.findIndex(gate => gate.projectID === prosjektID && gate.gateNR === nr);
+        const taskStore = useTasksStore();
 
-        if (gateIndex === -1) return null;
+        sortGates((x, y) => y.gateNR - x.gateNR);
 
-        if (lastGate(prosjektID, nr)) {
-            const sfDate = projectStore.getSFDate(prosjektID);
-            gates.value[gateIndex].plannedDate = sfDate;
-            return sfDate;
-        } else {
-            return computed(() => {
-                const nextGateDate = getNextGateDate(prosjektID, nr);
-                return nextGateDate;
-            });
+        const sfDate = projectStore.getSFDate(gates.value[0].projectID);
+        let date = sfDate;
+        let maxTaskduration;
+        for (let i = 0; i < gates.value.length; i++) {
+            gates.value[i].plannedDate = date;
+            gates.value[i].daysToEnd = calculateDaysToEnd(date);
+            maxTaskduration = taskStore.maxTaskDuration(gates.value[i].ID)
+            date = substractDays(date, maxTaskduration);
         }
     }
 
+    function sortGates(comparator) {
+        gates.value.sort(comparator);
+    }
+
+    function getPlanneddate(gateID) {
+        const gate = gates.value.find(gate => gate.ID === String(gateID));
+        if (gate) {
+            return gate.plannedDate;
+        } else {
+            console.error(`Gate with ID ${gateID} not found.`);
+            return null;
+        }
+    }
     function getSFG(gateID) {
         const gate = gates.value.find(gate => gate.ID === String(gateID));
         if (gate) {
@@ -52,6 +64,7 @@ export const useGatesStore = defineStore('gates', () => {
                 title: gate.gateTitle,
                 plannedDate: "1000-07-07",
                 completionDate: "1000-07-07",
+                daysToEnd: 0,
                 progress: gate.progress
             }));
 
@@ -81,6 +94,7 @@ export const useGatesStore = defineStore('gates', () => {
 
             console.log("calling fetchgates")
             await fetchGates(projectID);
+            calculateDate();
 
         } catch (error) {
             return createError({
@@ -91,9 +105,21 @@ export const useGatesStore = defineStore('gates', () => {
         }
     }
 
+    function updateGateOrder(newGateOrder) {
+        console.log("UPDATING ORDER with length: " + newGateOrder)
+        for (let x = 0; x < newGateOrder.length; x++) {
+            console.log("Running for gate: " + newGateOrder[x].ID)
+            for (let i = 0; i < gates.value.length; i++) {
+                if (gates.value[i].ID === newGateOrder[x].ID) {
+                    gates.value[i].gateNR = newGateOrder[x].gateNR;
+                    console.log("updating gateorder of: " + gates.value[i].title + " with " + gates.value[i].gateNR)
+                }
+            }
+        }
+        updateGateOrderDB(gates.value)
+    }
 
-
-    async function updateGateOrder(newGates) {
+    async function updateGateOrderDB(newGates) {
         try {
             const response = await fetch(`/gates/order`, {
                 method: 'PUT',
@@ -124,11 +150,12 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     function substractDays(date, days) {
+        console.log("Date before: " + date.toLocaleString() + " before subtracting: " + days)
         const currentDate = new Date(date);
-        const newDateTimestamp = currentDate.getTime() - (days * 24 * 60 * 60 * 1000);
-        const newDate = new Date(newDateTimestamp);
-        const formattedDate = newDate.toISOString().split('T')[0];
-        return formattedDate;
+        const newDate = currentDate.getDate();
+        currentDate.setDate(newDate - days)
+        console.log("Date after: " + currentDate.toLocaleString())
+        return currentDate;
     }
 
 
@@ -266,14 +293,13 @@ export const useGatesStore = defineStore('gates', () => {
 
 
     function calculateDaysToEnd(plannedDate) {
-        return computed(() => {
             let daysLeft = 0;
-            let date = new Date(plannedDate.value)
+            let date = new Date(plannedDate)
             const today = new Date();
             var differenceInMs = date.getTime() - today.getTime()
             daysLeft = Math.floor(differenceInMs/(1000*60*60*24))+1
+            console.log(Math.max(daysLeft,0))
             return Math.max(daysLeft, 0);
-        })
     }
 
     function calculateCompletionDate(gateID) {
@@ -362,7 +388,8 @@ export const useGatesStore = defineStore('gates', () => {
         updateGateProgress, 
         updateGateTitle, 
         updateGateOrder, 
-        deleteGate
+        deleteGate,
+        getPlanneddate
     };
 
 });
