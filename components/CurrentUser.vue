@@ -2,27 +2,35 @@
   <div>
     <label>User:</label>
     <button :class="{ admin: isAdmin }" @click="toggleModal">{{ username }}</button>
-    
+
     <ReusableModal @close="toggleModal" :modalActive="modalActive">
-      <div>Enter username:</div>
-      <input type="text" v-model="inputText" placeholder="Enter text" />
-      <div>
-        <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
-        <label for="acceptCookies">
-          I accept the 
-          <nuxt-link to="/cookiepolicy" @click="toggleModal">cookie policy</nuxt-link>
-        </label>
-      </div>
-      <div>
-        <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
-        <button @click="toggleModal">Cancel</button>
-      </div>
+    <div>Enter username:</div>
+    <input type="text" v-model="inputText" placeholder="Enter text" />
+    <div>
+      <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
+      <label for="acceptCookies">
+        I accept the 
+        <nuxt-link to="/cookiepolicy" @click="toggleModal">cookie policy</nuxt-link>
+      </label>
+    </div>
+    <div>
+      <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
+      <button @click="toggleModal">Cancel</button>
+    </div>
+    </ReusableModal>
+    <ReusableModal @close="toggleModal2" :modalActive="modalActive2">
+    <div>Enter password:</div>
+    <input type="text" v-model="inputText2" placeholder="Enter text" />
+    <div>
+      <button @click="savePassword">Login</button>
+      <button @click="toggleModal2">Cancel</button>
+    </div>
     </ReusableModal>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth'; // Import the auth store
 import ReusableModal from "@/components/ReusableModal.vue";
 import { useRouter } from 'vue-router';
@@ -31,12 +39,26 @@ const authStore = useAuthStore();
 
 const username = computed(() => authStore.getUsername());
 const inputText = ref('');
+const inputText2 = ref('');
 const acceptCookies = ref(false);
+const newAdmin = ref(false);
 
 const modalActive = ref(false);
+const modalActive2 = ref(false);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
+const toggleModal2 = () => {
+  modalActive2.value = !modalActive2.value;
+};
+const isNewAdmin = computed(() => authStore.isNewAdmin);
+
+watch(isNewAdmin, () => {
+  if (isNewAdmin.value == true) {
+    console.log("watch works")
+    modalActive2.value = true;
+  }
+});
 
 const saveUsername = () => {
   if (acceptCookies.value) {

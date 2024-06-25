@@ -5,14 +5,23 @@ import { defineStore } from "pinia";
 export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
+    const adminName = ref('---');
+    const isNewAdmin = ref(false);
     const role = ref('---');
 
     function getUsername() {
         return username.value;
     }
 
+
     /**
-     * Checks a username if it is valid and sets the role if found valid.
+     * Login Function, that is the enterance to the login handeling
+     * It checks if there is a password, and if there is, it reroutes to the correct
+     *
+     */
+
+    /**
+     * Checks a username if it is valid, if the fetched role, isn't normal then it asks for more info
      * @param {string} username - The username to be checked
      * @returns {boolean}
      */
@@ -22,13 +31,27 @@ export const useAuthStore = defineStore('auth', () => {
             console.log("Fetched role:", fetchedRole);
             if (!fetchedRole) {
                 console.log("not valid: " + newUsername)
+                adminName.value = '---';
+                isNewAdmin.value = false;
                 return false
             }
-            if (fetchedRole) {
+            else if (fetchedRole == 1) {
                 console.log("Valid: " + fetchedRole);
                 role.value=fetchedRole.role
+                adminName.value = '---';
+                isNewAdmin.value = false;
                 return true;
             }
+            else if (fetchedRole) {
+                // Now checking if they have password
+                adminName.value = newUsername;
+                isNewAdmin.value = true;
+                console.log("Valid but needs admin password");
+                return false;
+            }
+            else
+            adminName.value = '---';
+            isNewAdmin.value = false;
             return false;
 
         } catch (error) {
@@ -100,5 +123,5 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    return {username, role, getUsername, setUsername, isAdmin}
+    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName}
 })
