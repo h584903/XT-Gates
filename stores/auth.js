@@ -93,12 +93,22 @@ export const useAuthStore = defineStore('auth', () => {
     function isAdmin() {
         let user = username.value;
 
-        if(role.value == 2) {
+        if(role.value == 2 || role.value == 3) {
             return true;
         } else {
             return false;
         }
     }
 
-    return {username, role, getUsername, setUsername, isAdmin}
+    function isSuperAdmin() {
+        let user = username.value;
+
+        if(role.value == 3) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return {username, role, getUsername, setUsername, isAdmin, isSuperAdmin}
 })
