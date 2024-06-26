@@ -1,18 +1,24 @@
 import jwt from "jsonwebtoken"
-const createToken = async (user: User) => {
+import { ViteConfig } from "nuxt/schema"
+import {H3Event, getCookie} from 'h3'
+
+
+
+// Trenger vi å knytte pasw til token?
+// Oppretter en JWT token med brukernavnet
+const createToken = async (username: string) => {
   const config = useRuntimeConfig()
   return await jwt.sign(
     {
-      id: user.id,
-      email: user.email
+      id: username,
     },
     config.tokenSecret,
-
     {
       expiresIn: config.tokenExpiration
-    }
+    } 
   )
 }
+// Verifiserer tokenen
 const verifyToken = async (token: string) => {
   try {
   const config = useRuntimeConfig()
@@ -22,7 +28,7 @@ const verifyToken = async (token: string) => {
   }
 }
 
-const getUserToken = (event) => {
+const getUserToken = (event: H3Event) => {
   const cookie = getCookie(event, "__session")
   if (!cookie) {
     return null
@@ -33,4 +39,6 @@ const getUserToken = (event) => {
   }
   return token
 }
-export { createToken, getUserToken }
+export { createToken,verifyToken, getUserToken }
+
+

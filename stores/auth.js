@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue';
 import { packProject } from '@/utils/packProject.js';
 import { defineStore } from "pinia";
+import { H3Event, getCookie } from 'h3'; 
 
 export const useAuthStore = defineStore('auth', () => {
 
@@ -8,6 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
     const adminName = ref('---');
     const isNewAdmin = ref(false);
     const role = ref('---');
+    const token = ref(null);
 
     function getUsername() {
         return username.value;
@@ -19,6 +21,19 @@ export const useAuthStore = defineStore('auth', () => {
      * It checks if there is a password, and if there is, it reroutes to the correct
      *
      */
+    async function login(newName) {
+      
+        if (await validUsername(newName)) {
+            username.value = newName;
+            const newToken = await createToken(newName);
+            console.log('Token successfully created:', newToken);
+            token.value = newToken; 
+            return true;
+        } else {
+            clearUserData();
+            return false;
+        }
+    }
 
     /**
      * Checks a username if it is valid, if the fetched role, isn't normal then it asks for more info
@@ -28,21 +43,21 @@ export const useAuthStore = defineStore('auth', () => {
     async function validUsername(newUsername) {
         try {
             const fetchedRole = await fetchAccess(newUsername);
-            console.log("Fetched role:", fetchedRole);
+            console.log("Fetched role:", fetchedRole.role);
             if (!fetchedRole) {
                 console.log("not valid: " + newUsername)
                 adminName.value = '---';
                 isNewAdmin.value = false;
                 return false
             }
-            else if (fetchedRole == 1) {
+            else if (fetchedRole.role == 1) {
                 console.log("Valid: " + fetchedRole);
                 role.value=fetchedRole.role
                 adminName.value = '---';
                 isNewAdmin.value = false;
                 return true;
             }
-            else if (fetchedRole) {
+            else if (Number.isInteger(fetchedRole.role)) {
                 // Now checking if they have password
                 adminName.value = newUsername;
                 isNewAdmin.value = true;
@@ -123,5 +138,35 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName}
+    const verifyCurrentUserToken = async () => {
+        try {
+            const storedToken = token.value;
+            if (storedToken) {
+                const decoded = await verifyToken(storedToken);
+                if (decoded) {
+                    username.value = decoded.id;
+                } else {
+                    console.error("Token verification failed");
+                    clearUserData();
+                }
+            } else {
+                clearUserData();
+            }
+        } catch (error) {
+            console.error("Error verifying current user token:", error);
+            clearUserData();
+        }
+    };
+
+    const clearUserData = () => {
+        username.value = '---';
+        adminName.value = '---';
+        isNewAdmin.value = false;
+        role.value = '---';
+    }
+
+    verifyCurrentUserToken();
+
+
+    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login}
 })
