@@ -3,6 +3,7 @@ import { packProject } from '@/utils/packProject.js';
 import { defineStore } from "pinia";
 import { H3Event, getCookie } from 'h3'; 
 
+
 export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
@@ -114,18 +115,23 @@ export const useAuthStore = defineStore('auth', () => {
      */
     async function setUsername(newName) {
         const projectStore = useProjectsStore();
-        if (await validUsername(newName)) {
+        const isValid = await validUsername(newName);
+    
+        if (isValid) {
             if (role.value != 1) {
                 projectStore.setProjects([]);
-                return false
+                return false;
             }
             username.value = newName;
+            console.log('Username set in authStore for:', username.value);
             return true;
+        } else {
+            username.value = newName; // Set username regardless of validity
+            console.log('Username set in authStore for:', username.value);
+            projectStore.setProjects([]);
+            clearUserData();
+            return false;
         }
-
-        projectStore.setProjects([]);
-        clearUserData();
-        return false;
     }
 
     //Metode som returnerer true om en innlogget bruker er en administratorbruker
@@ -161,7 +167,7 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
     const clearUserData = () => {
-        username.value = '---';
+        // username.value = '---';
         adminName.value = '---';
         isNewAdmin.value = false;
         role.value = '---';
@@ -180,6 +186,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
 
-    return {username, role, loggedIn, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login, isSuperAdmin}
+    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login, isSuperAdmin}
 
 })

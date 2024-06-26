@@ -28,8 +28,17 @@
     </div>
     </ReusableModal>
     <ReusableModal @close="toggleRequestModal" :modalActive="requestModalActive">
-    <div>Username not valid</div>
-    <div>Do you want to request that: {{ inputText }} gets added?</div>
+    <div>Username not found</div>
+    <div>Do you want to request a new user?</div>
+    <div>
+      Username: {{username}}
+    </div>
+    <div>
+        <label for="teamSelect">Select Team:</label>
+        <select id="teamSelect" v-model="selectedTeam">
+          <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.team }}</option>
+        </select>
+      </div>
     <div>
       <button @click="sendRequest">Send request</button>
       <button @click="toggleRequestModal">Cancel</button>
@@ -39,22 +48,29 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth'; // Import the auth store
+import {useUsersStore} from '@/stores/users';
+import { useTeamsStore } from '@/stores/teams';
 import ReusableModal from "@/components/ReusableModal.vue";
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
+const usersStore = useUsersStore();
+const teamsStore = useTeamsStore();
 
 const username = computed(() => authStore.getUsername());
+const teams  = computed(() => teamsStore.getTeams());
+
 const inputText = ref('');
 const inputText2 = ref('');
 const acceptCookies = ref(false);
 const newAdmin = ref(false);
-
 const modalActive = ref(false);
 const modalActive2 = ref(false);
 const requestModalActive = ref(false);
+const selectedTeam = ref(null);
+// Toggles for modals
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
@@ -63,9 +79,14 @@ const toggleModal2 = () => {
 };
 const toggleRequestModal = () => {
   requestModalActive.value = !requestModalActive.value;
+  if (requestModalActive.value) {
+    teamsStore.fetchTeams();
+  }
 };
+
 const isNewAdmin = computed(() => authStore.isNewAdmin);
-const loggedIn = computed(() => authStore.loggedIn);
+// Ikke implementert
+//const loggedIn = computed(() => authStore.loggedIn);
 
 watch(isNewAdmin, () => {
   if (isNewAdmin.value == true) {
@@ -73,19 +94,36 @@ watch(isNewAdmin, () => {
   }
 });
 
-const saveUsername = () => {
-  if (acceptCookies.value) {
-    authStore.setUsername(inputText.value);
-    document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
-    toggleModal();
-  }
-};
+const saveUsername = async () => {
+    if (acceptCookies.value) {
+      authStore.setUsername(inputText.value);
+      document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`;
+
+      try {
+        const userExists = await usersStore.findUserByUsername(inputText.value);
+        if (userExists) {
+          console.log('User found in usersStore:', inputText.value);
+          toggleModal(); 
+        } else {
+          toggleModal();
+          console.log('User not found for username:', inputText.value);
+          inputText.value = '';
+          toggleRequestModal();
+        }
+      } catch (error) {
+        console.error('Error finding user:', error);
+      }
+    }
+  };
+
 const clearUsername = () => {
   authStore.clearUserData;
   document.cookie = `username=${'---'}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
   toggleModal();
 };
 const sendRequest = () => {
+  //todo
+  // implementere logikk for å sende request
   toggleRequestModal();
 };
 
