@@ -3,12 +3,18 @@
     <NuxtLink to="/projectList" class="hoverlink font">Dashboard</NuxtLink>
     <NuxtLink to="/" class="hoverlink font">System</NuxtLink>
     <NuxtLink to="/Archive" class="hoverlink font">Archive</NuxtLink>
+    <NuxtLink v-if="admin" to="/admin" class="hoverlink font">Admin</NuxtLink>
     <div class ="font">Projects:</div>
     <LinkList class="font"/> <!--Listen over aktive prosjekter-->
   </div>
 </template>
 
 <script setup>
+
+const authStore = useAuthStore();
+
+const admin = computed(() => authStore.isAdmin());
+
 </script>
 
 <style scoped>

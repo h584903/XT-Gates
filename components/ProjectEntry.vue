@@ -17,9 +17,7 @@
       :class="{'late': islate, 'onTime': !islate}" >
         <DateEntry :dateString="entryData.SFdate"/>
     </div>
-    <div 
-      class="dateWrapper"
-      :class="{'late2': islate, 'onTime': !islate}" >
+    <div class="dateWrapper">
       <DateEntry :dateString="entryData.POdate" />
     </div>
     <div class="statusWrapper">
@@ -170,11 +168,6 @@ a {
   background-color: yellow;
   padding: 5px;
   margin-left: 5px;
-}
-.dateWrapper.late2 {
-  background-color: yellow;
-  padding: 5px;
-  margin-right: 5px;
 }
 .dateWrapper.onTime {
   padding: 5px;
