@@ -40,7 +40,7 @@
         </select>
       </div>
     <div>
-      <button @click="sendRequest">Send request</button>
+      <button @click="sendRequest" :disabled="!selectedTeam">Send request</button>
       <button @click="toggleRequestModal">Cancel</button>
     </div>
     </ReusableModal>
@@ -51,6 +51,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth'; // Import the auth store
 import {useUsersStore} from '@/stores/users';
+import { useUserRequestsStore } from '@/stores/user_requests';
 import { useTeamsStore } from '@/stores/teams';
 import ReusableModal from "@/components/ReusableModal.vue";
 import { useRouter } from 'vue-router';
@@ -58,6 +59,7 @@ import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const teamsStore = useTeamsStore();
+const requestStore = useUserRequestsStore();
 
 const username = computed(() => authStore.getUsername());
 const teams  = computed(() => teamsStore.getTeams());
@@ -121,10 +123,40 @@ const clearUsername = () => {
   document.cookie = `username=${'---'}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
   toggleModal();
 };
-const sendRequest = () => {
-  //todo
-  // implementere logikk for å sende request
-  toggleRequestModal();
+
+// Sende en ny request
+const sendRequest = async () => {
+  try {
+    // Validation sjekk
+    if (!selectedTeam.value) {
+      console.error('No team selected');
+      return;
+    }
+
+    // Send request til backend
+    const requestBody = {
+      username: username.value,
+      selectedTeam: selectedTeam.value
+    };
+
+    const response = await fetch('/api/userRequest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to send request: ${response.statusText}`);
+    }
+
+    console.log('Request sent successfully');
+    toggleRequestModal();
+  } catch (error) {
+    console.error('Error sending request:', error);
+    
+  }
 };
 
 const getCookie = (name) => {
