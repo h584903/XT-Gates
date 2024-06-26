@@ -1,30 +1,32 @@
 <template>
   <div>
     <label>User:</label>
-    <button :class="{ admin: isAdmin }" @click="toggleModal">{{ username }}</button>
+    <button :class="{ admin: isAdmin }" @click="toggleUsernameModal">{{ username }}</button>
 
-    <ReusableModal @close="toggleModal" :modalActive="modalActive">
+    <ReusableModal @close="toggleUsernameModal" :modalActive="usernameModalActive">
     <div>Enter username:</div>
-    <input type="text" v-model="inputText" placeholder="Enter text" />
+    <input type="text" v-model="usernameInput" placeholder="Enter text" />
     <div>
       <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
       <label for="acceptCookies">
         I accept the 
-        <nuxt-link to="/cookiepolicy" @click="toggleModal">cookie policy</nuxt-link>
+        <nuxt-link to="/cookiepolicy" @click="toggleUsernameModal">cookie policy</nuxt-link>
       </label>
     </div>
     <div>
       <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
-      <button @click="toggleModal">Cancel</button>
+      <button @click="toggleUsernameModal">Cancel</button>
       <button @click="clearUsername">Logout</button>
     </div>
     </ReusableModal>
-    <ReusableModal @close="toggleModal2" :modalActive="modalActive2">
+    <ReusableModal @close="toggleLoginModal" :modalActive="loginModalActive">
+    <div>Enter username:</div>
+    <input type="text" v-model="usernameInput" placeholder="Enter text" />
     <div>Enter password:</div>
-    <input type="text" v-model="inputText2" placeholder="Enter text" />
+    <input type="text" v-model="passwordInput" placeholder="Enter text" />
     <div>
-      <button @click="savePassword">Login</button>
-      <button @click="toggleModal2">Cancel</button>
+      <button @click="loginAuthentication">Login</button>
+      <button @click="toggleLoginModal">Cancel</button>
     </div>
     </ReusableModal>
     <ReusableModal @close="toggleRequestModal" :modalActive="requestModalActive">
@@ -47,39 +49,45 @@ import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 
 const username = computed(() => authStore.getUsername());
-const inputText = ref('');
-const inputText2 = ref('');
+const usernameInput = ref('');
+const passwordInput = ref('');
 const acceptCookies = ref(false);
 const newAdmin = ref(false);
 
-const modalActive = ref(false);
-const modalActive2 = ref(false);
+const usernameModalActive = ref(false);
+const loginModalActive = ref(false);
 const requestModalActive = ref(false);
-const toggleModal = () => {
-  modalActive.value = !modalActive.value;
+const toggleUsernameModal = () => {
+  usernameModalActive.value = !usernameModalActive.value;
 };
-const toggleModal2 = () => {
-  modalActive2.value = !modalActive2.value;
+const toggleLoginModal = () => {
+  loginModalActive.value = !loginModalActive.value;
 };
 const toggleRequestModal = () => {
   requestModalActive.value = !requestModalActive.value;
 };
 const isNewAdmin = computed(() => authStore.isNewAdmin);
-const loggedIn = computed(() => authStore.loggedIn);
 
 watch(isNewAdmin, () => {
   if (isNewAdmin.value == true) {
-    modalActive2.value = true;
+    loginModalActive.value = true;
   }
 });
 
 const saveUsername = () => {
   if (acceptCookies.value) {
-    authStore.setUsername(inputText.value);
-    document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
-    toggleModal();
+    authStore.setUsername(usernameInput.value);
+    document.cookie = `username=${usernameInput.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
+    toggleUsernameModal();
   }
 };
+
+const loginAuthentication = () => {
+  authStore.login(usernameInput.value, passwordInput.value);
+  toggleLoginModal();
+};
+
+
 const clearUsername = () => {
   authStore.clearUserData;
   document.cookie = `username=${'---'}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year

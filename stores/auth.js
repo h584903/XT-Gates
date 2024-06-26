@@ -24,17 +24,33 @@ export const useAuthStore = defineStore('auth', () => {
      *
      */
     async function login(newName, password) {
-      
-        if (await validUsername(newName)) {
-            username.value = newName;
-            const newToken = await createToken(newName);
-            console.log('Token successfully created:', newToken);
-            token.value = newToken; 
-            return true;
-        } else {
+        if (validUsername(newName)) {
+            switch(role.value) {
+                case 1: // Normal user
+                    console.log("Something went wrong, role is normal user")
+                    return false;
+                case 2:
+                    useCookie('admin');
+                    admin.value(fetchToken(newName, password));
+                    return true;
+                case 3:
+                    useCookie('admin');
+                    admin.value(fetchToken(newName, password));
+                    return true;
+            }
+        }
+        else {
             clearUserData();
             return false;
         }
+        return false;
+    }
+
+    async function tokenCheck() {
+        useCookie('admin');
+        newUsername = await verifyToken(admin.value);
+        username.value(newUsername);
+        role = 2;
     }
 
     /**
@@ -75,6 +91,52 @@ export const useAuthStore = defineStore('auth', () => {
         }
         return false;
 
+    }
+
+    async function fetchToken(newUsername, newPassword) {
+
+        const requestBody = {
+            password: password,
+            username: newUsername
+        };
+
+        try {
+            const response = await $fetch('/users/createToken', {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+
+            return response;
+        } catch (error) {
+            console.log("Error during fetch: " + error)
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to create token'
+            });
+        }
+    }
+    async function verifyToken(token) {
+
+        const requestBody = {
+            token: token
+        };
+
+        try {
+            const response = await $fetch('/users/verifyToken', {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+
+            return response;
+        } catch (error) {
+            console.log("Error during fetch: " + error)
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to verify token'
+            });
+        }
     }
 
     /**
@@ -170,5 +232,5 @@ export const useAuthStore = defineStore('auth', () => {
     verifyCurrentUserToken();
 
 
-    return {username, role, loggedIn, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login}
+    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login}
 })
