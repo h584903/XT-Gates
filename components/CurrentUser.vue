@@ -16,6 +16,7 @@
     <div>
       <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
       <button @click="toggleModal">Cancel</button>
+      <button @click="clearUsername">Logout</button>
     </div>
     </ReusableModal>
     <ReusableModal @close="toggleModal2" :modalActive="modalActive2">
@@ -24,6 +25,14 @@
     <div>
       <button @click="savePassword">Login</button>
       <button @click="toggleModal2">Cancel</button>
+    </div>
+    </ReusableModal>
+    <ReusableModal @close="toggleRequestModal" :modalActive="requestModalActive">
+    <div>Username not valid</div>
+    <div>Do you want to request that: {{ inputText }} gets added?</div>
+    <div>
+      <button @click="sendRequest">Send request</button>
+      <button @click="toggleRequestModal">Cancel</button>
     </div>
     </ReusableModal>
   </div>
@@ -45,17 +54,21 @@ const newAdmin = ref(false);
 
 const modalActive = ref(false);
 const modalActive2 = ref(false);
+const requestModalActive = ref(false);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
 const toggleModal2 = () => {
   modalActive2.value = !modalActive2.value;
 };
+const toggleRequestModal = () => {
+  requestModalActive.value = !requestModalActive.value;
+};
 const isNewAdmin = computed(() => authStore.isNewAdmin);
+const loggedIn = computed(() => authStore.loggedIn);
 
 watch(isNewAdmin, () => {
   if (isNewAdmin.value == true) {
-    console.log("watch works")
     modalActive2.value = true;
   }
 });
@@ -66,6 +79,14 @@ const saveUsername = () => {
     document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
     toggleModal();
   }
+};
+const clearUsername = () => {
+  authStore.clearUserData;
+  document.cookie = `username=${'---'}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
+  toggleModal();
+};
+const sendRequest = () => {
+  toggleRequestModal();
 };
 
 const getCookie = (name) => {

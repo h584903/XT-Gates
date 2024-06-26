@@ -10,6 +10,8 @@ export const useAuthStore = defineStore('auth', () => {
     const isNewAdmin = ref(false);
     const role = ref('---');
     const token = ref(null);
+    const newName = ref(true); // variable to determine if the name is unknown in the database
+
 
     function getUsername() {
         return username.value;
@@ -21,7 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
      * It checks if there is a password, and if there is, it reroutes to the correct
      *
      */
-    async function login(newName) {
+    async function login(newName, password) {
       
         if (await validUsername(newName)) {
             username.value = newName;
@@ -41,32 +43,30 @@ export const useAuthStore = defineStore('auth', () => {
      * @returns {boolean}
      */
     async function validUsername(newUsername) {
+        if (newUsername === '') {
+            return false
+        }
         try {
             const fetchedRole = await fetchAccess(newUsername);
-            console.log("Fetched role:", fetchedRole.role);
             if (!fetchedRole) {
-                console.log("not valid: " + newUsername)
-                adminName.value = '---';
-                isNewAdmin.value = false;
+                clearUserData();
                 return false
             }
             else if (fetchedRole.role == 1) {
-                console.log("Valid: " + fetchedRole);
+                clearUserData();
                 role.value=fetchedRole.role
-                adminName.value = '---';
-                isNewAdmin.value = false;
                 return true;
             }
             else if (Number.isInteger(fetchedRole.role)) {
                 // Now checking if they have password
+                clearUserData();
                 adminName.value = newUsername;
                 isNewAdmin.value = true;
                 console.log("Valid but needs admin password");
-                return false;
+                return true;
             }
             else
-            adminName.value = '---';
-            isNewAdmin.value = false;
+            clearUserData();
             return false;
 
         } catch (error) {
@@ -113,16 +113,18 @@ export const useAuthStore = defineStore('auth', () => {
      * @returns {boolean} - If set true, if notset false.
      */
     async function setUsername(newName) {
-        console.log("checking new name: " + newName)
+        const projectStore = useProjectsStore();
         if (await validUsername(newName)) {
-            console.log("Valid, and setting name")
+            if (role.value != 1) {
+                projectStore.setProjects([]);
+                return false
+            }
             username.value = newName;
             return true;
         }
-        const projectStore = useProjectsStore();
+
         projectStore.setProjects([]);
-        username.value = "---";
-        role.value = "---";
+        clearUserData();
         return false;
     }
 
@@ -168,5 +170,5 @@ export const useAuthStore = defineStore('auth', () => {
     verifyCurrentUserToken();
 
 
-    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login}
+    return {username, role, loggedIn, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login}
 })
