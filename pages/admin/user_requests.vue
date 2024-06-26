@@ -1,5 +1,6 @@
 <template>
     <div v-if="admin">
+        <AdminComponentsRequestListDesc></AdminComponentsRequestListDesc>
         <div v-for="req in requests" :key="req.id">
             <AdminComponentsRequestEntry :entryData="req"></AdminComponentsRequestEntry>
         </div>
@@ -23,9 +24,8 @@ onMounted(() => {
 })
 
 async function fetchRequests() {
-    requestStore.fetchRequests();
+    await requestStore.fetchRequests();
     requests.value = requestStore.getRequests();
-    console.log(requests.value)
 }
 
 </script>
