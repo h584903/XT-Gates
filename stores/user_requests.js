@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useUserRequestsStore = defineStore('user_requests', () => {
+
     const user_requests = ref([]);
 
     // Fetches request from the database and adds them to the store
@@ -42,6 +43,8 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
 
     // Function to approve a request. Deletes the request from both store and database, but only after adding it to the user table/store
     async function approveUser(id) {
+        const teamStore = useTeamsStore();
+        await teamStore.fetchTeams();
         try {
             // Get the user request details
             const userRequest = user_requests.value.find(request => request.id === id);
@@ -57,7 +60,7 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
                 },
                 body: JSON.stringify({
                     username: userRequest.username,
-                    team: userRequest.team
+                    team: teamStore.getTeamId(userRequest.team)
                 })
             });
 
@@ -72,11 +75,16 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
         }
     }
 
+    function reqCount() {
+        return user_requests.value.length
+    }
+
     return {
         user_requests,
         fetchRequests,
         getRequests,
         declineUser,
-        approveUser
+        approveUser,
+        reqCount
     }
 });
