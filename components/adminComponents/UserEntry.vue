@@ -29,7 +29,6 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import usersGet from '~/server/routes/users.get';
 import Modal from "@/components/ReusableModal.vue";
 
 const authStore = useAuthStore();
@@ -40,8 +39,8 @@ const userStore = useUsersStore();
 const superadmin = ref(authStore.isSuperAdmin());
 const teams = ref([]);
 const roles = ref([]);
-const teamUnedited = ref(true); // Initialize as true initially
-const roleUnedited = ref(true); // Initialize as true initially
+const teamUnedited = ref(true);
+const roleUnedited = ref(true);
 
 const props = defineProps({
     entryData: {
