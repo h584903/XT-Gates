@@ -2,8 +2,8 @@
   <header>
     <div class="wrapper"> <!-- Lagt til for å plassere items mer fordelt -->
       <Logo/>
-      <CurrentUser />
       <TeamDropdown />
+      <CurrentUser />
     </div>
   </header>
 </template>

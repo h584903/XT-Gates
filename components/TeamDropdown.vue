@@ -21,13 +21,12 @@ const currentUserTeam = computed(() => {
 
 const filteredTeams = computed(() => {
     const currentTeamName = teamStore.getTeamName(currentUserTeam.value);
-    return teams.value.filter(team => team.team !== currentTeamName);
+    return teams.value.filter(team => team.team !== currentTeamName && team.id !== 0);
 });
 
 onMounted(async () => {
     await teamStore.fetchTeams();
     teams.value = teamStore.getTeams();
-
 });
 
 async function updateUserTeam(newTeamId) {
@@ -43,4 +42,21 @@ function handleChange(event) {
 </script>
 
 <style scoped>
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid #000000;
+    border-radius: 4px;
+    background-color: rgb(165, 204, 255);
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: #000000;
+    background-color: rgb(165, 204, 255);
+}
 </style>
