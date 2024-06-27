@@ -19,7 +19,7 @@
         <ProgressBar :progressNumber="gateProgress" />
       </div>
       <div class="plannedDate">
-        <DateEntry :dateString="plannedDate.value" />
+        <DateEntry :dateString="plannedDate" />
       </div>
       <div class="daysToEnd">
         <span>{{ daysToEnd }}</span>
@@ -86,6 +86,10 @@ const props = defineProps({
   responsiblePerson: {
     type: String,
     required: true
+  },
+  plannedDate: {
+    type: String,
+    required: true
   }
 });
 
@@ -113,8 +117,6 @@ const updateTitle = async () => {
   }
 };
 
-const plannedDate = computed(() => gateStore.calculateDate(props.projectId, props.gateNR));
-const daysToEnd = computed(() => gateStore.calculateDaysToEnd(plannedDate.value));
 const completionDate = computed(() => gateStore.calculateCompletionDate(props.gateID));
 const gateProgress = gateStore.getGateProgress(props.gateID);
 const isOpen = ref(false);

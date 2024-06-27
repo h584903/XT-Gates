@@ -40,6 +40,7 @@ export const useTasksStore = defineStore('tasks', () => {
             });
             updateTasksOrder(sortedTasks);
             await fetchTasks(projectID);
+            gateStore.calculateDate();
         } catch (error) {
             return createError({
                 statusCode: 500,
@@ -49,19 +50,19 @@ export const useTasksStore = defineStore('tasks', () => {
         }
     }
 
-    function maxTaskDuration(prosjektID, gateNR) {
+    function maxTaskDuration(gateID) {
+        console.log("Calculating the duration of: " + gateID)
         let maxDuration = 0;
-        const gates = useGatesStore();
-        for (let i = 0; i < tasks.value.length; i++) {
-            let rettGate = false;
-            let rettProsjekt = false;
+        const gateStore = useGatesStore();
+        const filteredtasks = tasks.value.filter(task => Number(task.gateID) == Number(gateID))
 
-            rettProsjekt = (tasks.value[i].prosjektID === Number(prosjektID));
-            rettGate = (gates.getGateNR(tasks.value[i].gateID) === (gateNR + 1));
-            if (tasks.value[i].duration > maxDuration && rettGate && rettProsjekt) {
-                maxDuration = tasks.value[i].duration;
+        console.log(filteredtasks)
+        for (let i = 0;i < filteredtasks.length; i++) {
+            if (filteredtasks[i].duration > maxDuration) {
+                maxDuration = filteredtasks[i].duration;
             }
         }
+        console.log(maxDuration);
         return maxDuration;
     }
 
@@ -122,6 +123,7 @@ export const useTasksStore = defineStore('tasks', () => {
             });
             const gateStore = useGatesStore();
             gateStore.updateGateProgress(getGateID(taskID));
+            gateStore.calculateDate();
         } catch (error) {
             console.error('Error updating task duration:', error);
         }

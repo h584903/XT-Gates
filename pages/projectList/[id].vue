@@ -188,14 +188,19 @@
       console.error('Error fetching project:', error);
     }
     try {
-      gateStore.fetchGates(projectId);
+      await gateStore.fetchGates(projectId);
     } catch (error) {
       console.error('Error fetching gates:', error);
     }
     try {
-      taskStore.fetchTasks(projectId);
+      await taskStore.fetchTasks(projectId);
     } catch (error) {
       console.error('Error fetching tasks:', error);
+    }
+    try {
+      gateStore.calculateDate();
+    } catch (error) {
+      console.error('Error calculating Date:', error);
     }
   });
 

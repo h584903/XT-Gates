@@ -29,7 +29,9 @@ export default defineEventHandler(async (event) => {
         POdate: row.POdate,
         SFdate: row.SFdate,
         archive: row.archive,
-        gates: {} // Initialize gates as an empty object
+        gates: {}, // Initialize gates as an empty object
+        team: row.team,
+        template: row.template
       };
     }
 

@@ -1,28 +1,27 @@
-import { defineEventHandler, readBody, createError } from 'h3';
+import { defineEventHandler, createError } from 'h3';
 
 export default defineEventHandler(async event => {
-  let users;
+  let userRequests;
   let organizedData = {};
 
   try {
-    users = await connectAndQuery("SELECT u.id, u.username, ur.role, ut.team FROM [db_owner].[validUsers] u LEFT JOIN [db_owner].[user_roles] ur ON u.role = ur.id LEFT JOIN [db_owner].[user_teams] ut on u.team = ut.id;")
+    userRequests = await connectAndQuery("SELECT ur.id, ur.username, ut.team FROM [db_owner].[userRequests] ur LEFT JOIN [db_owner].[user_teams] ut on ur.team = ut.id;");
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',
-      data: 'Failed to retrieve user records.',
+      data: 'Failed to retrieve user request records.',
     });
   }
 
   // Organize the data into an object
-  users.forEach(row => {
+  userRequests.forEach(row => {
     if (!organizedData[row.id]) {
       organizedData[row.id] = {
         ID: row.id,
         username: row.username,
-        team: row.team,
-        role: row.role
+        team: row.team
       };
     }
   });
