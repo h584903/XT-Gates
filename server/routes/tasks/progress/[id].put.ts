@@ -13,7 +13,6 @@ export default defineEventHandler(async event => {
       });
     }
 
-    console.log("This is newProgress in API: " + newProgress)
 
     // Update the task in the database
     await connectAndQuery(`UPDATE gates.db_owner.taskModel SET progress = ${newProgress} WHERE ID = ${taskID}`);

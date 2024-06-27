@@ -9,9 +9,7 @@ export default defineEventHandler(async event => {
 
     if (result.length > 0) {
       newRole = result[0]; // Get the first row
-      console.log('Data from the first row:', newRole);
     } else {
-      console.log('No data found.');
     }
 
     // Returning only the first match for the name

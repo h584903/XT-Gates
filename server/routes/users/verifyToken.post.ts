@@ -1,11 +1,20 @@
+import jwt from "jsonwebtoken"
+
 export default defineEventHandler(async event => {
   let newRole;
+  const config = useRuntimeConfig()
   try {
     const body = await readBody(event);
     const { token } = body;
-    const username = await jwt.verify({ username }, 'mysecrettoken').username;
+    let verifiedToken = ''
+    try {
+      verifiedToken = await jwt.verify(token, config.tokenSecret);
+    } catch (error) {
+      console.log("Authentication error: " + error)
+      return false;
+    }
 
-    return username;
+    return verifiedToken;
   } catch (error) {
     // If there's an error during the database operation, return an internal server error
     console.error('Failed to create Token', error);

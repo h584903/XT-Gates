@@ -6,11 +6,13 @@ import {H3Event, getCookie} from 'h3'
 
 // Trenger vi å knytte pasw til token?
 // Oppretter en JWT token med brukernavnet
-const createToken = async (username: string) => {
+async function createToken (username, userRole, team) {
   const config = useRuntimeConfig()
   return await jwt.sign(
     {
-      id: username,
+      user: username,
+      userRole: userRole,
+      team: team
     },
     config.tokenSecret,
     {
@@ -19,12 +21,15 @@ const createToken = async (username: string) => {
   )
 }
 // Verifiserer tokenen
-const verifyToken = async (token: string) => {
-  try {
+async function verifyToken(token) {
   const config = useRuntimeConfig()
-  return await jwt.verify(token, config.tokenSecret)
-  } catch (err) {
-    return "Token expired"
+  let verifiedToken = '';
+  try {
+    verifiedToken = await jwt.verify(token, config.tokenSecret);
+    return true;
+  } catch (error) {
+    console.log("Authentication error")
+    return false;
   }
 }
 

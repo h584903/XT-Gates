@@ -84,7 +84,6 @@
   };
 
   function addGateBetween(gateNR) {
-    console.log("Adding a gate between gates with ID:" + gateNR);
     toggleModal();
     formData.value.NR= gateNR;
   };

@@ -3,7 +3,6 @@ export default defineEventHandler(async event => {
     // Leser body fra put requesten
     const body = await readBody(event);
     const { gates } = body;
-    console.log("Putting the new order on database")
 
     if (!gates) {
       // Error hvis ingen tasks ble sendt

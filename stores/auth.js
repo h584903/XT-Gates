@@ -6,6 +6,7 @@ import { H3Event, getCookie } from 'h3';
 export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
+    const userTeam = ref('');
     const adminName = ref('---');
     const isNewAdmin = ref(false);
     const role = ref('---');
@@ -23,34 +24,83 @@ export const useAuthStore = defineStore('auth', () => {
      * It checks if there is a password, and if there is, it reroutes to the correct
      *
      */
-    async function login(newName, password) {
-        if (validUsername(newName)) {
-            switch(role.value) {
-                case 1: // Normal user
-                    console.log("Something went wrong, role is normal user")
+    async function login(newName, password, team) {
+        const admin = useCookie('admin');
+        let token = '';
+        let fetchedRole;
+        switch(role.value) {
+            case 1: // Normal user
+                console.log("Something went wrong, role is normal user")
+                return false;
+            case 2:
+                token = await verifyPass(newName, password, 2);
+                if (token == false) {
+                    console.log("Invalid password")
+                    clearUserData();
                     return false;
-                case 2:
-                    useCookie('admin');
-                    admin.value(fetchToken(newName, password));
+                } else {
+                    username.value = newName;
+                    role.value = 2;
+                    userTeam.value = team;
+                    admin.value = token;
                     return true;
-                case 3:
-                    useCookie('admin');
-                    admin.value(fetchToken(newName, password));
+                }
+            case 3:
+                token = await verifyPass(newName, password, 3);
+                if (token == false) {
+                    console.log("Invalid password")
+                    clearUserData();
+                    return false;
+                } else {
+                    username.value = newName;
+                    role.value = 3;
+                    userTeam.value = team;
+                    admin.value = token;
                     return true;
-            }
-        }
-        else {
-            clearUserData();
-            return false;
+                }
+            
         }
         return false;
     }
 
+
+    async function verifyPass(newName, pass, userRole) {
+        const requestBody = {
+            username: newName,
+            pass: pass,
+            userRole: userRole
+        };
+        try {
+            const response = await $fetch('/users/adminPass', {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+            return response;
+        } catch (error) {
+            console.log("Error during fetch: " + error)
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to verify pass'
+            });
+        }
+    }
+
     async function tokenCheck() {
-        useCookie('admin');
-        newUsername = await verifyToken(admin.value);
-        username.value(newUsername);
-        role = 2;
+        const admin = useCookie('admin');
+        if (!admin.value) {
+            return false
+        }
+        const decryptedToken = await verifyToken(admin.value);
+        if (decryptedToken == false) {
+            clearUserData();
+            return false;
+        } else {
+            username.value = decryptedToken.user;
+            role.value = decryptedToken.userRole;
+            userTeam.value = decryptedToken.team;
+        }
+        return true;
     }
 
     /**
@@ -76,9 +126,9 @@ export const useAuthStore = defineStore('auth', () => {
             else if (Number.isInteger(fetchedRole.role)) {
                 // Now checking if they have password
                 clearUserData();
+                role.value=fetchedRole.role
                 adminName.value = newUsername;
                 isNewAdmin.value = true;
-                console.log("Valid but needs admin password");
                 return true;
             }
             else
@@ -93,11 +143,12 @@ export const useAuthStore = defineStore('auth', () => {
 
     }
 
-    async function fetchToken(newUsername, newPassword) {
+    async function fetchToken(newUsername, newPassword, userRole) {
 
         const requestBody = {
-            password: password,
-            username: newUsername
+            password: newPassword,
+            username: newUsername,
+            userRole: userRole
         };
 
         try {
@@ -117,17 +168,14 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
     async function verifyToken(token) {
-
         const requestBody = {
             token: token
         };
-
         try {
             const response = await $fetch('/users/verifyToken', {
                 method: 'POST',
                 body: JSON.stringify(requestBody)
             });
-
             return response;
         } catch (error) {
             console.log("Error during fetch: " + error)
@@ -202,25 +250,6 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    const verifyCurrentUserToken = async () => {
-        try {
-            const storedToken = token.value;
-            if (storedToken) {
-                const decoded = await verifyToken(storedToken);
-                if (decoded) {
-                    username.value = decoded.id;
-                } else {
-                    console.error("Token verification failed");
-                    clearUserData();
-                }
-            } else {
-                clearUserData();
-            }
-        } catch (error) {
-            console.error("Error verifying current user token:", error);
-            clearUserData();
-        }
-    };
 
     const clearUserData = () => {
         username.value = '---';
@@ -229,8 +258,6 @@ export const useAuthStore = defineStore('auth', () => {
         role.value = '---';
     }
 
-    verifyCurrentUserToken();
 
-
-    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login}
+    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login, tokenCheck}
 })

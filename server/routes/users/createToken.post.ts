@@ -1,9 +1,20 @@
+import jwt from "jsonwebtoken"
+
 export default defineEventHandler(async event => {
+  const config = useRuntimeConfig()
   let newRole;
   try {
     const body = await readBody(event);
-    const { _username, _password } = body;
-    const token = await jwt.sign({ _username, _password }, 'mysecrettoken');
+    const { username, password, userRole } = body;
+    const token = await createToken(username, userRole, team)
+
+    if (token == false) {
+      return createError({
+        statusCode: 500,
+        statusMessage: 'Internal Server Error',
+        data: result,
+      })
+    }
 
     return token
   } catch (error) {

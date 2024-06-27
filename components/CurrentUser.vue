@@ -71,6 +71,7 @@ const isNewAdmin = computed(() => authStore.isNewAdmin);
 watch(isNewAdmin, () => {
   if (isNewAdmin.value == true) {
     loginModalActive.value = true;
+    authStore.isNewAdmin = false;
   }
 });
 
@@ -83,7 +84,7 @@ const saveUsername = () => {
 };
 
 const loginAuthentication = () => {
-  authStore.login(usernameInput.value, passwordInput.value);
+  authStore.login(usernameInput.value, passwordInput.value, 1);
   toggleLoginModal();
 };
 
@@ -105,10 +106,7 @@ const getCookie = (name) => {
 
 onMounted(() => {
   // Check for username cookie and set it in the store
-  const cookieUsername = getCookie("username");
-  if (cookieUsername) {
-    authStore.setUsername(cookieUsername);
-  }
+  authStore.tokenCheck();
 });
 
 // Computed property to check if the user is an admin
