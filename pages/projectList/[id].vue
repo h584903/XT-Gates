@@ -217,7 +217,6 @@
 
   const archiveProjectHandler = async () => {
     try {
-      console.log("Archiving project..")
       await store.archiveProject(project.value.id);
     } catch (error) {
       console.error('Failed to archive the project:', error);

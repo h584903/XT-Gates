@@ -4,6 +4,7 @@ export default defineEventHandler(async event => {
 
   try {
 
+    if (await verifyToken(event.req.headers.authentication) == true) {
     const body = await readBody(event);
     const { title, progress, plannedDate, PODate, status, PEM, comment } = body;
 
@@ -17,6 +18,9 @@ export default defineEventHandler(async event => {
       @SFDate = '${plannedDate}';`);
 
     return { updated: true };
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log("error: " + error)
     return createError({

@@ -43,10 +43,6 @@ const isLoggedIn = computed(() => username.value !== 'John Doe' && username.valu
 
 onMounted(() => {
   store.fetchProjects();
-  const cookieUsername = getCookie("username");
-  if (cookieUsername) {
-    authStore.setUsername(cookieUsername);
-  }
 });
 
 const modalActive = ref(false);

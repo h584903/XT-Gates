@@ -139,7 +139,6 @@ const admin = computed(() => authStore.isAdmin());
 
   // Oppdatere progress for en task
   function updateProgress() {
-  console.log("Updateprogress run")
   if (currentTask && currentTask.duration !== undefined && currentTask.progress !== undefined) {
     // Check if duration or progress has changed from their initial values
     if (currentTask.duration !== props.duration || currentTask.progress !== props.step) {
@@ -231,7 +230,6 @@ const responsiblePersonDisplay = computed(() => {
   }
 
   function closeAllEditModes() {
-    console.log("Closing all edit modes...");
   editMode.value = false;
   editCommentMode.value = false;
   editTitleMode.value = false;

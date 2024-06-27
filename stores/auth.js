@@ -7,11 +7,12 @@ import { H3Event, getCookie } from 'h3';
 export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
+    const invalidUsername = ref(false);
+    const userTeam = ref('');
     const adminName = ref('---');
     const isNewAdmin = ref(false);
     const role = ref('---');
     const token = ref(null);
-    const newName = ref(true); // variable to determine if the name is unknown in the database
 
 
     function getUsername() {
@@ -24,18 +25,83 @@ export const useAuthStore = defineStore('auth', () => {
      * It checks if there is a password, and if there is, it reroutes to the correct
      *
      */
-    async function login(newName, password) {
-      
-        if (await validUsername(newName)) {
-            username.value = newName;
-            const newToken = await createToken(newName);
-            console.log('Token successfully created:', newToken);
-            token.value = newToken; 
-            return true;
-        } else {
+    async function login(newName, password, team) {
+        const admin = useCookie('admin');
+        let token = '';
+        let fetchedRole;
+        switch(role.value) {
+            case 1: // Normal user
+                console.log("Something went wrong, role is normal user")
+                return false;
+            case 2:
+                token = await verifyPass(newName, password, 2);
+                if (token == false) {
+                    console.log("Invalid password")
+                    clearUserData();
+                    return false;
+                } else {
+                    username.value = newName;
+                    role.value = 2;
+                    userTeam.value = team;
+                    admin.value = token;
+                    return true;
+                }
+            case 3:
+                token = await verifyPass(newName, password, 3);
+                if (token == false) {
+                    console.log("Invalid password")
+                    clearUserData();
+                    return false;
+                } else {
+                    username.value = newName;
+                    role.value = 3;
+                    userTeam.value = team;
+                    admin.value = token;
+                    return true;
+                }
+            
+        }
+        return false;
+    }
+
+
+    async function verifyPass(newName, pass, userRole) {
+        const requestBody = {
+            username: newName,
+            pass: pass,
+            userRole: userRole
+        };
+        try {
+            const response = await $fetch('/users/adminPass', {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+            return response;
+        } catch (error) {
+            console.log("Error during fetch: " + error)
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to verify pass'
+            });
+        }
+    }
+
+    async function tokenCheck() {
+        const admin = useCookie('admin');
+        if (!admin.value) {
+            return false
+        }
+        const decryptedToken = await verifyToken(admin.value);
+        if (decryptedToken == false) {
             clearUserData();
             return false;
+        } else {
+            username.value = decryptedToken.user;
+            role.value = decryptedToken.userRole;
+            userTeam.value = decryptedToken.team;
         }
+        return true;
     }
 
     /**
@@ -51,7 +117,9 @@ export const useAuthStore = defineStore('auth', () => {
             const fetchedRole = await fetchAccess(newUsername);
             if (!fetchedRole) {
                 clearUserData();
-                return false
+                console.log("We are here")
+                invalidUsername.value = true;
+                return false;
             }
             else if (fetchedRole.role == 1) {
                 clearUserData();
@@ -61,9 +129,9 @@ export const useAuthStore = defineStore('auth', () => {
             else if (Number.isInteger(fetchedRole.role)) {
                 // Now checking if they have password
                 clearUserData();
+                role.value=fetchedRole.role
                 adminName.value = newUsername;
                 isNewAdmin.value = true;
-                console.log("Valid but needs admin password");
                 return true;
             }
             else
@@ -76,6 +144,50 @@ export const useAuthStore = defineStore('auth', () => {
         }
         return false;
 
+    }
+
+    async function fetchToken(newUsername, newPassword, userRole) {
+
+        const requestBody = {
+            password: newPassword,
+            username: newUsername,
+            userRole: userRole
+        };
+
+        try {
+            const response = await $fetch('/users/createToken', {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+
+            return response;
+        } catch (error) {
+            console.log("Error during fetch: " + error)
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to create token'
+            });
+        }
+    }
+    async function verifyToken(token) {
+        const requestBody = {
+            token: token
+        };
+        try {
+            const response = await $fetch('/users/verifyToken', {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+            return response;
+        } catch (error) {
+            console.log("Error during fetch: " + error)
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to verify token'
+            });
+        }
     }
 
     /**
@@ -115,23 +227,18 @@ export const useAuthStore = defineStore('auth', () => {
      */
     async function setUsername(newName) {
         const projectStore = useProjectsStore();
-        const isValid = await validUsername(newName);
-    
-        if (isValid) {
+        if (await validUsername(newName)) {
             if (role.value != 1) {
                 projectStore.setProjects([]);
-                return false;
+                return false
             }
             username.value = newName;
-            console.log('Username set in authStore for:', username.value);
             return true;
-        } else {
-            username.value = newName; // Set username regardless of validity
-            console.log('Username set in authStore for:', username.value);
-            projectStore.setProjects([]);
-            clearUserData();
-            return false;
         }
+
+        projectStore.setProjects([]);
+        clearUserData();
+        return false;
     }
 
     //Metode som returnerer true om en innlogget bruker er en administratorbruker
@@ -146,35 +253,20 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    const verifyCurrentUserToken = async () => {
-        try {
-            const storedToken = token.value;
-            if (storedToken) {
-                const decoded = await verifyToken(storedToken);
-                if (decoded) {
-                    username.value = decoded.id;
-                } else {
-                    console.error("Token verification failed");
-                    clearUserData();
-                }
-            } else {
-                clearUserData();
-            }
-        } catch (error) {
-            console.error("Error verifying current user token:", error);
-            clearUserData();
-        }
-    };
 
-    const clearUserData = () => {
-        // username.value = '---';
+    function clearUserData() {
+        username.value = '---';
         adminName.value = '---';
         isNewAdmin.value = false;
         role.value = '---';
     }
 
-    verifyCurrentUserToken();
-
+    function logout() {
+        clearUserData();
+        const projectStore = useProjectsStore();
+        projectStore.setProjects([]);
+    }
+    
     function isSuperAdmin() {
         let user = username.value;
 
@@ -186,6 +278,5 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
 
-    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, login, isSuperAdmin}
-
+    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, invalidUsername, login, tokenCheck, isSuperAdmin, logout}
 })

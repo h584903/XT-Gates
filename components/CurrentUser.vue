@@ -1,48 +1,50 @@
 <template>
   <div>
     <label>User:</label>
-    <button :class="{ admin: isAdmin }" @click="toggleModal">{{ username }}</button>
+    <button :class="{ admin: isAdmin }" @click="toggleUsernameModal">{{ username }}</button>
 
-    <ReusableModal @close="toggleModal" :modalActive="modalActive">
-    <div>Enter username:</div>
-    <input type="text" v-model="inputText" placeholder="Enter text" />
-    <div>
-      <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
-      <label for="acceptCookies">
-        I accept the 
-        <nuxt-link to="/cookiepolicy" @click="toggleModal">cookie policy</nuxt-link>
-      </label>
-    </div>
-    <div>
-      <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
-      <button @click="toggleModal">Cancel</button>
-      <button @click="clearUsername">Logout</button>
-    </div>
+    <ReusableModal @close="toggleUsernameModal" :modalActive="usernameModalActive">
+      <div>Enter username:</div>
+      <input type="text" v-model="usernameInput" placeholder="Enter text" />
+      <div>
+        <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
+        <label for="acceptCookies">
+          I accept the 
+          <nuxt-link to="/cookiepolicy" @click="toggleUsernameModal">cookie policy</nuxt-link>
+        </label>
+      </div>
+      <div>
+        <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
+        <button @click="toggleUsernameModal">Cancel</button>
+        <button @click="clearUsername">Logout</button>
+      </div>
     </ReusableModal>
-    <ReusableModal @close="toggleModal2" :modalActive="modalActive2">
-    <div>Enter password:</div>
-    <input type="text" v-model="inputText2" placeholder="Enter text" />
-    <div>
-      <button @click="savePassword">Login</button>
-      <button @click="toggleModal2">Cancel</button>
-    </div>
+    <ReusableModal @close="toggleLoginModal" :modalActive="loginModalActive">
+      <div>Enter username:</div>
+      <input type="text" v-model="usernameInput" placeholder="Enter text" />
+      <div>Enter password:</div>
+      <input type="text" v-model="passwordInput" placeholder="Enter text" />
+      <div>
+        <button @click="loginAuthentication">Login</button>
+        <button @click="toggleLoginModal">Cancel</button>
+      </div>
     </ReusableModal>
     <ReusableModal @close="toggleRequestModal" :modalActive="requestModalActive">
-    <div>Username not found</div>
-    <div>Do you want to request a new user?</div>
-    <div>
-      Username: {{inputText}}
-    </div>
-    <div>
+      <div>Username not found</div>
+      <div>Do you want to request a new user?</div>
+      <div>
+        Username: {{ usernameInput }}
+      </div>
+      <div>
         <label for="teamSelect">Select Team:</label>
         <select id="teamSelect" v-model="selectedTeam">
           <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.team }}</option>
         </select>
       </div>
-    <div>
-      <button @click="sendRequest" :disabled="!selectedTeam">Send request</button>
-      <button @click="toggleRequestModal">Cancel</button>
-    </div>
+      <div>
+        <button @click="sendRequest" :disabled="!selectedTeam">Send request</button>
+        <button @click="toggleRequestModal">Cancel</button>
+      </div>
     </ReusableModal>
   </div>
 </template>
@@ -50,7 +52,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth'; // Import the auth store
-import {useUsersStore} from '@/stores/users';
+import { useUsersStore } from '@/stores/users';
 import { useUserRequestsStore } from '@/stores/user_requests';
 import { useTeamsStore } from '@/stores/teams';
 import ReusableModal from "@/components/ReusableModal.vue";
@@ -62,72 +64,67 @@ const teamsStore = useTeamsStore();
 const userRequestsStore = useUserRequestsStore();
 
 const username = computed(() => authStore.getUsername());
-const teams  = computed(() => teamsStore.getTeams());
-
-const inputText = ref('');
-const inputText2 = ref('');
+const usernameInput = ref('');
+const passwordInput = ref('');
 const acceptCookies = ref(false);
 const newAdmin = ref(false);
-const modalActive = ref(false);
-const modalActive2 = ref(false);
+const admin = useCookie('admin')
+
+const usernameModalActive = ref(false);
+const loginModalActive = ref(false);
 const requestModalActive = ref(false);
-const selectedTeam = ref(null);
-// Toggles for modals
-const toggleModal = () => {
-  modalActive.value = !modalActive.value;
+const toggleUsernameModal = () => {
+  usernameModalActive.value = !usernameModalActive.value;
 };
-const toggleModal2 = () => {
-  modalActive2.value = !modalActive2.value;
+const toggleLoginModal = () => {
+  loginModalActive.value = !loginModalActive.value;
 };
 const toggleRequestModal = () => {
   requestModalActive.value = !requestModalActive.value;
-  if (requestModalActive.value) {
-    teamsStore.fetchTeams();
-  }
 };
 
 const isNewAdmin = computed(() => authStore.isNewAdmin);
-// Ikke implementert
-//const loggedIn = computed(() => authStore.loggedIn);
+const invalidUsername = computed(() => authStore.invalidUsername);
 
 watch(isNewAdmin, () => {
   if (isNewAdmin.value == true) {
-    modalActive2.value = true;
+    loginModalActive.value = true;
+    authStore.isNewAdmin = false;
+  }
+});
+watch(invalidUsername, () => {
+  if (invalidUsername.value == true) {
+    requestModalActive.value = true;
+    authStore.invalidUsername = false;
   }
 });
 
-const saveUsername = async () => {
-    if (acceptCookies.value) {
-      authStore.setUsername(inputText.value);
-      document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`;
+const saveUsername = () => {
+  if (acceptCookies.value) {
+    authStore.setUsername(usernameInput.value);
+    document.cookie = `username=${usernameInput.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
+    toggleUsernameModal();
+  }
+};
 
-      try {
-        const userExists = await usersStore.findUserByUsername(inputText.value);
-        if (userExists) {
-          console.log('User found in usersStore:', inputText.value);
-          toggleModal(); 
-        } else {
-          toggleModal();
-          console.log('User not found for username:', inputText.value);
-          toggleRequestModal();
-        }
-      } catch (error) {
-        console.error('Error finding user:', error);
-      }
-    }
-  };
+const loginAuthentication = () => {
+  authStore.login(usernameInput.value, passwordInput.value, 1);
+  toggleLoginModal();
+};
+
 
 const clearUsername = () => {
-  authStore.clearUserData;
+  authStore.logout();
   document.cookie = `username=${'---'}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
-  toggleModal();
+  admin.value = null
+  toggleUsernameModal();
 };
 
 // Sende en ny request
 const sendRequest = async () => {
   try {
     await userRequestsStore.submitRequest({
-      username: inputText,
+      username: usernameInput.value,
       selectedTeam: selectedTeam.value,
     });
     console.log('Request sent successfully');
@@ -145,10 +142,7 @@ const getCookie = (name) => {
 
 onMounted(() => {
   // Check for username cookie and set it in the store
-  const cookieUsername = getCookie("username");
-  if (cookieUsername) {
-    authStore.setUsername(cookieUsername);
-  }
+  authStore.tokenCheck();
 });
 
 // Computed property to check if the user is an admin
