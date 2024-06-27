@@ -33,7 +33,7 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
     // Function to submit a new user request to the backend
     async function submitRequest(request) {
         try {
-            const response = await $fetch('/user_request', {
+            const response = await $fetch('/user_requests/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
