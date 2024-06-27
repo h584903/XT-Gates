@@ -59,7 +59,7 @@ import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const teamsStore = useTeamsStore();
-const requestStore = useUserRequestsStore();
+const userRequestsStore = useUserRequestsStore();
 
 const username = computed(() => authStore.getUsername());
 const teams  = computed(() => teamsStore.getTeams());
@@ -127,35 +127,14 @@ const clearUsername = () => {
 // Sende en ny request
 const sendRequest = async () => {
   try {
-    // Validation sjekk
-    if (!selectedTeam.value) {
-      console.error('No team selected');
-      return;
-    }
-
-    // Send request til backend
-    const requestBody = {
+    await userRequestsStore.submitRequest({
       username: username.value,
-      selectedTeam: selectedTeam.value
-    };
-
-    const response = await fetch('/api/userRequest', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
+      selectedTeam: selectedTeam.value,
     });
-
-    if (!response.ok) {
-      throw new Error(`Failed to send request: ${response.statusText}`);
-    }
-
     console.log('Request sent successfully');
-    toggleRequestModal();
+    toggleRequestModal(); 
   } catch (error) {
     console.error('Error sending request:', error);
-    
   }
 };
 
