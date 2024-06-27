@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 
 export const useTeamsStore = defineStore('teams', () => {
     
-    const team = ref();
+    const currentteam = ref(1);
     const teams = ref([]);
 
     const fetchTeams = async () => {
@@ -32,10 +32,17 @@ export const useTeamsStore = defineStore('teams', () => {
         return team ? team.id : null;
     }
 
+    function getTeamName(teamID) {
+        const team = teams.value.find(t => t.id === teamID)
+        return team ? team.team : null
+    }
+
     return {
         teams,
+        currentteam,
         fetchTeams,
         getTeams,
-        getTeamId
+        getTeamId,
+        getTeamName
     };
 });

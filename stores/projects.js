@@ -27,18 +27,24 @@ export const useProjectsStore = defineStore('projects', () => {
                 POdate: project.POdate,
                 SFdate: project.SFdate,
                 archive: project.archive,
-                gates: project.gates
+                gates: project.gates,
+                team: project.team,
+                template: project.template
             }));
 
             setProjects(projectsArray);
+
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
     }
 
     async function fetchProjects() {
+        const authStore = useAuthStore();
+        const userTeam = authStore.getUserTeam();
+
         try {
-            const response = await $fetch('/projects', {
+            const response = await $fetch('/projects/' + userTeam, {
                 method: 'GET'
             });
             const data = response.data;
@@ -52,7 +58,9 @@ export const useProjectsStore = defineStore('projects', () => {
                 POdate: project.POdate,
                 SFdate: project.SFdate,
                 archive: project.archive,
-                gates: project.gates
+                gates: project.gates,
+                team: project.team,
+                template: project.template
             }));
 
             setProjects(projectsArray);
@@ -236,6 +244,9 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     async function addProject(ID, title, progress, plannedDate, PODate, status, PEM, comment) {
+        const authStore = useAuthStore();
+        const userTeam = authStore.getUserTeam();
+
         const requestBody = {
             ID: ID,
             title: title,
@@ -244,7 +255,8 @@ export const useProjectsStore = defineStore('projects', () => {
             PODate: PODate,
             status: status,
             PEM: PEM,
-            comment: comment
+            comment: comment,
+            team: userTeam
         };
 
         const admin = useCookie('admin');
@@ -391,6 +403,10 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
+    function clearStore() {
+        setProjects([])
+    }
+
     return {
         getTemplate,
         filteredProjects,
@@ -415,6 +431,7 @@ export const useProjectsStore = defineStore('projects', () => {
         calculateWorkDuration,
         updateOnTime,
         calculateFloat,
-        calculatePOFloat
+        calculatePOFloat,
+        clearStore
     };
 });

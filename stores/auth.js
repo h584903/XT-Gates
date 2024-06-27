@@ -1,5 +1,4 @@
 import { ref, computed } from 'vue';
-import { packProject } from '@/utils/packProject.js';
 import { defineStore } from "pinia";
 import { H3Event, getCookie } from 'h3'; 
 
@@ -7,6 +6,7 @@ import { H3Event, getCookie } from 'h3';
 export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
+
     const invalidUsername = ref(false);
     const userTeam = ref('');
     const adminName = ref('---');
@@ -277,6 +277,31 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    function getUserTeam() {
+        return userTeam.value
+    }
 
-    return {username, role, getUsername, setUsername, isAdmin, isNewAdmin, adminName, validUsername, invalidUsername, login, tokenCheck, isSuperAdmin, logout}
+    function setUserTeam(t) {
+        userTeam.value = t;
+    }
+
+
+    return {
+        username,
+        role,
+        getUsername,
+        setUsername,
+        isAdmin,
+        isNewAdmin,
+        adminName,
+        validUsername,
+        invalidUsername,
+        login,
+        tokenCheck,
+        isSuperAdmin,
+        logout,
+        getUserTeam,
+        setUserTeam
+    }
+
 })
