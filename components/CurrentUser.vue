@@ -31,7 +31,7 @@
     <div>Username not found</div>
     <div>Do you want to request a new user?</div>
     <div>
-      Username: {{username}}
+      Username: {{inputText}}
     </div>
     <div>
         <label for="teamSelect">Select Team:</label>
@@ -109,7 +109,6 @@ const saveUsername = async () => {
         } else {
           toggleModal();
           console.log('User not found for username:', inputText.value);
-          inputText.value = '';
           toggleRequestModal();
         }
       } catch (error) {
@@ -128,7 +127,7 @@ const clearUsername = () => {
 const sendRequest = async () => {
   try {
     await userRequestsStore.submitRequest({
-      username: username.value,
+      username: inputText,
       selectedTeam: selectedTeam.value,
     });
     console.log('Request sent successfully');

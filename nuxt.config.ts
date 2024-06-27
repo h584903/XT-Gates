@@ -14,5 +14,5 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxt/test-utils/module'
   ],
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 })
