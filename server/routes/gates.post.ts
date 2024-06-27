@@ -3,16 +3,20 @@ export default defineEventHandler(async event => {
 
   try {
 
-    const body = await readBody(event);
-    const { projectID, gateNR, title } = body;
+    if (await verifyToken(event.req.headers.authentication) == true) {
+      const body = await readBody(event);
+      const { projectID, gateNR, title } = body;
 
-    //Oppretter prosjektet
-    gate = await connectAndQuery(`
-      EXEC gates.db_owner.AdjustAndInsertGate
-      @ProsjektID = ${projectID},
-      @GateNR = ${gateNR},
-      @GateTitle = '${title}';
-    `); return { gate };
+      //Oppretter prosjektet
+      gate = await connectAndQuery(`
+        EXEC gates.db_owner.AdjustAndInsertGate
+        @ProsjektID = ${projectID},
+        @GateNR = ${gateNR},
+        @GateTitle = '${title}';
+      `); return { gate };
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log("error: " + error)
     return createError({

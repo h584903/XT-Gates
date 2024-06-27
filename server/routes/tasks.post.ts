@@ -3,16 +3,21 @@ export default defineEventHandler(async event => {
 
   try {
 
-    const body = await readBody(event);
-    const { projectID, gateID, step, title, responsiblePerson, duration} = body;
+    if (await verifyToken(event.req.headers.authentication) == true) {
+      const body = await readBody(event);
+      const { projectID, gateID, step, title, responsiblePerson, duration} = body;
 
-    //Oppretter prosjektet
-    task = await connectAndQuery(`
-      INSERT INTO gates.db_owner.taskModel (prosjektID, gateID, step, title, responsiblePerson, onTime, progress, duration)
-      VALUES (${projectID}, ${gateID}, ${step}, '${title}', '${responsiblePerson}', 0, 0, ${duration})
-    `);
 
-    return { task };
+      //Oppretter prosjektet
+      task = await connectAndQuery(`
+INSERT INTO gates.db_owner.taskModel (prosjektID, gateID, step, title, responsiblePerson, onTime, progress, duration)
+VALUES (${projectID}, ${gateID}, ${step}, '${title}', '${responsiblePerson}', 0, 0, ${duration})
+`);
+
+      return { task };
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log("nå error: " + error)
     return createError({

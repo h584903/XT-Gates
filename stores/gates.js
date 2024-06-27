@@ -75,24 +75,24 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     async function addGate(gateNR, projectID, title) {
-        console.log("Making gate: " + title + " with id: " + gateNR + " in project: " + projectID)
 
         const requestBody = {
             projectID: projectID,
             gateNR: gateNR,
             title: title
         };
+        const admin = useCookie('admin');
 
         try {
             const response = await $fetch('/gates', {
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'authentication': admin.value
                 },
                 body: JSON.stringify(requestBody)
             });
 
-            console.log("calling fetchgates")
             await fetchGates(projectID);
             calculateDate();
 
@@ -177,7 +177,6 @@ export const useGatesStore = defineStore('gates', () => {
 
     async function saveGateProgress(gateID, progress) {
         // Assuming you have a function to save gate progress to the database
-        console.log("Saving gateprogress in database")
         try {
             const response = await fetch(`/gates/progress/${gateID}`, {
                 method: 'PUT',
@@ -212,10 +211,8 @@ export const useGatesStore = defineStore('gates', () => {
 
 
     function updateGateProgress(gateID) {
-        console.log("In update gateProgress for: " + gateID);
         const taskStore = useTasksStore();
 
-        console.log("In return");
         const tasks = taskStore.getGateTasks(gateID);
 
         if (tasks.length === 0) return 0;

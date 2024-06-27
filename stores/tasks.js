@@ -7,7 +7,6 @@ export const useTasksStore = defineStore('tasks', () => {
     async function addTask(gateID, step, title, responsiblePerson, duration) {
         const gateStore = useGatesStore();
         const projectID = gateStore.getProjectID(gateID);
-        console.log("Making Task: " + title + " with step: " + step + " in project: " + projectID + "and gate: " + gateID);
 
         const requestBody = {
             projectID: projectID,
@@ -18,17 +17,21 @@ export const useTasksStore = defineStore('tasks', () => {
             duration: duration,
             completeDate: null
         };
-        console.log(requestBody);
+        const admin = useCookie('admin');
 
         try {
             const response = await $fetch('/tasks', {
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'authentication': admin.value
                 },
                 body: JSON.stringify(requestBody)
             });
 
+            if (response == false) {
+                return false;
+            }
             await fetchTasks(projectID);
 
             let sortedTasks = getGateTasks(gateID).sort((a, b) => a.step - b.step);
@@ -71,7 +74,6 @@ export const useTasksStore = defineStore('tasks', () => {
 
     async function updateTaskProgress(taskID, newProgress) {
         const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
-        console.log("This is newProgress: " + newProgress);
         if (taskIndex !== -1) {
             tasks.value[taskIndex].progress = newProgress;
         }
@@ -93,7 +95,6 @@ export const useTasksStore = defineStore('tasks', () => {
             const projectID = getProjectID(tasks.value[taskIndex].ID);
 
             const float = await projectStore.calculateFloat(projectID);
-            console.log("Calculated float: ", float);
 
             await projectStore.updateOnTime(projectID, float);
 
@@ -231,7 +232,6 @@ export const useTasksStore = defineStore('tasks', () => {
                     newUser: username
                 })
             });
-            console.log("USERNAME: " + username);
             const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
             if (taskIndex !== -1) {
                 tasks.value[taskIndex].updateUser = username;
