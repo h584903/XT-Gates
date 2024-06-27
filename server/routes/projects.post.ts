@@ -1,5 +1,3 @@
-import { verifyToken } from "../utils/session";
-
 // projects.post.ts 
 export default defineEventHandler(async event => {
   let projects;
