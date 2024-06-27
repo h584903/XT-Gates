@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useTeamsStore } from './teams'; // Make sure to import your teams store if needed
 
+
 export const useUserRequestsStore = defineStore('user_requests', () => {
 
     const user_requests = ref([]);
@@ -101,7 +102,9 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
     }
 
     function reqCount() {
+
         return user_requests.value.length;
+
     }
 
     return {
@@ -113,4 +116,5 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
         approveUser,
         reqCount
     };
+
 });

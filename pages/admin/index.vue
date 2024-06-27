@@ -3,7 +3,7 @@
         <h1>Administrator page:</h1>
         <div class="link-wrapper">
             <NuxtLink to="admin/users" class="buttonStyling">Users</NuxtLink>
-            <NuxtLink to="admin/user_requests" class="buttonStyling">Incoming user requests</NuxtLink>
+            <NuxtLink to="admin/user_requests" class="buttonStyling">Incoming user requests ({{ reqnr }})</NuxtLink>
             <div v-if="superadmin" class="link-wrapper">
                 <button class="buttonStyling">Change admin password</button><!--Button for admin password change-->
                 <button class="buttonStyling">Change super admin password</button><!--Button for superadmin passwordchange-->
@@ -22,9 +22,15 @@
 //init stores
 const authStore = useAuthStore();
 const projectStore = useProjectsStore();
+const requestStore = useUserRequestsStore();
 
 const admin = computed(() => authStore.isAdmin());
 const superadmin = computed(() => authStore.isSuperAdmin())
+await requestStore.fetchRequests();
+const reqnr = requestStore.reqCount();
+
+console.log(reqnr + " requests in store")
+
 projectStore.fetchProjects();
 
 </script>
