@@ -127,7 +127,12 @@ export const useUsersStore = defineStore('users', () => {
         }
     }
     
-
+    async function findUserByUsername(username) {
+        console.log('Fetching users and searching for user...');
+        await fetchUsers();
+        return users.value.find(user => user.username === username);
+    
+    }
     return {
         users,
         fetchUsers,
@@ -135,6 +140,7 @@ export const useUsersStore = defineStore('users', () => {
         sortUsersAlphabetically,
         updateRole,
         updateTeam,
-        deleteUser
+        deleteUser,
+        findUserByUsername
     };
 });
