@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
   let projects;
   try {
     projects = await connectAndQuery("SELECT * FROM gates.db_owner.projectModel WHERE ID = 1;");
+    getUserToken();
 
   } catch (error) {
     // Handle error, for example, by returning an error status and message

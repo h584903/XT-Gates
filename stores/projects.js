@@ -112,12 +112,9 @@ export const useProjectsStore = defineStore('projects', () => {
         const gateStore = useGatesStore();
         const taskStore = useTasksStore();
         let workDuration = 0;
-        console.log("INIT");
         let filteredGates = gateStore.getProjectGates(prosjektID);
-        console.log(filteredGates);
         for (const gate of filteredGates) {
             const maxDuration = taskStore.maxTaskWorkDuration(prosjektID, gate.ID);
-            console.log("Attempting to add:", maxDuration);
             workDuration += maxDuration;
         }
         return workDuration;
@@ -135,7 +132,6 @@ export const useProjectsStore = defineStore('projects', () => {
         const workDuration = await calculateWorkDuration(String(projectID));
     
         if (workDuration === 0) {
-            console.log("Workduration is 0")
             return 0;
         }
     
@@ -264,11 +260,13 @@ export const useProjectsStore = defineStore('projects', () => {
             team: userTeam
         };
 
+        const admin = useCookie('admin');
         try {
             await $fetch('/projects', {
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'authentication': admin.value
                 },
                 body: JSON.stringify(requestBody)
             });

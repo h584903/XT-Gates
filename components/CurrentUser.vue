@@ -1,28 +1,47 @@
 <template>
   <div>
     <label>User:</label>
-    <button :class="{ admin: isAdmin }" @click="toggleModal">{{ username }}</button>
-    
-    <ReusableModal @close="toggleModal" :modalActive="modalActive">
-      <div>Enter username:</div>
-      <input type="text" v-model="inputText" placeholder="Enter text" />
-      <div>
-        <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
-        <label for="acceptCookies">
-          I accept the 
-          <nuxt-link to="/cookiepolicy" @click="toggleModal">cookie policy</nuxt-link>
-        </label>
-      </div>
-      <div>
-        <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
-        <button @click="toggleModal">Cancel</button>
-      </div>
+    <button :class="{ admin: isAdmin }" @click="toggleUsernameModal">{{ username }}</button>
+
+    <ReusableModal @close="toggleUsernameModal" :modalActive="usernameModalActive">
+    <div>Enter username:</div>
+    <input type="text" v-model="usernameInput" placeholder="Enter text" />
+    <div>
+      <input type="checkbox" id="acceptCookies" v-model="acceptCookies">
+      <label for="acceptCookies">
+        I accept the 
+        <nuxt-link to="/cookiepolicy" @click="toggleUsernameModal">cookie policy</nuxt-link>
+      </label>
+    </div>
+    <div>
+      <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
+      <button @click="toggleUsernameModal">Cancel</button>
+      <button @click="clearUsername">Logout</button>
+    </div>
+    </ReusableModal>
+    <ReusableModal @close="toggleLoginModal" :modalActive="loginModalActive">
+    <div>Enter username:</div>
+    <input type="text" v-model="usernameInput" placeholder="Enter text" />
+    <div>Enter password:</div>
+    <input type="text" v-model="passwordInput" placeholder="Enter text" />
+    <div>
+      <button @click="loginAuthentication">Login</button>
+      <button @click="toggleLoginModal">Cancel</button>
+    </div>
+    </ReusableModal>
+    <ReusableModal @close="toggleRequestModal" :modalActive="requestModalActive">
+    <div>Username not valid</div>
+    <div>Do you want to request that: {{ inputText }} gets added?</div>
+    <div>
+      <button @click="sendRequest">Send request</button>
+      <button @click="toggleRequestModal">Cancel</button>
+    </div>
     </ReusableModal>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth'; // Import the auth store
 import ReusableModal from "@/components/ReusableModal.vue";
 import { useRouter } from 'vue-router';
@@ -30,20 +49,53 @@ import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 
 const username = computed(() => authStore.getUsername());
-const inputText = ref('');
+const usernameInput = ref('');
+const passwordInput = ref('');
 const acceptCookies = ref(false);
+const newAdmin = ref(false);
 
-const modalActive = ref(false);
-const toggleModal = () => {
-  modalActive.value = !modalActive.value;
+const usernameModalActive = ref(false);
+const loginModalActive = ref(false);
+const requestModalActive = ref(false);
+const toggleUsernameModal = () => {
+  usernameModalActive.value = !usernameModalActive.value;
 };
+const toggleLoginModal = () => {
+  loginModalActive.value = !loginModalActive.value;
+};
+const toggleRequestModal = () => {
+  requestModalActive.value = !requestModalActive.value;
+};
+const isNewAdmin = computed(() => authStore.isNewAdmin);
+
+watch(isNewAdmin, () => {
+  if (isNewAdmin.value == true) {
+    loginModalActive.value = true;
+    authStore.isNewAdmin = false;
+  }
+});
 
 const saveUsername = () => {
   if (acceptCookies.value) {
-    authStore.setUsername(inputText.value);
-    document.cookie = `username=${inputText.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
-    toggleModal();
+    authStore.setUsername(usernameInput.value);
+    document.cookie = `username=${usernameInput.value}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
+    toggleUsernameModal();
   }
+};
+
+const loginAuthentication = () => {
+  authStore.login(usernameInput.value, passwordInput.value, 1);
+  toggleLoginModal();
+};
+
+
+const clearUsername = () => {
+  authStore.clearUserData;
+  document.cookie = `username=${'---'}; path=/; max-age=${60 * 60 * 24 * 365}`; // Cookie expires in 1 year
+  toggleModal();
+};
+const sendRequest = () => {
+  toggleRequestModal();
 };
 
 const getCookie = (name) => {
@@ -54,10 +106,7 @@ const getCookie = (name) => {
 
 onMounted(() => {
   // Check for username cookie and set it in the store
-  const cookieUsername = getCookie("username");
-  if (cookieUsername) {
-    authStore.setUsername(cookieUsername);
-  }
+  authStore.tokenCheck();
 });
 
 // Computed property to check if the user is an admin

@@ -94,7 +94,6 @@
   };
   // Funksjon brukt for å kunne sette inn et nytt step mellom to steps
   function addTaskBetween(step) {
-    console.log("Adding a task between tasks with NR:" + step);
     toggleModal();
     formData.value.step = step;
   };

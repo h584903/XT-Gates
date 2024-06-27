@@ -28,6 +28,6 @@
 .bar.progress {
   border: 0px;
   width: var(--progress);
-  background-color: green;
+  background-color: skyblue;
 }
 </style>

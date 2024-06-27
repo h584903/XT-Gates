@@ -7,6 +7,8 @@ export default defineNuxtConfig({
     dbName: '',
     dbPort: '',
     dbEncrypt: '',
+    tokenSecret: '',
+    tokenExpiration: '',
   },
   modules: [
     '@pinia/nuxt',
