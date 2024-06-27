@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
     const invalidUsername = ref(false);
-    const userTeam = ref('');
+    const userTeam = ref('1');
     const adminName = ref('---');
     const isNewAdmin = ref(false);
     const role = ref('---');
@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('auth', () => {
      * It checks if there is a password, and if there is, it reroutes to the correct
      *
      */
-    async function login(newName, password, team) {
+    async function login(newName, password) {
         const admin = useCookie('admin');
         let token = '';
         let fetchedRole;
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', () => {
                 console.log("Something went wrong, role is normal user")
                 return false;
             case 2:
-                token = await verifyPass(newName, password, 2);
+                token = await verifyPass(newName, password, 2, userTeam.value);
                 if (token == false) {
                     console.log("Invalid password")
                     clearUserData();
@@ -42,12 +42,11 @@ export const useAuthStore = defineStore('auth', () => {
                 } else {
                     username.value = newName;
                     role.value = 2;
-                    userTeam.value = team;
                     admin.value = token;
                     return true;
                 }
             case 3:
-                token = await verifyPass(newName, password, 3);
+                token = await verifyPass(newName, password, 3, userTeam.value);
                 if (token == false) {
                     console.log("Invalid password")
                     clearUserData();
@@ -55,7 +54,6 @@ export const useAuthStore = defineStore('auth', () => {
                 } else {
                     username.value = newName;
                     role.value = 3;
-                    userTeam.value = team;
                     admin.value = token;
                     return true;
                 }
@@ -69,7 +67,8 @@ export const useAuthStore = defineStore('auth', () => {
         const requestBody = {
             username: newName,
             pass: pass,
-            userRole: userRole
+            userRole: userRole,
+            userTeam: userTeam.value,
         };
         try {
             const response = await $fetch('/users/adminPass', {
@@ -146,12 +145,13 @@ export const useAuthStore = defineStore('auth', () => {
 
     }
 
-    async function fetchToken(newUsername, newPassword, userRole) {
+    async function fetchToken(newUsername, newPassword, userRole, _userTeam) {
 
         const requestBody = {
             password: newPassword,
             username: newUsername,
-            userRole: userRole
+            userRole: userRole,
+            userTeam: _userTeam
         };
 
         try {

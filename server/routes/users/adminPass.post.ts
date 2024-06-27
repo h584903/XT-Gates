@@ -4,7 +4,7 @@ export default defineEventHandler(async event => {
   try {
     const config = useRuntimeConfig()
     const body = await readBody(event);
-    const { username, pass, userRole } = body;
+    const { username, pass, userRole, userTeam } = body;
     let adminRole;
     // Querying the role
     const result = await connectAndQuery(`SELECT role FROM [db_owner].[admin_pass] WHERE pass = '${pass}' AND role = ${userRole}`)
@@ -15,8 +15,7 @@ export default defineEventHandler(async event => {
       return false;
     }
 
-    // Returning only the first match for the name
-    const token = await jwt.sign({ user: username, userRole: userRole , team: 1}, config.tokenSecret);
+    const token = await createToken(username, userRole, userTeam);
 
     return token
   } catch (error) {

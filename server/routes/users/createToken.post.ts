@@ -5,8 +5,8 @@ export default defineEventHandler(async event => {
   let newRole;
   try {
     const body = await readBody(event);
-    const { username, password, userRole } = body;
-    const token = await createToken(username, userRole, team)
+    const { username, password, userRole, userTeam } = body;
+    const token = await createToken(username, userRole, userTeam)
 
     if (token == false) {
       return createError({
