@@ -3,11 +3,13 @@
     <div class="wrapper"> <!-- Lagt til for å plassere items mer fordelt -->
       <Logo/>
       <CurrentUser />
+      <TeamDropdown />
     </div>
   </header>
 </template>
 
 <script>
+
 </script>
 
 <style scoped>

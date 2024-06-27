@@ -1,5 +1,4 @@
 import { ref, computed } from 'vue';
-import { packProject } from '@/utils/packProject.js';
 import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore('auth', () => {
@@ -110,5 +109,12 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    return {username, role, getUsername, setUsername, isAdmin, isSuperAdmin}
+    return {
+        username,
+        role,
+        getUsername,
+        setUsername,
+        isAdmin,
+        isSuperAdmin
+    }
 })

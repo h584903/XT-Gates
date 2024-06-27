@@ -5,7 +5,7 @@ export default defineEventHandler(async event => {
   try {
 
     const body = await readBody(event);
-    const { title, progress, plannedDate, PODate, status, PEM, comment } = body;
+    const { title, progress, plannedDate, PODate, status, PEM, comment, team } = body;
 
     //Oppretter prosjektet
     projects = await connectAndQuery(`
@@ -14,7 +14,9 @@ export default defineEventHandler(async event => {
       @NewProjectTitle = '${title}',
       @PEMName = '${PEM}',
       @PODate = '${PODate}',
-      @SFDate = '${plannedDate}';`);
+      @SFDate = '${plannedDate}',
+      @team = ${team},
+      @template = 0;`);
 
     return { updated: true };
   } catch (error) {
