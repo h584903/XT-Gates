@@ -5,7 +5,7 @@ import { H3Event, getCookie } from 'h3';
 export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
-    const userTeam = ref('');
+    const userTeam = ref(1);
     const adminName = ref('---');
     const isNewAdmin = ref(false);
     const role = ref('---');
@@ -267,6 +267,14 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    function getUserTeam() {
+        return userTeam.value
+    }
+
+    function setUserTeam(t) {
+        userTeam.value = t;
+    }
+
 
     return {
         username,
@@ -279,6 +287,8 @@ export const useAuthStore = defineStore('auth', () => {
         validUsername,
         login,
         tokenCheck,
-        isSuperAdmin
+        isSuperAdmin,
+        getUserTeam,
+        setUserTeam
     }
 })

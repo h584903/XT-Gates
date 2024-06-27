@@ -64,7 +64,6 @@ export const useProjectsStore = defineStore('projects', () => {
             }));
 
             setProjects(projectsArray);
-            console.log(projects.value)
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
@@ -404,6 +403,10 @@ export const useProjectsStore = defineStore('projects', () => {
         }
     }
 
+    function clearStore() {
+        setProjects([])
+    }
+
     return {
         getTemplate,
         filteredProjects,
@@ -428,6 +431,7 @@ export const useProjectsStore = defineStore('projects', () => {
         calculateWorkDuration,
         updateOnTime,
         calculateFloat,
-        calculatePOFloat
+        calculatePOFloat,
+        clearStore
     };
 });
