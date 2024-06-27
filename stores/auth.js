@@ -252,7 +252,10 @@ export const useAuthStore = defineStore('auth', () => {
             return false;
         }
     }
-
+    
+    function isLoggedIn() {
+        return computed(() => username.value !== 'John Doe' && username.value !== '---')
+    }
 
     function clearUserData() {
         username.value = '---';
@@ -301,7 +304,8 @@ export const useAuthStore = defineStore('auth', () => {
         isSuperAdmin,
         logout,
         getUserTeam,
-        setUserTeam
+        setUserTeam,
+        isLoggedIn
     }
 
 })

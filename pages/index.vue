@@ -39,7 +39,7 @@ const router = useRouter();
 
 const admin = computed(() => authStore.isAdmin());
 const username = computed(() => authStore.getUsername());
-const isLoggedIn = computed(() => username.value !== 'John Doe' && username.value !== '---');
+const isLoggedIn = authStore.isLoggedIn();
 
 onMounted(() => {
   store.fetchProjects();
