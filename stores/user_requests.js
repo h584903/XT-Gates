@@ -28,6 +28,30 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
         return user_requests.value;
     }
 
+    // Function to submit a new user request to the backend
+    async function submitRequest(request) {
+        try {
+            const response = await $fetch('/user_requests/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
+            });
+
+            if (response.status === 201) {
+                // Assuming the backend returns the new request data
+                user_requests.value.push(response.data);
+                console.log('Request submitted successfully:', response.data);
+            } else {
+                console.error('Error submitting request:', response);
+            }
+        } catch (error) {
+            console.error('Error submitting request:', error);
+            throw new Error(`Failed to submit request: ${error.message}`);
+        }
+    }
+
     // Function to decline a request. Deletes the request from both store and database
     async function declineUser(id) {
         try {
@@ -76,15 +100,19 @@ export const useUserRequestsStore = defineStore('user_requests', () => {
     }
 
     function reqCount() {
-        return user_requests.value.length
+
+        return user_requests.value.length;
+
     }
 
     return {
         user_requests,
         fetchRequests,
         getRequests,
+        submitRequest,
         declineUser,
         approveUser,
         reqCount
-    }
+    };
+
 });

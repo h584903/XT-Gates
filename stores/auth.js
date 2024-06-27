@@ -2,15 +2,17 @@ import { ref, computed } from 'vue';
 import { defineStore } from "pinia";
 import { H3Event, getCookie } from 'h3'; 
 
+
 export const useAuthStore = defineStore('auth', () => {
 
     const username = ref('---');
-    const userTeam = ref(1);
+
+    const invalidUsername = ref(false);
+    const userTeam = ref('');
     const adminName = ref('---');
     const isNewAdmin = ref(false);
     const role = ref('---');
     const token = ref(null);
-    const newName = ref(true); // variable to determine if the name is unknown in the database
 
 
     function getUsername() {
@@ -115,7 +117,9 @@ export const useAuthStore = defineStore('auth', () => {
             const fetchedRole = await fetchAccess(newUsername);
             if (!fetchedRole) {
                 clearUserData();
-                return false
+                console.log("We are here")
+                invalidUsername.value = true;
+                return false;
             }
             else if (fetchedRole.role == 1) {
                 clearUserData();
@@ -250,11 +254,17 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
 
-    const clearUserData = () => {
+    function clearUserData() {
         username.value = '---';
         adminName.value = '---';
         isNewAdmin.value = false;
         role.value = '---';
+    }
+
+    function logout() {
+        clearUserData();
+        const projectStore = useProjectsStore();
+        projectStore.setProjects([]);
     }
     
     function isSuperAdmin() {
@@ -285,10 +295,13 @@ export const useAuthStore = defineStore('auth', () => {
         isNewAdmin,
         adminName,
         validUsername,
+        invalidUsername,
         login,
         tokenCheck,
         isSuperAdmin,
+        logout,
         getUserTeam,
         setUserTeam
     }
+
 })
