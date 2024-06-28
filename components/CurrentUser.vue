@@ -62,7 +62,7 @@ const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const teamsStore = useTeamsStore();
 const userRequestsStore = useUserRequestsStore();
-
+const selectedTeam = ref(null);
 const username = computed(() => authStore.getUsername());
 const usernameInput = ref('');
 const passwordInput = ref('');
@@ -124,12 +124,17 @@ const clearUsername = () => {
 // Sende en ny request
 const sendRequest = async () => {
   try {
-    await userRequestsStore.submitRequest({
-      username: usernameInput.value,
-      selectedTeam: selectedTeam.value,
-    });
-    console.log('Request sent successfully');
-    toggleRequestModal(); 
+    // Ensure selectedTeam has a valid value
+    if (selectedTeam.value !== null) {
+      await userRequestsStore.submitRequest({
+        username: usernameInput.value,
+        selectedTeam: selectedTeam.value,
+      });
+      console.log('Request sent successfully');
+      toggleRequestModal();
+    } else {
+      console.error('No team selected');
+    }
   } catch (error) {
     console.error('Error sending request:', error);
   }
