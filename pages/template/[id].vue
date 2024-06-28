@@ -3,14 +3,8 @@
     <div class="wrapper" v-if="project">
       <div class="title">
         <h1>{{ project.title }}</h1>
-        <!--Skal oppdateres med komponent etter merge-->
-        <h2>PO Date</h2>
       </div>
       <GateList :projectId="project.id"/>
-      <!-- Brukes for å kunne ha ting på en linje etter listen -->
-      <div class="semi-footer">
-        <SaveButton />
-      </div>
     </div>
     <div v-else>
       loading project...
@@ -76,7 +70,7 @@ const toggleModal = () => {
 
 <style scoped>
 .wrapper {
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
