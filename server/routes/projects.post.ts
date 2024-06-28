@@ -1,30 +1,33 @@
-// projects.post.ts 
 export default defineEventHandler(async event => {
   let projects;
 
   try {
+    if (await verifyToken(event.req.headers.authentication) === true) {
+      const body = await readBody(event);
+      const {ID, title, progress, plannedDate, PODate, status, PEM, comment, team, template } = body;
 
-    if (await verifyToken(event.req.headers.authentication) == true) {
-    const body = await readBody(event);
-    const { title, progress, plannedDate, PODate, status, PEM, comment, team } = body;
+      // Ensure the template parameter is a boolean
+      const isTemplate = template ? 1 : 0;
 
-    //Oppretter prosjektet
-    projects = await connectAndQuery(`
-      EXEC gates.db_owner.DuplicateProject
-      @OldProjectID = 1,
-      @NewProjectTitle = '${title}',
-      @PEMName = '${PEM}',
-      @PODate = '${PODate}',
-      @SFDate = '${plannedDate}',
-      @team = ${team},
-      @template = 0;`);
+      console.log("Copied ID: "+ID)
 
-    return { updated: true };
+      // Create the project
+      projects = await connectAndQuery(`
+        EXEC gates.db_owner.DuplicateProject
+        @OldProjectID = ${ID},
+        @NewProjectTitle = '${title}',
+        @PEMName = '${PEM}',
+        @PODate = '${PODate}',
+        @SFDate = '${plannedDate}',
+        @team = ${team},
+        @template = ${isTemplate};`);
+
+      return { updated: true };
     } else {
       return false;
     }
   } catch (error) {
-    console.log("error: " + error)
+    console.log("error: " + error);
     return createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',

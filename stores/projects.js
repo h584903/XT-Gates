@@ -4,11 +4,15 @@ import { defineStore } from 'pinia';
 export const useProjectsStore = defineStore('projects', () => {
     const project = ref();
     const projects = ref([]);
-    const template = ref(1);
+    const templateId = ref(null);
     const index = ref(0);
 
     function setProjects(newProjects) {
         projects.value = newProjects;
+        const templateProject = projects.value.find(project => project.template === true);
+        if (templateProject) {
+            templateId.value = templateProject.id;
+        }
     }
 
     async function fetchNonArchivedProjects() {
@@ -43,7 +47,7 @@ export const useProjectsStore = defineStore('projects', () => {
         const authStore = useAuthStore();
         const userTeam = authStore.getUserTeam();
 
-        if(!authStore.isLoggedIn()) {
+        if (!authStore.isLoggedIn()) {
             return null;
         }
 
@@ -75,7 +79,7 @@ export const useProjectsStore = defineStore('projects', () => {
 
     async function updateOnTime(projectID, float) {
         if (isNaN(float)) {
-            console.log("ERRRORFLOAT: "+float)
+            console.log("ERRRORFLOAT: " + float)
             console.error('Invalid float value:', float);
             return;
         }
@@ -126,34 +130,32 @@ export const useProjectsStore = defineStore('projects', () => {
     async function calculateFloat(projectID) {
         const project = projects.value.find(project => project.id === String(projectID));
         if (!project) {
-            console.log("PROJECTID ERROR WITH ID: "+ projectID)
-            return null
+            console.log("PROJECTID ERROR WITH ID: " + projectID)
+            return null;
         };
-    
+
         // Fetch the SF date and work duration
         const sfDate = new Date(project.SFdate);
         const workDuration = await calculateWorkDuration(String(projectID));
-    
+
         if (workDuration === 0) {
             return 0;
         }
-    
+
         // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
         const newDate = new Date(sfDate);
         newDate.setDate(sfDate.getDate() - workDuration);
         newDate.setHours(23, 59, 0, 0);
-    
+
         const today = new Date();
         const diffTime = Math.abs(newDate - today);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+
         if (today > newDate) {
             return -diffDays;
         }
         return diffDays;
     }
-    
-    
 
     async function calculatePOFloat(projectID) {
         const project = projects.value.find(project => project.id === projectID);
@@ -175,7 +177,7 @@ export const useProjectsStore = defineStore('projects', () => {
         const today = new Date();
         const diffTime = Math.abs(newDate - today);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+
         if (today > newDate) {
             return -diffDays;
         }
@@ -205,11 +207,11 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     function getTemplate() {
-        return template.value;
+        return templateId.value;
     }
 
     const filteredProjects = computed(() => {
-        return projects.value.filter(project => project.id != template.value);
+        return projects.value.filter(project => project.id != templateId.value);
     });
 
     function getProjects() {
@@ -251,8 +253,14 @@ export const useProjectsStore = defineStore('projects', () => {
         const authStore = useAuthStore();
         const userTeam = authStore.getUserTeam();
 
+        const templateProject = projects.value.find(project => project.template === true);
+        if (templateProject) {
+            templateId.value = templateProject.id;
+        }
+        console.log("ID of template in store: " + typeof templateId.value)
+
         const requestBody = {
-            ID: ID,
+            ID: Number(templateId.value),
             title: title,
             progress: progress,
             plannedDate: plannedDate,
@@ -260,7 +268,8 @@ export const useProjectsStore = defineStore('projects', () => {
             status: status,
             PEM: PEM,
             comment: comment,
-            team: userTeam
+            team: userTeam,
+            teamplate: 0
         };
 
         const admin = useCookie('admin');
@@ -408,13 +417,14 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     function clearStore() {
-        setProjects([])
+        setProjects([]);
+        templateId.value = null;
     }
 
     return {
         getTemplate,
         filteredProjects,
-        template,
+        templateId,
         project,
         projects,
         getProjects,
