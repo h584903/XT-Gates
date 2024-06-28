@@ -43,6 +43,10 @@ export const useProjectsStore = defineStore('projects', () => {
         const authStore = useAuthStore();
         const userTeam = authStore.getUserTeam();
 
+        if(!authStore.isLoggedIn()) {
+            return null;
+        }
+
         try {
             const response = await $fetch('/projects/' + userTeam, {
                 method: 'GET'
