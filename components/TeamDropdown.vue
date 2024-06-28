@@ -45,8 +45,6 @@ async function updateUserTeam(newTeamId) {
 }
 
 function selectTeam(teamId) {
-    console.log("Set team to: " + teamId + ".");
-    console.log(typeof teamId)
     teamUnedited.value = false;
     selectedTeamName.value = teamStore.getTeamName(teamId);
     updateUserTeam(teamId);
