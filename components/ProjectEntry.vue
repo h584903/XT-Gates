@@ -14,9 +14,11 @@
     </div>
     <div class="dateWrapper" :class="{ 'late': !fullProgress && islate, 'onTime': !fullProgress && !islate, 'fullProgressSF': fullProgress }">
       <DateEntry :dateString="entryData.SFdate" />
+      <div v-if="islate && !fullProgress" class="tooltip">Scheduled to finish after Purchase Order</div>
     </div>
     <div class="dateWrapper" :class="{'PO_Late': !fullProgress && poIsLate, 'PO_OnTime': !fullProgress && !poIsLate, 'fullProgressPO': fullProgress}">
       <DateEntry :dateString="entryData.POdate" />
+      <div v-if="poIsLate && !fullProgress" class="tooltip">Deadline for the project has passed</div>
     </div>
     <div class="statusWrapper">
       <PlanStatus :onSchedule="calculateStatus" />
@@ -173,6 +175,7 @@ a {
   text-align: center;
   width: 10%;
   cursor: pointer;
+  position: relative;
 }
 
 .dateWrapper.late {
@@ -201,6 +204,38 @@ a {
 }
 .dateWrapper.fullProgressPO {
   padding: 5px;
+}
+.dateWrapper .tooltip {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position the tooltip above the text */
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.dateWrapper .tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.dateWrapper:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 .statusWrapper {
