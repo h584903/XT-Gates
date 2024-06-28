@@ -1,6 +1,6 @@
 <template>
   <div class="list project-card" @click="redirect">
-    <div class="titleWrapper" @click.stop="enableEditMode" v-if="!editMode&&admin">
+    <div class="titleWrapper" @click.stop="enableEditMode" v-if="!editMode && admin">
       <span>{{ editedTitle }}</span>
     </div>
     <div class="titleWrapper" v-else-if="admin">
@@ -12,12 +12,10 @@
     <div class="progressWrapper">
       <ProgressBar :progressNumber="entryData.progress" />
     </div>
-    <div 
-      class="dateWrapper"
-      :class="{'late': islate, 'onTime': !islate}" >
-        <DateEntry :dateString="entryData.SFdate"/>
+    <div class="dateWrapper" :class="{ 'late': !fullProgress && islate, 'onTime': !fullProgress && !islate, 'fullProgressSF': fullProgress }">
+      <DateEntry :dateString="entryData.SFdate" />
     </div>
-    <div class="dateWrapper">
+    <div class="dateWrapper" :class="{'PO_Late': !fullProgress && poIsLate, 'PO_OnTime': !fullProgress && !poIsLate, 'fullProgressPO': fullProgress}">
       <DateEntry :dateString="entryData.POdate" />
     </div>
     <div class="statusWrapper">
@@ -28,7 +26,8 @@
     </div>
     <div class="commentWrapper w10" @click.stop="enableCommentEditMode">
       <div v-if="commentEditMode">
-        <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;" v-model="editedComment" @blur="updateComment" @keyup.enter="updateComment"></textarea>
+        <textarea rows="2" maxlength="30" style="word-wrap: break-word; overflow-wrap: break-word;"
+          v-model="editedComment" @blur="updateComment" @keyup.enter="updateComment"></textarea>
       </div>
       <div v-else>
         <span>{{ editedComment }}</span>
@@ -61,7 +60,15 @@ const commentEditMode = ref(false); // editMode for comment
 const admin = computed(() => authStore.isAdmin());
 
 let islate;
-islate = (props.entryData.SFdate>props.entryData.POdate)
+islate = (props.entryData.SFdate > props.entryData.POdate)
+
+const poIsLate = computed(() => {
+  return new Date(props.entryData.POdate) < new Date();
+});
+
+const fullProgress = computed(() => {
+  return props.entryData.progress === 100;
+});
 
 // Watch for changes in props.entryData and update local state
 watch(
@@ -109,7 +116,7 @@ const updateComment = async () => {
 const calculateStatus = computed(() => {
   const today = new Date();
   const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate()-2);
+  tomorrow.setDate(tomorrow.getDate() - 2);
   const onTimeDate = new Date(props.entryData.onTimeDate);
   return onTimeDate >= tomorrow;
 });
@@ -148,43 +155,68 @@ a {
   width: 20%;
   cursor: text;
 }
+
 .titleWrapper input {
   width: 75%;
   text-align: center;
 }
+
 .progressWrapper {
   margin: auto;
   text-align: center;
   width: 40%;
   cursor: pointer;
 }
+
 .dateWrapper {
   margin: auto;
   text-align: center;
   width: 10%;
   cursor: pointer;
 }
+
 .dateWrapper.late {
   background-color: yellow;
   padding: 5px;
   margin-left: 5px;
 }
+
 .dateWrapper.onTime {
   padding: 5px;
   margin-left: 5px;
 }
+
+.dateWrapper.PO_Late {
+  background-color: rgb(249, 155, 40); 
+  padding: 5px;
+
+}
+
+.dateWrapper.PO_OnTime {
+  padding: 5px;
+}
+.dateWrapper.fullProgressSF {
+  padding: 5px;
+  margin-left: 5px;
+}
+.dateWrapper.fullProgressPO {
+  padding: 5px;
+}
+
 .statusWrapper {
   margin: auto;
   text-align: center;
   width: 5%;
   cursor: pointer;
 }
+
 .personWrapper {
   margin: auto;
   text-align: center;
   width: 15%;
   cursor: pointer;
 }
+
 .commentWrapper {
   display: flex;
   margin: auto;
