@@ -1,30 +1,35 @@
 <template>
+    Team:
     <div class="dropdown">
         <div class="dropdown-selected" @click="toggleDropdown">
-            <span>TEAM {{ currentUserTeamName }}</span>
+            <span>{{ currentUserTeamName }}</span>
         </div>
+        <NuxtLink to = "/projectlist">
         <div class="dropdown-menu" v-if="dropdownOpen">
             <div class="dropdown-item" v-for="team in filteredTeams" :key="team.id" @click="selectTeam(team.id)">
-                TEAM {{ team.team }}
+                {{ team.team }}
             </div>
         </div>
+    </NuxtLink>
     </div>
 </template>
 
-
 <script setup>
-const projectStore = useProjectsStore();
-const teamStore = useTeamsStore();
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useTeamsStore } from '@/stores/teams';
+import { useAuthStore } from '@/stores/auth';
+import {useProjectsStore} from '@/stores/projects'
+
+const router = useRouter();
 const authStore = useAuthStore();
+const teamStore = useTeamsStore();
+const projectStore = useProjectsStore();
 
-let nonchecked = true
-const teams = ref([]);
-const teamUnedited = ref(true);
 const dropdownOpen = ref(false);
-
+const teams = ref([]);
 const currentUserTeam = computed(() => authStore.getUserTeam());
 const currentUserTeamName = computed(() => teamStore.getTeamName(currentUserTeam.value));
-const selectedTeamName = ref(currentUserTeamName.value);
 
 const filteredTeams = computed(() => {
     const currentTeamName = teamStore.getTeamName(currentUserTeam.value);
@@ -34,84 +39,100 @@ const filteredTeams = computed(() => {
 onMounted(async () => {
     await teamStore.fetchTeams();
     teams.value = teamStore.getTeams();
-    selectTeam(Number(currentUserTeam.value));
-    nonchecked = false
-    toggleDropdown();
 });
-
-async function updateUserTeam(newTeamId) {
-    authStore.setUserTeam(newTeamId);
-    await projectStore.fetchProjects();
-}
-
-function selectTeam(teamId) {
-    teamUnedited.value = false;
-    selectedTeamName.value = teamStore.getTeamName(teamId);
-    updateUserTeam(teamId);
-    toggleDropdown();
-}
 
 function toggleDropdown() {
     dropdownOpen.value = !dropdownOpen.value;
 }
+
+function selectTeam(teamId) {
+    authStore.setUserTeam(teamId);
+    projectStore.fetchProjects();
+    toggleDropdown();
+}
 </script>
 
-
-
 <style scoped>
+button {
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+button:active {
+    background-color: #003f7f;
+    transform: translateY(0);
+}
+
+button.admin {
+    background-color: #28a745;
+}
+
+button.admin:hover {
+    background-color: #218838;
+}
+
+button.admin:active {
+    background-color: #1e7e34;
+}
+
 .dropdown {
     position: relative;
-    width: 35%;
-    /* Adjust width to make it smaller */
-    margin: 0 auto;
-    /* Center the dropdown */
+    margin: 10px;
+    display: inline-block;
 }
 
 .dropdown-selected {
-    padding: 8px 10px;
-    /* Smaller padding for a smaller element */
-    border: 1px solid #000;
-    border-radius: 0px;
-    background-color: #d3e5fc;
-    font-size: 30px;
-    /* Smaller font size */
-    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
-    user-select: none;
+    transition: background-color 0.3s, transform 0.3s;
     display: flex;
     justify-content: center;
-    /* Center text horizontally */
     align-items: center;
-    /* Center text vertically */
-    position: relative;
-    /* To position the arrow absolutely */
 }
 
-.dropdown-selected-text {
-    flex-grow: 1;
-    /* Allow text to take available space */
-    text-align: center;
-    /* Center text horizontally */
+.dropdown-selected:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
 .dropdown-menu {
     position: absolute;
     width: 100%;
     border: 1px solid #000;
-    border-radius: 0px;
+    border-radius: 5px;
     background-color: #d3e5fc;
     margin-top: 5px;
     z-index: 1000;
+    width: fit-content;
 }
 
 .dropdown-item {
-    padding: 8px 10px;
-    /* Smaller padding for a smaller element */
+    padding: 10px 20px;
     font-size: 16px;
-    /* Smaller font size */
     color: #333;
     text-align: center;
-    /* Center text */
     cursor: pointer;
     user-select: none;
 }

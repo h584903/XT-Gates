@@ -69,6 +69,7 @@ const passwordInput = ref('');
 const acceptCookies = ref(false);
 const newAdmin = ref(false);
 const admin = useCookie('admin')
+const teams = computed(()  => teamsStore.getTeams());
 
 const usernameModalActive = ref(false);
 const loginModalActive = ref(false);

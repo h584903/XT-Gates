@@ -2,8 +2,11 @@
   <header>
     <div class="wrapper">
       <Logo />
-      <TeamDropdown v-if="isLoggedIn" />
+      <AppTitle/> 
+      <div class="user-controls">
+      <TeamDropdown/>
       <CurrentUser />
+    </div>
     </div>
   </header>
 </template>
@@ -34,6 +37,10 @@ header {
   width: 95%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+.user-controls {
+  display: flex;
   align-items: center;
 }
 </style>
