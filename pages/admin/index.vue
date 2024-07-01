@@ -4,11 +4,24 @@
         <div class="link-wrapper">
             <NuxtLink to="admin/users" class="buttonStyling">Users</NuxtLink>
             <NuxtLink to="admin/user_requests" class="buttonStyling">Incoming user requests ({{ reqnr }})</NuxtLink>
+            <NuxtLink to ="admin/teams" class="buttonStyling">Teams</NuxtLink>
             <div v-if="superadmin" class="link-wrapper">
                 <button class="buttonStyling">Change admin password</button><!--Button for admin password change-->
-                <button class="buttonStyling">Change super admin password</button><!--Button for superadmin passwordchange-->
+                <button class="buttonStyling">Change super admin
+                    password</button><!--Button for superadmin passwordchange-->
             </div>
         </div>
+
+        <ReusableModal @close="toggleCreateTeamModal" :modalActive="createTeamModalActive">
+            <div>
+                <h2>Create New Team</h2>
+                <input type="text" v-model="newTeamName" placeholder="Enter team name" />
+                <div>
+                    <button @click="createTeam">Create</button>
+                    <button @click="toggleCreateTeamModal">Cancel</button>
+                </div>
+            </div>
+        </ReusableModal>
     </div>
     <div v-else>
         This is an admin only page, please do not attempt to access it without being logged in as an admin.
@@ -17,6 +30,7 @@
 
 <script setup>
 //imports
+import ReusableModal from "@/components/ReusableModal.vue";
 //...
 
 //init stores
@@ -28,10 +42,26 @@ const admin = computed(() => authStore.isAdmin());
 const superadmin = computed(() => authStore.isSuperAdmin())
 await requestStore.fetchRequests();
 const reqnr = requestStore.reqCount();
+const createTeamModalActive = ref(false);
+const newTeamName = ref('');
 
 console.log(reqnr + " requests in store")
 
 projectStore.fetchProjects();
+
+const toggleCreateTeamModal = () => {
+  createTeamModalActive.value = !createTeamModalActive.value;
+};
+
+const createTeam = async () => {
+  try {
+    await teamsStore.createTeam(newTeamName.value);
+    newTeamName.value = '';
+    toggleCreateTeamModal();
+  } catch (error) {
+    console.error('Error creating team:', error);
+  }
+};
 
 </script>
 
@@ -63,7 +93,8 @@ projectStore.fetchProjects();
 .link-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adds space between the links */
-    width:fit-content;
+    gap: 10px;
+    /* Adds space between the links */
+    width: fit-content;
 }
 </style>
