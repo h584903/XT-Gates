@@ -1,18 +1,18 @@
 <template>
-    Team:
-    <div class="dropdown">
+    <div v-if="isLoggedIn">
+      Team:
+      <div class="dropdown">
         <div class="dropdown-selected" @click="toggleDropdown">
-            <span>{{ currentUserTeamName }}</span>
+          <span>{{ currentUserTeamName }}</span>
         </div>
-        <NuxtLink to = "/projectlist">
         <div class="dropdown-menu" v-if="dropdownOpen">
-            <div class="dropdown-item" v-for="team in filteredTeams" :key="team.id" @click="selectTeam(team.id)">
-                {{ team.team }}
-            </div>
+          <div class="dropdown-item" v-for="team in filteredTeams" :key="team.id" @click="selectTeam(team.id)">
+            {{ team.team }}
+          </div>
         </div>
-    </NuxtLink>
+      </div>
     </div>
-</template>
+  </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
@@ -36,9 +36,12 @@ const filteredTeams = computed(() => {
     return teams.value.filter(team => team.team !== currentTeamName && team.id !== 0);
 });
 
+const isLoggedIn = authStore.isLoggedIn();
+
 onMounted(async () => {
     await teamStore.fetchTeams();
     teams.value = teamStore.getTeams();
+    
 });
 
 function toggleDropdown() {
