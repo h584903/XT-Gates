@@ -18,7 +18,7 @@
     </div>
     <div class="dateWrapper" :class="{'PO_Late': !fullProgress && poIsLate, 'PO_OnTime': !fullProgress && !poIsLate, 'fullProgressPO': fullProgress}">
       <DateEntry :dateString="entryData.POdate" />
-      <div v-if="poIsLate && !fullProgress" class="tooltip">Deadline for the project has passed</div>
+      <div v-if="poIsLate && !fullProgress" class="tooltip">Deadline for the project has expired</div>
     </div>
     <div class="statusWrapper">
       <PlanStatus :onSchedule="calculateStatus" />
