@@ -21,19 +21,14 @@ export const useUsersStore = defineStore('users', () => {
         } catch (error) {
             console.error('Error fetching users', error);
         }
-        sortUsersAlphabetically();
     }
 
     function getUsers() {
         return users.value;
     }
 
-    function sortUsersAlphabetically() {
-        users.value.sort((a, b) => {
-            if (a.username < b.username) return -1;
-            if (a.username > b.username) return 1;
-            return 0;
-        });
+    function sortUsers(comparator) {
+        users.value.sort(comparator)
     }
 
     async function updateRole(roleId, userId) {
@@ -137,7 +132,7 @@ export const useUsersStore = defineStore('users', () => {
         users,
         fetchUsers,
         getUsers,
-        sortUsersAlphabetically,
+        sortUsers,
         updateRole,
         updateTeam,
         deleteUser,

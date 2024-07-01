@@ -215,7 +215,6 @@ export const useProjectsStore = defineStore('projects', () => {
     });
 
     function getProjects() {
-        sortProjects((x, y) => new Date(x.SFdate) - new Date(y.SFdate));
         return filteredProjects.value;
     }
 
@@ -269,7 +268,7 @@ export const useProjectsStore = defineStore('projects', () => {
             PEM: PEM,
             comment: comment,
             team: userTeam,
-            teamplate: 0
+            teamplate: false
         };
 
         const admin = useCookie('admin');
@@ -446,6 +445,7 @@ export const useProjectsStore = defineStore('projects', () => {
         updateOnTime,
         calculateFloat,
         calculatePOFloat,
-        clearStore
+        clearStore,
+        sortProjects
     };
 });
