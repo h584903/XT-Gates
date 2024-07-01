@@ -2,37 +2,37 @@
     <!-- Følger prototypen til figma -->
     <div class="list">
         <div class="titleWrapper" @click="sortByTitle">
-            <span v-if="orderBy === 'title' && order === 'desc'">↑</span>
-            <span v-else-if="orderBy === 'title' && order === 'asc'">↓</span>
             <span>Title</span>
+            <span v-if="orderBy === 'title' && order === 'desc'"> ↑</span>
+            <span v-else-if="orderBy === 'title' && order === 'asc'"> ↓</span>
         </div>
         <div class="progressWrapper" @click="sortByProgress">
-            <span v-if="orderBy === 'progress' && order === 'desc'">↑</span>
-            <span v-else-if="orderBy === 'progress' && order === 'asc'">↓</span>
             <span>Progress</span>
+            <span v-if="orderBy === 'progress' && order === 'desc'"> ↑</span>
+            <span v-else-if="orderBy === 'progress' && order === 'asc'"> ↓</span>
         </div>
         <div class="dateWrapper" @click="sortBySFDate">
-            <span v-if="orderBy === 'SFdate' && order === 'desc'">↑</span>
-            <span v-else-if="orderBy === 'SFdate' && order === 'asc'">↓</span>
             <span>Planned Delivery Date</span>
+            <span v-if="orderBy === 'SFdate' && order === 'desc'"> ↑</span>
+            <span v-else-if="orderBy === 'SFdate' && order === 'asc'"> ↓</span>
         </div>
         <div class="dateWrapper" @click="sortByPODate">
-            <span v-if="orderBy === 'POdate' && order === 'desc'">↑</span>
-            <span v-else-if="orderBy === 'POdate' && order === 'asc'">↓</span>
             <span>PO Date</span>
+            <span v-if="orderBy === 'POdate' && order === 'desc'"> ↑</span>
+            <span v-else-if="orderBy === 'POdate' && order === 'asc'"> ↓</span>
         </div>
         <div class="statusWrapper">
             <span>Plan Status</span>
         </div>
         <div class="PEM" @click="sortByPEM">
-            <span v-if="orderBy === 'PEM' && order === 'desc'">↑</span>
-            <span v-else-if="orderBy === 'PEM' && order === 'asc'">↓</span>
             <span>PEM</span>
+            <span v-if="orderBy === 'PEM' && order === 'desc'"> ↑</span>
+            <span v-else-if="orderBy === 'PEM' && order === 'asc'"> ↓</span>
         </div>
         <div class="commentWrapper" @click="sortByComment">
-            <span v-if="orderBy === 'comment' && order === 'desc'">↑</span>
-            <span v-else-if="orderBy === 'comment' && order === 'asc'">↓</span>
             <span>Comment</span>
+            <span v-if="orderBy === 'comment' && order === 'desc'"> ↑</span>
+            <span v-else-if="orderBy === 'comment' && order === 'asc'"> ↓</span>
         </div>
     </div>
 </template>

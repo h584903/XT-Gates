@@ -61,10 +61,12 @@ function sortByRole() {
 <style scoped>
 .w50 {
     width: 50%;
+    cursor: pointer;
 }
 
 .w25 {
     width: 25%;
+    cursor: pointer;
 }
 
 .small {
