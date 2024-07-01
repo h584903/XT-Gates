@@ -62,6 +62,7 @@ const getCookie = (name) => {
 </script>
 
 <style scoped>
+
 .dashboard {
   max-width: 800px;
   margin: 0 auto;

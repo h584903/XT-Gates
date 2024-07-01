@@ -21,8 +21,10 @@
             <span v-if="orderBy === 'POdate' && order === 'desc'"> ↑</span>
             <span v-else-if="orderBy === 'POdate' && order === 'asc'"> ↓</span>
         </div>
-        <div class="statusWrapper">
+        <div class="statusWrapper" @click="sortByStatus">
             <span>Plan Status</span>
+            <span v-if="orderBy === 'onTimeDate' && order === 'desc'"> ↑</span>
+            <span v-else-if="orderBy === 'onTimeDate' && order === 'asc'"> ↓</span>
         </div>
         <div class="PEM" @click="sortByPEM">
             <span>PEM</span>
@@ -66,6 +68,10 @@ function sortByPODate() {
 
 function sortBySFDate() {
     sortProjects('SFdate');
+}
+
+function sortByStatus() {
+    sortProjects('onTimeDate')
 }
 
 function sortByPEM() {
