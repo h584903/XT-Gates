@@ -12,26 +12,39 @@ export default defineEventHandler(async (event) => {
         });
       }
 
-      // Fetch the current maximum id
+      // Fetch the highest id in the teams table to calculate the new id
       const maxIdResult = await connectAndQuery(`
-        SELECT MAX(id) AS maxId FROM [db_owner].[user_teams];
+        SELECT MAX(id) as maxId FROM [db_owner].[user_teams]
       `);
-      
-      const maxId = maxIdResult[0].maxId || 0;
-      const newId = maxId + 1;
+      const newId = maxIdResult[0].maxId + 1;
 
       // Insert the new team into the database
-      const result = await connectAndQuery(`
+      await connectAndQuery(`
         INSERT INTO [db_owner].[user_teams] (id, team)
         VALUES (${newId}, '${team}');
       `);
 
+      // Create a template for the new team
+      await connectAndQuery(`
+        EXEC gates.db_owner.DuplicateProject
+        @OldProjectID = 1,
+        @NewProjectTitle = '${team} Template',
+        @PEMName = '${team} Manager',
+        @PODate = '3000-01-01',
+        @SFDate = '3000-01-01',
+        @team = ${newId},
+        @template = 1;
+      `);
+
+      // Fetch the newly inserted team to return it
+      const newTeam = await connectAndQuery(`
+        SELECT id, team FROM [db_owner].[user_teams]
+        WHERE id = ${newId};
+      `);
+
       return {
         status: 'success',
-        data: {
-          id: newId,
-          team: team,
-        },
+        data: newTeam[0],
       };
     } catch (error) {
       console.error(error);
