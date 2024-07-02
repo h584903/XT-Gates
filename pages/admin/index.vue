@@ -7,7 +7,7 @@
             <NuxtLink to ="admin/teams" class="buttonStyling">Teams</NuxtLink>
             <div v-if="superadmin" class="link-wrapper">
                 <button class="buttonStyling">Change admin password</button><!--Button for admin password change-->
-                <button class="buttonStyling">Change super adminpassword</button><!--Button for superadmin passwordchange-->
+                <button class="buttonStyling">Change super admin password</button><!--Button for superadmin passwordchange-->
             </div>
         </div>
     </div>
