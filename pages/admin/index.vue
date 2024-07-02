@@ -18,7 +18,6 @@
 
 <script setup>
 //imports
-import ReusableModal from "@/components/ReusableModal.vue";
 //...
 
 //init stores
