@@ -20,10 +20,8 @@
       </div>
     </ReusableModal>
     <ReusableModal @close="toggleLoginModal" :modalActive="loginModalActive">
-      <div>Enter username:</div>
-      <input type="text" v-model="usernameInput" placeholder="Enter text" />
-      <div>Enter password:</div>
-      <input type="text" v-model="passwordInput" placeholder="Enter text" />
+      <div>Enter admin password:</div>
+      <input type="password" v-model="passwordInput" placeholder="Enter password" />
       <div>
         <button @click="loginAuthentication">Login</button>
         <button @click="toggleLoginModal">Cancel</button>
