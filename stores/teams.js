@@ -37,12 +37,30 @@ export const useTeamsStore = defineStore('teams', () => {
         return team ? team.team : null
     }
 
+    const addTeam = async (newTeam) => {
+        try {
+          const response = await $fetch('/teams', {
+            method: 'POST',
+            body: JSON.stringify(newTeam),
+            headers: { 'Content-Type': 'application/json' },
+          });
+          const addedTeam = response.data;
+          teams.value.push({
+            id: addedTeam.id,
+            team: addedTeam.team,
+          });
+        } catch (error) {
+          console.error('Error adding team:', error);
+        }
+      };
+
     return {
         teams,
         currentteam,
         fetchTeams,
         getTeams,
         getTeamId,
-        getTeamName
+        getTeamName,
+        addTeam
     };
 });
