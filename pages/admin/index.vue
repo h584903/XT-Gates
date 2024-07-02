@@ -4,6 +4,7 @@
         <div class="link-wrapper">
             <NuxtLink to="admin/users" class="buttonStyling">Users</NuxtLink>
             <NuxtLink to="admin/user_requests" class="buttonStyling">Incoming user requests ({{ reqnr }})</NuxtLink>
+            <NuxtLink to ="admin/teams" class="buttonStyling">Teams</NuxtLink>
             <div v-if="superadmin" class="link-wrapper">
                 <button class="buttonStyling" @click="toggleAdmModal">
                     Change admin password
