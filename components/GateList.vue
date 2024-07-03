@@ -103,7 +103,6 @@
     gateStore.updateGateOrder(updatedGates);
     gateStore.calculateDate();
 }
-
 </script>
 
 

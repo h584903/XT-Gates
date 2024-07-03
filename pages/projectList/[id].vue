@@ -202,6 +202,9 @@
     } catch (error) {
       console.error('Error calculating Date:', error);
     }
+
+    await updatePOFloat();
+    await updateFloat();
   });
 
   const modalActive = ref(false);
@@ -245,61 +248,36 @@ watch(
   () => project.value && project.value.POdate,
   async (newPODate) => {
     if (newPODate) {
-      poFloat.value = await calculatePOFloat();
+      await updatePOFloat();
     }
   }
 );
-
 // Watch for changes in SF date and update float
 watch(
   () => project.value && project.value.SFdate,
   async (newSFDate) => {
     if (newSFDate) {
-      float.value = await calculateFloat();
+      await updateFloat();
     }
   }
 );
 
-const calculateFloat = async () => {
-  if (!project.value) return null;
-  const sfDate = new Date(project.value.SFdate);
-  const workDuration = await store.calculateWorkDuration(project.value.id);
-  if (workDuration == 0) {
-    return 0;
+watch(
+  () => project.value && store.calculateWorkDuration(project.value.id), // Check project.value before accessing id
+  async (newWorkDuration) => {
+    if (newWorkDuration !== undefined) {
+      await updatePOFloat();
+      await updateFloat();
+    }
   }
-  const newDate = new Date(sfDate);
-  newDate.setDate(sfDate.getDate() - workDuration);
-  newDate.setHours(23, 59, 0, 0);
+);
 
-  const today = new Date();
-  const diffTime = Math.abs(newDate - today);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (today > newDate) {
-    return -diffDays + 1;
-  }
-  return diffDays;
+const updatePOFloat = async () => {
+  poFloat.value = await store.calculatePOFloat(project.value.id);
 };
 
-const calculatePOFloat = async () => {
-  if (!project.value) return null;
-  const poDate = new Date(project.value.POdate);
-  const workDuration = await store.calculateWorkDuration(project.value.id);
-  if (workDuration == 0) {
-    return 0;
-  }
-  const newDate = new Date(poDate);
-  newDate.setDate(poDate.getDate() - workDuration);
-  newDate.setHours(23, 59, 0, 0);
-
-  const today = new Date();
-  const diffTime = Math.abs(newDate - today);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (today > newDate) {
-    return -diffDays + 1;
-  }
-  return diffDays;
+const updateFloat = async () => {
+  float.value = await store.calculateFloat(project.value.id);
 };
 
 function calculateDaysToPO() {
@@ -310,6 +288,7 @@ function calculateDaysToPO() {
 
   const differenceInMs = today - poDate;
   const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+  console.log('Difference in days:', differenceInDays);
   return -differenceInDays;
 }
 </script>
