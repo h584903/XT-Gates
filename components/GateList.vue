@@ -6,7 +6,7 @@
   <draggable class="gatelist" v-model="gates" @end="onEndDrag" group="gates" item-key="ID" handle=".handle" animation="300"> 
   <template #item="{ element, index }">
     <div :key="element.ID">
-      <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" :responsiblePerson="element.responsiblePerson || ''" :plannedDate="String(element.plannedDate)" :daysToEnd="element.daysToEnd"/>
+      <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" :responsiblePerson="element.responsiblePerson || ''" :plannedDate="element.plannedDate" :daysToEnd="element.daysToEnd"/>
       <div v-if="!admin" class="gate-divider cursorDefault"></div>
       <div
         v-else-if="index < gates.length - 1"
