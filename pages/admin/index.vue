@@ -4,14 +4,14 @@
         <div class="link-wrapper">
             <NuxtLink to="admin/users" class="buttonStyling">Users</NuxtLink>
             <NuxtLink to="admin/user_requests" class="buttonStyling">Incoming user requests ({{ reqnr }})</NuxtLink>
-            <NuxtLink to ="admin/teams" class="buttonStyling">Teams</NuxtLink>
+            <NuxtLink to="admin/teams" class="buttonStyling">Teams</NuxtLink>
             <div v-if="superadmin" class="link-wrapper">
                 <button class="buttonStyling" @click="toggleAdmModal">
                     Change admin password
-                </button><!--Button for admin password change-->
+                </button>
                 <button class="buttonStyling" @click="toggleSuperModal">
                     Change super admin password
-                </button><!--Button for superadmin passwordchange-->
+                </button>
             </div>
         </div>
     </div>
@@ -57,22 +57,20 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import Modal from "@/components/ReusableModal.vue";
+import Modal from '~/components/ReusableModal.vue';
 
-// Initialize stores
 const authStore = useAuthStore();
 const projectStore = useProjectsStore();
 const requestStore = useUserRequestsStore();
 
-// Define computed properties
 const admin = computed(() => authStore.isAdmin());
 const superadmin = computed(() => authStore.isSuperAdmin());
+
 await requestStore.fetchRequests();
 const reqnr = requestStore.reqCount();
 
 projectStore.fetchProjects();
 
-// Modal states
 const admModalActive = ref(false);
 const toggleAdmModal = () => {
     admModalActive.value = !admModalActive.value;
@@ -83,36 +81,45 @@ const toggleSuperModal = () => {
     superModalActive.value = !superModalActive.value;
 };
 
-// Password fields for admin
 const adminOldPassword = ref('');
 const adminNewPassword = ref('');
 const adminRepeatPassword = ref('');
 
-// Password fields for super admin
 const superAdminOldPassword = ref('');
 const superAdminNewPassword = ref('');
 const superAdminRepeatPassword = ref('');
 
-// Functions to handle password changes
-const changeAdminPassword = () => {
-    if (adminNewPassword.value !== adminRepeatPassword.value) {
-        alert("New passwords do not match!");
-        return;
-    }
-    // Add your logic to change admin password here
-    console.log('Admin password changed');
-    toggleAdmModal();
-};
+async function changeAdminPassword() {
+    const correctPass = await authStore.checkPass(adminOldPassword.value, 2);
 
-const changeSuperAdminPassword = () => {
-    if (superAdminNewPassword.value !== superAdminRepeatPassword.value) {
-        alert("New passwords do not match!");
+    if (adminNewPassword.value !== adminRepeatPassword.value) {
+        alert('New passwords do not match!');
+        return;
+    } else if (!correctPass) {
+        alert('Current password incorrect!');
         return;
     }
-    // Add your logic to change super admin password here
-    console.log('Super Admin password changed');
+
+    await authStore.updatePass(adminNewPassword.value, 2);
+    toggleAdmModal();
+    console.log('Admin password changed');
+}
+
+async function changeSuperAdminPassword() {
+    const correctPass = await authStore.checkPass(superAdminOldPassword.value, 3);
+
+    if (superAdminNewPassword.value !== superAdminRepeatPassword.value) {
+        alert('New passwords do not match!');
+        return;
+    } else if (!correctPass) {
+        alert('Current password incorrect!');
+        return;
+    }
+
+    await authStore.updatePass(superAdminNewPassword.value, 3);
     toggleSuperModal();
-};
+    console.log('Super Admin password changed');
+}
 </script>
 
 <style scoped>
