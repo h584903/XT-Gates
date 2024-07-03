@@ -4,6 +4,7 @@
         <div class="link-wrapper">
             <NuxtLink to="admin/users" class="buttonStyling">Users</NuxtLink>
             <NuxtLink to="admin/user_requests" class="buttonStyling">Incoming user requests ({{ reqnr }})</NuxtLink>
+            <NuxtLink to ="admin/teams" class="buttonStyling">Teams</NuxtLink>
             <div v-if="superadmin" class="link-wrapper">
                 <button class="buttonStyling">Change admin password</button><!--Button for admin password change-->
                 <button class="buttonStyling">Change super admin password</button><!--Button for superadmin passwordchange-->
@@ -63,7 +64,8 @@ projectStore.fetchProjects();
 .link-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adds space between the links */
-    width:fit-content;
+    gap: 10px;
+    /* Adds space between the links */
+    width: fit-content;
 }
 </style>

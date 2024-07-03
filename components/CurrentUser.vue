@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label>User:</label>
+    <!-- <label>User:</label> -->
     <button :class="{ admin: isAdmin }" @click="toggleUsernameModal">{{ username }}</button>
 
     <ReusableModal @close="toggleUsernameModal" :modalActive="usernameModalActive">
