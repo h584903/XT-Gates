@@ -268,7 +268,7 @@ export const useProjectsStore = defineStore('projects', () => {
             PEM: PEM,
             comment: comment,
             team: userTeam,
-            teamplate: false
+            template: false
         };
 
         const admin = useCookie('admin');

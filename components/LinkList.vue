@@ -24,8 +24,12 @@ const filteredProjects = computed(() => {
   return projects.value.filter(project => !project.archive);
 });
 
+const orderedProjects = computed(() => {
+  return filteredProjects.value.sort((x,y) => x.title.localeCompare(y.title))
+})
+
 const limitedProjects = computed(() => {
-  return filteredProjects.value.slice(0, 30);
+  return orderedProjects.value.slice(0, 30);
 });
 
 // Function to truncate project titles
