@@ -88,7 +88,7 @@ const props = defineProps({
     required: true
   },
   plannedDate: {
-    type: String,
+    type: [String, Date],
     required: true
   }
 });

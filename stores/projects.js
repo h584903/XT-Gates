@@ -152,34 +152,35 @@ export const useProjectsStore = defineStore('projects', () => {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         if (today > newDate) {
-            return -diffDays;
+            return -diffDays+1;
         }
         return diffDays;
     }
 
+
     async function calculatePOFloat(projectID) {
         const project = projects.value.find(project => project.id === projectID);
         if (!project) return null;
-
+    
         // Fetch the PO date and work duration
         const poDate = new Date(project.POdate);
         const workDuration = await calculateWorkDuration(String(projectID));
-
+    
         if (workDuration === 0) {
             return 0;
         }
-
+    
         // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
         const newDate = new Date(poDate);
         newDate.setDate(poDate.getDate() - workDuration);
         newDate.setHours(23, 59, 0, 0);
-
+    
         const today = new Date();
         const diffTime = Math.abs(newDate - today);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+    
         if (today > newDate) {
-            return -diffDays;
+            return -diffDays + 1;
         }
         return diffDays;
     }
