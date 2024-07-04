@@ -56,6 +56,7 @@ body {
 .login-prompt {
   text-align: center;
   margin-top: 50px;
+  width: 82%;
 }
 
 .login-prompt h1 {
