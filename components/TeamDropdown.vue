@@ -29,7 +29,10 @@ const projectStore = useProjectsStore();
 const dropdownOpen = ref(false);
 const teams = ref([]);
 const currentUserTeam = computed(() => authStore.getUserTeam());
-const currentUserTeamName = computed(() => teamStore.getTeamName(currentUserTeam.value));
+const currentUserTeamName = computed(() => {
+  const teamName = teamStore.getTeamName(currentUserTeam.value);
+  return teamName || 'Default';
+});
 
 const filteredTeams = computed(() => {
     const currentTeamName = teamStore.getTeamName(currentUserTeam.value);
