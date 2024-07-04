@@ -28,8 +28,8 @@ export default defineEventHandler(async (event) => {
       await connectAndQuery(`
         EXEC gates.db_owner.DuplicateProject
         @OldProjectID = 1,
-        @NewProjectTitle = '${team} Template',
-        @PEMName = '${team} Manager',
+        @NewProjectTitle = 'Template ${team} ',
+        @PEMName = 'NONE',
         @PODate = '3000-01-01',
         @SFDate = '3000-01-01',
         @team = ${newId},
