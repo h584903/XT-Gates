@@ -6,6 +6,7 @@ export const useProjectsStore = defineStore('projects', () => {
     const projects = ref([]);
     const templateId = ref(null);
     const index = ref(0);
+    const managerProjects = ref([]);
 
     function setProjects(newProjects) {
         projects.value = newProjects;
@@ -13,6 +14,10 @@ export const useProjectsStore = defineStore('projects', () => {
         if (templateProject) {
             templateId.value = templateProject.id;
         }
+    }
+
+    function setManagerProjects(newProjects) {
+        managerProjects.value = newProjects;
     }
 
     async function fetchNonArchivedProjects() {
@@ -38,6 +43,39 @@ export const useProjectsStore = defineStore('projects', () => {
 
             setProjects(projectsArray);
 
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
+    }
+
+    async function fetchAllProjects() {
+        const authStore = useAuthStore();
+
+        if (!authStore.isLoggedIn()) {
+            return null;
+        }
+
+        try {
+            const response = await $fetch('/projects', {
+                method: 'GET'
+            });
+            const data = response.data;
+            const projectsArray = Object.values(data).map(project => ({
+                id: project.ID,
+                title: project.title,
+                progress: project.progress,
+                onTimeDate: project.onTimeDate,
+                PEM: project.PEM,
+                comment: project.comment,
+                POdate: project.POdate,
+                SFdate: project.SFdate,
+                archive: project.archive,
+                gates: project.gates,
+                team: project.team,
+                template: project.template
+            }));
+
+            setManagerProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
@@ -217,6 +255,10 @@ export const useProjectsStore = defineStore('projects', () => {
 
     function getProjects() {
         return filteredProjects.value;
+    }
+
+    function getManagerProjects() {
+        return managerProjects.value;
     }
 
     function sortProjects(comparator) {
@@ -427,6 +469,7 @@ export const useProjectsStore = defineStore('projects', () => {
         templateId,
         project,
         projects,
+        managerProjects,
         getProjects,
         getProjectById,
         addProject,
@@ -447,6 +490,8 @@ export const useProjectsStore = defineStore('projects', () => {
         calculateFloat,
         calculatePOFloat,
         clearStore,
-        sortProjects
+        sortProjects,
+        fetchAllProjects,
+        getManagerProjects
     };
 });

@@ -14,6 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
     function getUsername() {
         return username.value;
     }
+    
 
     async function login(newName, password) {
         const admin = useCookie('admin');
