@@ -33,7 +33,7 @@ const currentUserTeamName = computed(() => teamStore.getTeamName(currentUserTeam
 
 const filteredTeams = computed(() => {
     const currentTeamName = teamStore.getTeamName(currentUserTeam.value);
-    return teams.value.filter(team => team.team !== currentTeamName && team.id !== 0);
+    return teams.value.filter(team => team.team !== currentTeamName);
 });
 
 const isLoggedIn = authStore.isLoggedIn();
