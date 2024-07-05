@@ -302,7 +302,9 @@ function calculateDaysToPO() {
   flex-direction: column;
   justify-content: center;
 }
-
+h1 {
+  font-size: 200%;
+}
 .allWrapper {
   margin: auto;
 }

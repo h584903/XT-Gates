@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper-row">
-    <h1>ACTIVE PROJECTS</h1>
+    <h1>ACTIVE PROJECTS - {{ teamName }}</h1>
     <div class="projectList">
       <ProjectList />
     </div>
@@ -9,10 +9,22 @@
 
 <script setup> 
 import { useProjectsStore } from '@/stores/projects';
+import { useAuthStore } from '@/stores/auth';
+import { useTeamsStore } from '@/stores/teams';
 
-const store = useProjectsStore();
+const projectStore = useProjectsStore();
+const authStore = useAuthStore();
+const teamStore = useTeamsStore();
 
+const teamName = computed(() => {
+  const userTeam = authStore.getUserTeam();
+  return teamStore.getTeamName(userTeam) || 'Default';
+});
 
+onMounted(async () => {
+  // Fetch projects or any other initialization logic
+  await projectStore.fetchProjects();
+});
 </script>
 <style scoped>
 /* Style er scoped for å beholde singleFileComponent struktur */
@@ -23,7 +35,7 @@ const store = useProjectsStore();
 
 
 h1 {
-  text-decoration: underline;
+  font-size: 200%;
 }
 
 
