@@ -1,13 +1,7 @@
 <template>
   <div class="list project-card" @click="redirect">
-    <div class="titleWrapper" @click.stop="enableEditMode" v-if="!editMode && admin">
-      <span>{{ editedTitle }}</span>
-    </div>
-    <div class="titleWrapper" v-else-if="admin">
-      <input type="text" v-model="editedTitle" @keyup.enter="updateTitle" @click.stop @blur="updateTitle" />
-    </div>
-    <div class="titleWrapper cursorPointer" v-else>
-      <span>{{ editedTitle }}</span>
+    <div class="titleWrapper">
+      <span>{{ entryData.title }}</span>
     </div>
     <div class="progressWrapper">
       <ProgressBar :progressNumber="entryData.progress" />
@@ -52,14 +46,10 @@ const props = defineProps({
 
 const router = useRouter();
 const store = useProjectsStore();
-const authStore = useAuthStore();
 
-const editedTitle = ref(props.entryData.title);
 const editedComment = ref(props.entryData.comment);
-const editMode = ref(false); // editorMode for title
 const commentEditMode = ref(false); // editMode for comment
 
-const admin = computed(() => authStore.isAdmin());
 
 let islate;
 islate = (props.entryData.SFdate > props.entryData.POdate)
@@ -76,32 +66,15 @@ const fullProgress = computed(() => {
 watch(
   () => props.entryData,
   (newData) => {
-    editedTitle.value = newData.title;
     editedComment.value = newData.comment;
   },
   { immediate: true, deep: true }
 );
 
-// Handle title edit
-const enableEditMode = () => {
-  editMode.value = true;
-  commentEditMode.value = false;
-};
-
-const updateTitle = async () => {
-  try {
-    await store.updateProjectTitle(props.entryData.id, editedTitle.value);
-  } catch (error) {
-    console.error('Failed to update the project:', error);
-  } finally {
-    editMode.value = false;
-  }
-};
 
 // Handle comment edit
 const enableCommentEditMode = () => {
   commentEditMode.value = true;
-  editMode.value = false;
 };
 
 const updateComment = async () => {
@@ -155,12 +128,7 @@ a {
   margin: auto;
   text-align: center;
   width: 20%;
-  cursor: text;
-}
-
-.titleWrapper input {
-  width: 75%;
-  text-align: center;
+  cursor: pointer;
 }
 
 .progressWrapper {
