@@ -142,7 +142,7 @@ const admin = computed(() => authStore.isAdmin());
   if (currentTask && currentTask.duration !== undefined && currentTask.progress !== undefined) {
     // Check if duration or progress has changed from their initial values
     if (currentTask.duration !== props.duration || currentTask.progress !== props.step) {
-      if (parseInt(selectedProgress.value) === 100) {
+      if (parseInt(selectedProgress.value) == 100) {
         updateMode.value = true;
       }
         tasksStore.updateTaskProgress(props.taskID, parseInt(selectedProgress.value));
@@ -152,10 +152,13 @@ const admin = computed(() => authStore.isAdmin());
 
   const planStatus = computed(() => {
     if(tasksStore.completedInTime(props.completeDate, props.taskID)) {
+      console.log("Completed in time")
       return false
-    } else if(selectedProgress.value === 100) {
+    } else if(selectedProgress.value == 100) {
+      console.log("Progress = 100")
       return true
     } else {
+      console.log("Checking inTime")
       return tasksStore.inTime(props.taskID);
     }
   })
@@ -236,7 +239,7 @@ const responsiblePersonDisplay = computed(() => {
   editResponsiblePersonMode.value = false;
 }
 
-  const debouncedUpdateProgress = debounce(updateProgress, 1500);
+  const debouncedUpdateProgress = debounce(updateProgress, 0);
 
   // Delete modal
   const modalActive = ref(false);

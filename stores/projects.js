@@ -7,6 +7,7 @@ export const useProjectsStore = defineStore('projects', () => {
     const templateId = ref(null);
     const index = ref(0);
     const managerProjects = ref([]);
+    const projectSorting = ref();
 
     function setProjects(newProjects) {
         projects.value = newProjects;
@@ -110,6 +111,8 @@ export const useProjectsStore = defineStore('projects', () => {
             }));
 
             setProjects(projectsArray);
+            sortProjects();
+
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
@@ -262,6 +265,17 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     function sortProjects(comparator) {
+        console.log("This is the comparator: " + typeof(comparator))
+        console.log("This is the ref: " + projectSorting.value)
+
+        if (comparator == undefined && projectSorting.value) {
+            projects.value.sort(projectSorting.value)
+            return;
+        } else if (!comparator == undefined) {
+            // Legg inn her hvis vi vil ha en "default" sortering
+            return;
+        }
+        projectSorting.value = comparator;
         projects.value.sort(comparator);
     }
 
@@ -492,6 +506,7 @@ export const useProjectsStore = defineStore('projects', () => {
         clearStore,
         sortProjects,
         fetchAllProjects,
-        getManagerProjects
+        getManagerProjects,
+        projectSorting
     };
 });

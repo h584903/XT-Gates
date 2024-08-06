@@ -56,8 +56,9 @@ const projectsPerPage = 25;
 const admin = computed(() => authStore.isAdmin());
 
 useIntervalFn(() => {
+  console.log("Fetching updated projects")
   fetchProjects() // will call the 'todos' endpoint, just above
-}, 120000) // call it back every 3s
+}, 120000)
 
 const fetchProjects = () => {
   store.fetchProjects();

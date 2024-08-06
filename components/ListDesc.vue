@@ -58,6 +58,12 @@ function sortProjects(field, isNumeric = false) {
     orderBy.value = field;
 }
 
+watch(projectStore.projects, () => {
+    console.log("PROJECTS UPDATED AND SEEN THROUGH WATCH!!!")
+})
+
+
+
 function sortByTitle() {
     sortProjects('title');
 }

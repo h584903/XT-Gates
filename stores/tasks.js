@@ -148,14 +148,20 @@ export const useTasksStore = defineStore('tasks', () => {
     function inTime(taskID) {
         const gateStore = useGatesStore();
         let onTime = false;
-        let today = new Date();
+        let date = new Date();
         let duration = getTaskDuration(taskID);
         let progress = getTaskProgress(taskID);
         let remainderTime = duration - (duration * progress / 100);
-        let SF = new Date(today.getTime() + (remainderTime * 86400000));
+        console.log("This is the remainting time: " + remainderTime)
+        date.setDate(date.getDate() + remainderTime);
+        console.log("This is the schedualed finishdate for the task: " + date.toLocaleString())
         let PF = gateStore.getSFG(getGateID(taskID));
-
-        onTime = (PF >= SF.toISOString());
+        if (typeof(PF) == 'object') {
+            console.log(PF.toISOString());
+            PF = PF.toISOString();
+        }
+        console.log(date.toISOString())
+        onTime = (PF >= date.toISOString());
 
         return onTime;
     }
