@@ -152,7 +152,6 @@ const admin = computed(() => authStore.isAdmin());
 
   const planStatus = computed(() => {
     if(!tasksStore.completedInTime(props.completeDate, props.taskID)) {
-      console.log("Not completed in time")
       return false
     } else if(selectedProgress.value == 100) {
       return true
