@@ -265,9 +265,6 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     function sortProjects(comparator) {
-        console.log("This is the comparator: " + typeof(comparator))
-        console.log("This is the ref: " + projectSorting.value)
-
         if (comparator == undefined && projectSorting.value) {
             projects.value.sort(projectSorting.value)
             return;
