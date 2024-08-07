@@ -58,6 +58,8 @@ function sortProjects(field, isNumeric = false) {
     orderBy.value = field;
 }
 
+
+
 function sortByTitle() {
     sortProjects('title');
 }
