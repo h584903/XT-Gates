@@ -152,13 +152,10 @@ const admin = computed(() => authStore.isAdmin());
 
   const planStatus = computed(() => {
     if(tasksStore.completedInTime(props.completeDate, props.taskID)) {
-      console.log("Completed in time")
       return false
     } else if(selectedProgress.value == 100) {
-      console.log("Progress = 100")
       return true
     } else {
-      console.log("Checking inTime")
       return tasksStore.inTime(props.taskID);
     }
   })
