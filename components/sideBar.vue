@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar"> <!-- listen over linker-->
     <NuxtLink to="/projectList" class="hoverlink font">Dashboard</NuxtLink>
-    <NuxtLink to="manager" class="hoverlink font">Overview</NuxtLink>
+    <NuxtLink to="/manager" class="hoverlink font">Overview</NuxtLink>
     <NuxtLink to="/" class="hoverlink font">System</NuxtLink>
     <NuxtLink to="/Archive" class="hoverlink font">Archive</NuxtLink>
     <NuxtLink v-if="admin" to="/admin" class="hoverlink font">Admin</NuxtLink>
