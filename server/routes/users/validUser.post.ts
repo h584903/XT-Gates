@@ -4,7 +4,7 @@ export default defineEventHandler(async event => {
     const body = await readBody(event);
     const { username } = body;
     // Querying the role
-    const result = await connectAndQuery(`SELECT role FROM [db_owner].[validUsers] WHERE username = '${username}'`)
+    const result = await connectAndQuery(`SELECT role, team FROM [db_owner].[validUsers] WHERE username = '${username}'`)
 
 
     newRole = result[0];

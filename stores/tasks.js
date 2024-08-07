@@ -56,13 +56,11 @@ export const useTasksStore = defineStore('tasks', () => {
         const gateStore = useGatesStore();
         const filteredtasks = tasks.value.filter(task => Number(task.gateID) == Number(gateID))
 
-        console.log(filteredtasks)
         for (let i = 0;i < filteredtasks.length; i++) {
             if (filteredtasks[i].duration > maxDuration) {
                 maxDuration = filteredtasks[i].duration;
             }
         }
-        console.log(maxDuration);
         return maxDuration;
     }
 
@@ -183,20 +181,28 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     function completedInTime(date, taskID) {
+        if (date == null)
+            return true
         const gateStore = useGatesStore();
-        let inTime = false;
 
         const task = tasks.value.find(task => task.ID === taskID);
 
         if (task) {
             const gateID = task.gateID;
-            const supposedDate = gateStore.getSFG(gateID);
-            if (date >= supposedDate) {
-                inTime = true;
+            let supposedDate = gateStore.getSFG(gateID);
+
+            if (typeof(supposedDate) == 'object') {
+                supposedDate = supposedDate.toISOString();
             }
+
+            if (date >= supposedDate) {
+                return false;
+            }
+        } else {
+            console.log("Found no task")
         }
 
-        return inTime;
+        return true;
     }
 
     async function updateDate(taskID) {

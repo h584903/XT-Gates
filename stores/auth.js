@@ -133,19 +133,21 @@ export const useAuthStore = defineStore('auth', () => {
             return false;
         }
         try {
-            const fetchedRole = await fetchAccess(newUsername);
-            if (!fetchedRole) {
+            let response = await fetchAccess(newUsername);
+            if (!response) {
                 clearUserData();
                 console.log('We are here');
                 invalidUsername.value = true;
                 return false;
-            } else if (fetchedRole.role == 1) {
+            } else if (response.role == 1) {
                 clearUserData();
-                role.value = fetchedRole.role;
+                role.value = response.role;
+                userTeam.value = response.team;
                 return true;
-            } else if (Number.isInteger(fetchedRole.role)) {
+            } else if (Number.isInteger(response.role)) {
                 clearUserData();
-                role.value = fetchedRole.role;
+                role.value = response.role;
+                userTeam.value = response.team;
                 adminName.value = newUsername;
                 isNewAdmin.value = true;
                 return true;
