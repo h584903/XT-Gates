@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
                     clearUserData();
                     return false;
                 } else {
-                    username.value = newName;
+                    username.value = uppercaseName(newName);
                     role.value = 2;
                     admin.value = token;
                     return true;
@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
                     clearUserData();
                     return false;
                 } else {
-                    username.value = newName;
+                    username.value = uppercaseName(newName);
                     role.value = 3;
                     admin.value = token;
                     return true;
@@ -121,7 +121,7 @@ export const useAuthStore = defineStore('auth', () => {
             clearUserData();
             return false;
         } else {
-            username.value = decryptedToken.user;
+            username.value = uppercaseName(decryptedToken.user);
             role.value = decryptedToken.userRole;
             userTeam.value = decryptedToken.team;
         }
@@ -227,7 +227,7 @@ export const useAuthStore = defineStore('auth', () => {
                 projectStore.setProjects([]);
                 return false;
             }
-            username.value = newName;
+            username.value = uppercaseName(newName);
             return true;
         }
         projectStore.setProjects([]);
@@ -266,6 +266,14 @@ export const useAuthStore = defineStore('auth', () => {
 
     function setUserTeam(t) {
         userTeam.value = t;
+    }
+
+    function uppercaseName(name) {
+        let words = name.split(" ");
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i][0].toUpperCase() + words[i].substr(1).toLowerCase()
+        }
+        return words.join(" ");
     }
 
     return {
