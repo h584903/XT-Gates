@@ -185,7 +185,6 @@ export const useTasksStore = defineStore('tasks', () => {
             return true
         const gateStore = useGatesStore();
 
-        console.log("Running completedInTime with date: " + date)
         const task = tasks.value.find(task => task.ID === taskID);
 
         if (task) {
@@ -195,10 +194,8 @@ export const useTasksStore = defineStore('tasks', () => {
             if (typeof(supposedDate) == 'object') {
                 supposedDate = supposedDate.toISOString();
             }
-            console.log("Checking dates: " + supposedDate + " " + date)
 
             if (date >= supposedDate) {
-                console.log("completedDate is too late")
                 return false;
             }
         } else {
