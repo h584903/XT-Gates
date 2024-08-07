@@ -152,15 +152,11 @@ export const useTasksStore = defineStore('tasks', () => {
         let duration = getTaskDuration(taskID);
         let progress = getTaskProgress(taskID);
         let remainderTime = duration - (duration * progress / 100);
-        console.log("This is the remainting time: " + remainderTime)
         date.setDate(date.getDate() + remainderTime);
-        console.log("This is the schedualed finishdate for the task: " + date.toLocaleString())
         let PF = gateStore.getSFG(getGateID(taskID));
         if (typeof(PF) == 'object') {
-            console.log(PF.toISOString());
             PF = PF.toISOString();
         }
-        console.log(date.toISOString())
         onTime = (PF >= date.toISOString());
 
         return onTime;
