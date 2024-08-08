@@ -51,7 +51,6 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     function maxTaskDuration(gateID) {
-        console.log("Calculating the duration of: " + gateID)
         let maxDuration = 0;
         const gateStore = useGatesStore();
         const filteredtasks = tasks.value.filter(task => Number(task.gateID) == Number(gateID))
@@ -203,6 +202,26 @@ export const useTasksStore = defineStore('tasks', () => {
         }
 
         return true;
+    }
+    async function updateCompletionDate(completedDate, taskID) {
+        try {
+            const response = await $fetch('/tasks/completeDate/' + taskID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newDate: completedDate
+                })
+            });
+            const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+            if (taskIndex !== -1) {
+                tasks.value[taskIndex].completeDate = completedDate;
+            }
+        } catch (error) {
+            console.error('Error updating date', error);
+        }
     }
 
     async function updateDate(taskID) {
@@ -394,6 +413,7 @@ export const useTasksStore = defineStore('tasks', () => {
         updateTaskResponsiblePerson,
         updateTaskTitle,
         maxTaskWorkDuration,
-        setTasks
+        setTasks,
+        updateCompletionDate
     };
 });

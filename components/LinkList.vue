@@ -25,7 +25,7 @@ const filteredProjects = computed(() => {
 });
 
 const orderedProjects = computed(() => {
-  return filteredProjects.value.sort((x,y) => x.title.localeCompare(y.title))
+  return filteredProjects.value.sort((a, b) => false ? a['SFdate'] - b['SFdate'] : a['SFdate'].localeCompare(b['SFdate']));
 })
 
 const limitedProjects = computed(() => {
