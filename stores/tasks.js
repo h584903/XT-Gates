@@ -51,7 +51,6 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     function maxTaskDuration(gateID) {
-        console.log("Calculating the duration of: " + gateID)
         let maxDuration = 0;
         const gateStore = useGatesStore();
         const filteredtasks = tasks.value.filter(task => Number(task.gateID) == Number(gateID))
@@ -205,9 +204,6 @@ export const useTasksStore = defineStore('tasks', () => {
         return true;
     }
     async function updateCompletionDate(completedDate, taskID) {
-        console.log("in updateCompletionDate")
-        console.log("The given date is a: " + typeof(completedDate))
-        console.log("The print of the object is: " + completedDate)
         try {
             const response = await $fetch('/tasks/completeDate/' + taskID, {
                 method: 'PUT',

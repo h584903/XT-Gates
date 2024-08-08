@@ -150,11 +150,9 @@ export const useGatesStore = defineStore('gates', () => {
     }
 
     function substractDays(date, days) {
-        console.log("Date before: " + date.toLocaleString() + " before subtracting: " + days)
         const currentDate = new Date(date);
         const newDate = currentDate.getDate();
         currentDate.setDate(newDate - days)
-        console.log("Date after: " + currentDate.toLocaleString())
         return currentDate;
     }
 
@@ -290,21 +288,17 @@ export const useGatesStore = defineStore('gates', () => {
 
 
     function calculateDaysToEnd(plannedDate) {
-        console.log('Calculating daysToEnd:');
         
         // Parse the plannedDate and normalize to start of the day
         let date = new Date(plannedDate);
         date.setHours(0, 0, 0, 0); // Set to start of the day
-        console.log('Date in calculateDaysToEnd:', date);
         
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Set to start of the day
-        console.log('Today in calculateDaysToEnd:', today);
     
         // Calculate the difference in milliseconds and convert to days
         var differenceInMs = date.getTime() - today.getTime();
         let daysLeft = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
-        console.log('Days left before adding 1:', daysLeft);
     
         // Add 1 if the target date is in the future
         if (differenceInMs > 0) {
@@ -312,7 +306,6 @@ export const useGatesStore = defineStore('gates', () => {
         }
         
         const cd = Math.max(daysLeft, 0);
-        console.log('Value of calculate days to end:', cd);
         return cd;
     }
 
