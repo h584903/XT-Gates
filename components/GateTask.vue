@@ -29,7 +29,18 @@
       </div>
       <div class="w10">
         <div v-if="updateMode">Update completion date?</div>
-        <div v-else><DateEntry :dateString = props.completeDate /></div>
+        <div v-else>
+          <div v-if="!admin">
+            <DateEntry :dateString = props.completeDate />
+          </div>
+          <div v-else-if="editCompletionDateMode">
+            <input type="date" v-model="editedCompletionDate" @blur="updateCompletionDate" @keyup.enter="updateCompletionDate" @keyup.esc="cancelEditCompletionDate" />
+            <button @click="cancelEditCompletionDate">Cancel</button>
+          </div>
+          <div v-else @click="enableCompletionDateMode" class="cursorText">
+            <DateEntry :dateString = props.completeDate />
+          </div>
+        </div>
       </div>
       <div class="w10">
         <div v-if="updateMode">
@@ -129,6 +140,8 @@ const editedTitle = ref(props.title);
 const editTitleMode = ref(false);
 const editedResponsiblePerson = ref(props.responsiblePerson);
 const editResponsiblePersonMode = ref(false);
+const editCompletionDate = ref(false);
+const editedCompletionDate = ref("");
 
 
 const admin = computed(() => authStore.isAdmin());
@@ -172,6 +185,14 @@ const admin = computed(() => authStore.isAdmin());
   function updateDuration() {
     tasksStore.updateTaskDuration(props.taskID, parseInt(taskDuration.value))
     editMode.value = false;
+  }
+
+  function updateCompletionDate() {
+
+  }
+
+  function cancelEditCompletionDate() {
+    
   }
 
   // Håndtering av å editte task comment, hvis de deler editMode går begge inn i redigeringsmodus når du trykker på en av de
