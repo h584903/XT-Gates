@@ -204,6 +204,29 @@ export const useTasksStore = defineStore('tasks', () => {
 
         return true;
     }
+    async function updateCompletionDate(completedDate, taskID) {
+        console.log("in updateCompletionDate")
+        console.log("The given date is a: " + typeof(completedDate))
+        console.log("The print of the object is: " + completedDate)
+        try {
+            const response = await $fetch('/tasks/completeDate/' + taskID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newDate: completedDate
+                })
+            });
+            const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+            if (taskIndex !== -1) {
+                tasks.value[taskIndex].completeDate = completedDate;
+            }
+        } catch (error) {
+            console.error('Error updating date', error);
+        }
+    }
 
     async function updateDate(taskID) {
         const authStore = useAuthStore();
@@ -394,6 +417,7 @@ export const useTasksStore = defineStore('tasks', () => {
         updateTaskResponsiblePerson,
         updateTaskTitle,
         maxTaskWorkDuration,
-        setTasks
+        setTasks,
+        updateCompletionDate
     };
 });

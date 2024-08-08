@@ -270,7 +270,7 @@ export const useProjectsStore = defineStore('projects', () => {
             return;
         } else if (comparator == undefined) {
             console.log("comparator is not undefined")
-            projects.value.sort((a, b) => false ? a['POdate'] - b['POdate'] : a['POdate'].localeCompare(b['POdate']))
+            projects.value.sort((a, b) => false ? a['SFdate'] - b['SFdate'] : a['SFdate'].localeCompare(b['SFdate']))
             // Legg inn her hvis vi vil ha en "default" sortering
             return;
         }

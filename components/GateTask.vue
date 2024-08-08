@@ -140,7 +140,7 @@ const editedTitle = ref(props.title);
 const editTitleMode = ref(false);
 const editedResponsiblePerson = ref(props.responsiblePerson);
 const editResponsiblePersonMode = ref(false);
-const editCompletionDate = ref(false);
+const editCompletionDateMode = ref(false);
 const editedCompletionDate = ref("");
 
 
@@ -188,11 +188,24 @@ const admin = computed(() => authStore.isAdmin());
   }
 
   function updateCompletionDate() {
+    try {
+      tasksStore.updateCompletionDate(editedCompletionDate.value, props.taskID);
+    } catch (error) {
+      console.error("Failed to update the project:", error);
+    } finally {
 
+      editCompletionDateMode.value = false;
+    }
   }
 
   function cancelEditCompletionDate() {
-    
+    closeAllEditModes();
+    editCompletionDateMode.value = false;
+  }
+
+  function enableCompletionDateMode() {
+    closeAllEditModes();
+    editCompletionDateMode.value = true;
   }
 
   // Håndtering av å editte task comment, hvis de deler editMode går begge inn i redigeringsmodus når du trykker på en av de
@@ -255,6 +268,7 @@ const responsiblePersonDisplay = computed(() => {
   editCommentMode.value = false;
   editTitleMode.value = false;
   editResponsiblePersonMode.value = false;
+  editCompletionDateMode.value = false;
 }
 
   const debouncedUpdateProgress = debounce(updateProgress, 0);
