@@ -3,18 +3,18 @@
     <div>
       <h1>Teams:</h1>
     </div>
-    <div v-for="team in filteredTeams" :key="team.id" class="team-box">
-      <div>{{ team.team }}</div>
+    <div v-for="team in filteredTeams" :key="team.id">
+      <TeamEntry :entryData="team" />
     </div>
     <div class="bottom-spacer"></div>
-    <button class="addButton"@click="toggleAddTeamModal">Add Team</button>
+    <button class="addButton" @click="toggleAddTeamModal">Add Team</button>
 
     <ReusableModal @close="toggleAddTeamModal" :modalActive="addTeamModalActive">
       <h2>Add New Team</h2>
       <input type="text" v-model="newTeamName" class="team-input" placeholder="Enter team name" />
       <div>
-        <button class = "addButton"@click="addTeam">Add</button>
-        <button class = "closeButton"@click="toggleAddTeamModal">Cancel</button>
+        <button class="addButton" @click="addTeam">Add</button>
+        <button class="closeButton" @click="toggleAddTeamModal">Cancel</button>
       </div>
     </ReusableModal>
   </div>
@@ -80,25 +80,13 @@ const addTeam = async () => {
 </script>
 
 <style scoped>
-.team-box {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.team-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
 
 .bottom-spacer {
   height: 50px;
 }
 
-.addButton, .closeButton{
+.addButton,
+.closeButton {
   background-color: #007BFF;
   color: white;
   cursor: pointer;
@@ -110,20 +98,27 @@ const addTeam = async () => {
   transition: background-color 0.3s, transform 0.3s;
 }
 
-.addButton:hover, .closeButton:hover {
+.addButton:hover,
+.closeButton:hover {
   background-color: #0056b3;
   transform: translateY(-2px);
 }
 
-.addButton:active, .closeButton:active{
+.addButton:active,
+.closeButton:active {
   background-color: #003f7f;
   transform: translateY(0);
 }
+
 .team-input {
-  width: 90%; 
+  width: 90%;
   padding: 10px;
-  font-size: 1rem; 
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.row {
+  display: flex;
 }
 </style>
