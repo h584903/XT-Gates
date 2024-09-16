@@ -1,87 +1,112 @@
 import { ref, computed } from 'vue';
-import { defineStore } from "pinia";
-import { H3Event, getCookie } from 'h3'; 
-
+import { defineStore } from 'pinia';
+import { useCookie } from '#app';
 
 export const useAuthStore = defineStore('auth', () => {
-
-    const username = ref('---');
-
+    const username = ref('');
     const invalidUsername = ref(false);
     const userTeam = ref('1');
-    const adminName = ref('---');
+    const adminName = ref('');
     const isNewAdmin = ref(false);
-    const role = ref('---');
+    const role = ref('');
     const token = ref(null);
-
 
     function getUsername() {
         return username.value;
     }
+    
 
-
-    /**
-     * Login Function, that is the enterance to the login handeling
-     * It checks if there is a password, and if there is, it reroutes to the correct
-     *
-     */
     async function login(newName, password) {
         const admin = useCookie('admin');
         let token = '';
-        let fetchedRole;
-        switch(role.value) {
-            case 1: // Normal user
-                console.log("Something went wrong, role is normal user")
+        switch (role.value) {
+            case 1:
+                console.log('Something went wrong, role is normal user');
                 return false;
             case 2:
-                token = await verifyPass(newName, password, 2, userTeam.value);
-                if (token == false) {
-                    console.log("Invalid password")
+                token = await verifyPass(newName, password, 2);
+                if (!token) {
+                    console.log('Invalid password');
                     clearUserData();
                     return false;
                 } else {
-                    username.value = newName;
+                    username.value = uppercaseName(newName);
                     role.value = 2;
                     admin.value = token;
                     return true;
                 }
             case 3:
-                token = await verifyPass(newName, password, 3, userTeam.value);
-                if (token == false) {
-                    console.log("Invalid password")
+                token = await verifyPass(newName, password, 3);
+                if (!token) {
+                    console.log('Invalid password');
                     clearUserData();
                     return false;
                 } else {
-                    username.value = newName;
+                    username.value = uppercaseName(newName);
                     role.value = 3;
                     admin.value = token;
                     return true;
                 }
-            
         }
         return false;
     }
 
+    async function checkPass(pass, role) {
+        const requestBody = { pass, role };
+        try {
+            const response = await $fetch('/users/changeAdminPass', {
+                method: 'POST',
+                body: JSON.stringify(requestBody),
+            });
+            console.log('response:', response);
+            return response;
+        } catch (error) {
+            console.log(error);
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to verify pass',
+            });
+        }
+    }
+
+    async function updatePass(newPass, role) {
+        const requestBody = { newPass, role };
+        try {
+            const response = await $fetch('/users/changePassword', {
+                method: 'POST',
+                body: JSON.stringify(requestBody),
+            });
+            return response;
+        } catch (error) {
+            console.error('error updating password');
+            return createError({
+                statusCode: 500,
+                statusMessage: 'Internal Server Error',
+                data: 'Failed to update pass',
+            });
+        }
+    }
 
     async function verifyPass(newName, pass, userRole) {
         const requestBody = {
             username: newName,
-            pass: pass,
-            userRole: userRole,
+            pass,
+            userRole,
             userTeam: userTeam.value,
         };
         try {
             const response = await $fetch('/users/adminPass', {
                 method: 'POST',
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestBody),
             });
             return response;
         } catch (error) {
-            console.log("Error during fetch: " + error)
+            console.log('Error during fetch:', error);
             return createError({
                 statusCode: 500,
                 statusMessage: 'Internal Server Error',
-                data: 'Failed to verify pass'
+                data: 'Failed to verify pass',
             });
         }
     }
@@ -89,179 +114,140 @@ export const useAuthStore = defineStore('auth', () => {
     async function tokenCheck() {
         const admin = useCookie('admin');
         if (!admin.value) {
-            return false
+            return false;
         }
         const decryptedToken = await verifyToken(admin.value);
-        if (decryptedToken == false) {
+        if (!decryptedToken) {
             clearUserData();
             return false;
         } else {
-            username.value = decryptedToken.user;
+            username.value = uppercaseName(decryptedToken.user);
             role.value = decryptedToken.userRole;
             userTeam.value = decryptedToken.team;
         }
         return true;
     }
 
-    /**
-     * Checks a username if it is valid, if the fetched role, isn't normal then it asks for more info
-     * @param {string} username - The username to be checked
-     * @returns {boolean}
-     */
     async function validUsername(newUsername) {
-        if (newUsername === '') {
-            return false
+        if (!newUsername) {
+            return false;
         }
         try {
-            const fetchedRole = await fetchAccess(newUsername);
-            if (!fetchedRole) {
+            let response = await fetchAccess(newUsername);
+            if (!response) {
                 clearUserData();
-                console.log("We are here")
+                console.log('We are here');
                 invalidUsername.value = true;
                 return false;
-            }
-            else if (fetchedRole.role == 1) {
+            } else if (response.role == 1) {
                 clearUserData();
-                role.value=fetchedRole.role
+                role.value = response.role;
+                userTeam.value = response.team;
                 return true;
-            }
-            else if (Number.isInteger(fetchedRole.role)) {
-                // Now checking if they have password
+            } else if (Number.isInteger(response.role)) {
                 clearUserData();
-                role.value=fetchedRole.role
+                role.value = response.role;
+                userTeam.value = response.team;
                 adminName.value = newUsername;
                 isNewAdmin.value = true;
                 return true;
+            } else {
+                clearUserData();
+                return false;
             }
-            else
-            clearUserData();
-            return false;
-
         } catch (error) {
-            console.error("Error during fetch:", error);
-
+            console.error('Error during fetch:', error);
         }
         return false;
-
     }
 
     async function fetchToken(newUsername, newPassword, userRole, _userTeam) {
-
         const requestBody = {
             password: newPassword,
             username: newUsername,
-            userRole: userRole,
-            userTeam: _userTeam
+            userRole,
+            userTeam: _userTeam,
         };
-
         try {
             const response = await $fetch('/users/createToken', {
                 method: 'POST',
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestBody),
             });
-
             return response;
         } catch (error) {
-            console.log("Error during fetch: " + error)
+            console.log('Error during fetch:', error);
             return createError({
                 statusCode: 500,
                 statusMessage: 'Internal Server Error',
-                data: 'Failed to create token'
+                data: 'Failed to create token',
             });
         }
     }
+
     async function verifyToken(token) {
-        const requestBody = {
-            token: token
-        };
+        const requestBody = { token };
         try {
             const response = await $fetch('/users/verifyToken', {
                 method: 'POST',
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestBody),
             });
             return response;
         } catch (error) {
-            console.log("Error during fetch: " + error)
+            console.log('Error during fetch:', error);
             return createError({
                 statusCode: 500,
                 statusMessage: 'Internal Server Error',
-                data: 'Failed to verify token'
+                data: 'Failed to verify token',
             });
         }
     }
 
-    /**
-     * Checks a username if it's valid in the database
-     * Returns the role if found
-     * @param {string} username - The username to be checked
-     * @returns {string} - The role of the user
-     */
     async function fetchAccess(newUsername) {
-
-        const requestBody = {
-            username: newUsername
-        };
-
+        const requestBody = { username: newUsername };
         try {
             const response = await $fetch('/users/validUser', {
                 method: 'POST',
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestBody),
             });
-
             return response;
         } catch (error) {
-            console.log("Error during fetch: " + error)
+            console.log('Error during fetch:', error);
             return createError({
                 statusCode: 500,
                 statusMessage: 'Internal Server Error',
-                data: 'Failed to check username in DB'
+                data: 'Failed to check username in DB',
             });
         }
-
     }
 
-    /**
-     * Sets a new name if it is valid.
-     * @param {string} newName - The new name to be set.
-     * @returns {boolean} - If set true, if notset false.
-     */
     async function setUsername(newName) {
         const projectStore = useProjectsStore();
         if (await validUsername(newName)) {
             if (role.value != 1) {
                 projectStore.setProjects([]);
-                return false
+                return false;
             }
-            username.value = newName;
+            username.value = uppercaseName(newName);
             return true;
         }
-
         projectStore.setProjects([]);
         clearUserData();
         return false;
     }
 
-    //Metode som returnerer true om en innlogget bruker er en administratorbruker
-    //Må kobles mot databasen senere, foreløpig veldig enkel.
     function isAdmin() {
-        let user = username.value;
-
-        if(role.value == 2 || role.value == 3) {
-            return true;
-        } else {
-            return false;
-        }
+        return role.value == 2 || role.value == 3;
     }
-    
+
     function isLoggedIn() {
-        return computed(() => username.value !== 'John Doe' && username.value !== '---')
+        return computed(() => username.value !== 'John Doe' && username.value !== '');
     }
 
     function clearUserData() {
-        username.value = '---';
-        adminName.value = '---';
+        username.value = '';
+        adminName.value = '';
         isNewAdmin.value = false;
-        role.value = '---';
+        role.value = '';
     }
 
     function logout() {
@@ -269,25 +255,26 @@ export const useAuthStore = defineStore('auth', () => {
         const projectStore = useProjectsStore();
         projectStore.setProjects([]);
     }
-    
-    function isSuperAdmin() {
-        let user = username.value;
 
-        if(role.value == 3) {
-            return true;
-        } else {
-            return false;
-        }
+    function isSuperAdmin() {
+        return role.value == 3;
     }
 
     function getUserTeam() {
-        return userTeam.value
+        return userTeam.value;
     }
 
     function setUserTeam(t) {
         userTeam.value = t;
     }
 
+    function uppercaseName(name) {
+        let words = name.split(" ");
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i][0].toUpperCase() + words[i].substr(1).toLowerCase()
+        }
+        return words.join(" ");
+    }
 
     return {
         username,
@@ -305,7 +292,8 @@ export const useAuthStore = defineStore('auth', () => {
         logout,
         getUserTeam,
         setUserTeam,
-        isLoggedIn
-    }
-
-})
+        isLoggedIn,
+        checkPass,
+        updatePass,
+    };
+});

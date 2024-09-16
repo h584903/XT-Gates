@@ -51,18 +51,15 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     function maxTaskDuration(gateID) {
-        console.log("Calculating the duration of: " + gateID)
         let maxDuration = 0;
         const gateStore = useGatesStore();
         const filteredtasks = tasks.value.filter(task => Number(task.gateID) == Number(gateID))
 
-        console.log(filteredtasks)
         for (let i = 0;i < filteredtasks.length; i++) {
             if (filteredtasks[i].duration > maxDuration) {
                 maxDuration = filteredtasks[i].duration;
             }
         }
-        console.log(maxDuration);
         return maxDuration;
     }
 
@@ -148,14 +145,16 @@ export const useTasksStore = defineStore('tasks', () => {
     function inTime(taskID) {
         const gateStore = useGatesStore();
         let onTime = false;
-        let today = new Date();
+        let date = new Date();
         let duration = getTaskDuration(taskID);
         let progress = getTaskProgress(taskID);
         let remainderTime = duration - (duration * progress / 100);
-        let SF = new Date(today.getTime() + (remainderTime * 86400000));
+        date.setDate(date.getDate() + remainderTime);
         let PF = gateStore.getSFG(getGateID(taskID));
-
-        onTime = (PF >= SF.toISOString());
+        if (typeof(PF) == 'object') {
+            PF = PF.toISOString();
+        }
+        onTime = (PF >= date.toISOString());
 
         return onTime;
     }
@@ -181,20 +180,48 @@ export const useTasksStore = defineStore('tasks', () => {
     }
 
     function completedInTime(date, taskID) {
+        if (date == null)
+            return true
         const gateStore = useGatesStore();
-        let inTime = false;
 
         const task = tasks.value.find(task => task.ID === taskID);
 
         if (task) {
             const gateID = task.gateID;
-            const supposedDate = gateStore.getSFG(gateID);
-            if (date >= supposedDate) {
-                inTime = true;
+            let supposedDate = gateStore.getSFG(gateID);
+
+            if (typeof(supposedDate) == 'object') {
+                supposedDate = supposedDate.toISOString();
             }
+
+            if (date >= supposedDate) {
+                return false;
+            }
+        } else {
+            console.log("Found no task")
         }
 
-        return inTime;
+        return true;
+    }
+    async function updateCompletionDate(completedDate, taskID) {
+        try {
+            const response = await $fetch('/tasks/completeDate/' + taskID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskID: taskID,
+                    newDate: completedDate
+                })
+            });
+            const taskIndex = tasks.value.findIndex(t => t.ID === taskID);
+            if (taskIndex !== -1) {
+                tasks.value[taskIndex].completeDate = completedDate;
+            }
+        } catch (error) {
+            console.error('Error updating date', error);
+        }
     }
 
     async function updateDate(taskID) {
@@ -386,6 +413,7 @@ export const useTasksStore = defineStore('tasks', () => {
         updateTaskResponsiblePerson,
         updateTaskTitle,
         maxTaskWorkDuration,
-        setTasks
+        setTasks,
+        updateCompletionDate
     };
 });

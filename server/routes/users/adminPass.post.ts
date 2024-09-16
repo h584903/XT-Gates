@@ -1,5 +1,3 @@
-import jwt from "jsonwebtoken"
-
 export default defineEventHandler(async event => {
   try {
     const config = useRuntimeConfig()

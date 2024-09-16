@@ -6,6 +6,8 @@ export const useProjectsStore = defineStore('projects', () => {
     const projects = ref([]);
     const templateId = ref(null);
     const index = ref(0);
+    const managerProjects = ref([]);
+    const projectSorting = ref();
 
     function setProjects(newProjects) {
         projects.value = newProjects;
@@ -13,6 +15,10 @@ export const useProjectsStore = defineStore('projects', () => {
         if (templateProject) {
             templateId.value = templateProject.id;
         }
+    }
+
+    function setManagerProjects(newProjects) {
+        managerProjects.value = newProjects;
     }
 
     async function fetchNonArchivedProjects() {
@@ -38,6 +44,39 @@ export const useProjectsStore = defineStore('projects', () => {
 
             setProjects(projectsArray);
 
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
+    }
+
+    async function fetchAllProjects() {
+        const authStore = useAuthStore();
+
+        if (!authStore.isLoggedIn()) {
+            return null;
+        }
+
+        try {
+            const response = await $fetch('/projects', {
+                method: 'GET'
+            });
+            const data = response.data;
+            const projectsArray = Object.values(data).map(project => ({
+                id: project.ID,
+                title: project.title,
+                progress: project.progress,
+                onTimeDate: project.onTimeDate,
+                PEM: project.PEM,
+                comment: project.comment,
+                POdate: project.POdate,
+                SFdate: project.SFdate,
+                archive: project.archive,
+                gates: project.gates,
+                team: project.team,
+                template: project.template
+            }));
+
+            setManagerProjects(projectsArray);
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
@@ -72,6 +111,8 @@ export const useProjectsStore = defineStore('projects', () => {
             }));
 
             setProjects(projectsArray);
+            sortProjects();
+
         } catch (error) {
             console.error('Error fetching projects:', error);
         }
@@ -152,34 +193,35 @@ export const useProjectsStore = defineStore('projects', () => {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         if (today > newDate) {
-            return -diffDays;
+            return -diffDays+1;
         }
         return diffDays;
     }
 
+
     async function calculatePOFloat(projectID) {
         const project = projects.value.find(project => project.id === projectID);
         if (!project) return null;
-
+    
         // Fetch the PO date and work duration
         const poDate = new Date(project.POdate);
         const workDuration = await calculateWorkDuration(String(projectID));
-
+    
         if (workDuration === 0) {
             return 0;
         }
-
+    
         // Calculate the new date by subtracting the work duration (assuming workDuration is in days)
         const newDate = new Date(poDate);
         newDate.setDate(poDate.getDate() - workDuration);
         newDate.setHours(23, 59, 0, 0);
-
+    
         const today = new Date();
         const diffTime = Math.abs(newDate - today);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+    
         if (today > newDate) {
-            return -diffDays;
+            return -diffDays + 1;
         }
         return diffDays;
     }
@@ -218,7 +260,27 @@ export const useProjectsStore = defineStore('projects', () => {
         return filteredProjects.value;
     }
 
+    function getManagerProjects() {
+        return managerProjects.value;
+    }
+
     function sortProjects(comparator) {
+        if (comparator == undefined && projectSorting.value) {
+            projects.value.sort(projectSorting.value)
+            if (managerProjects.value.length > 0) {
+                managerProjects.value.sort(projectSorting.value)
+            }
+            return;
+        } else if (comparator == undefined) {
+            console.log("comparator is not undefined")
+            projects.value.sort((a, b) => false ? a['SFdate'] - b['SFdate'] : a['SFdate'].localeCompare(b['SFdate']))
+            if (managerProjects.value.length > 0) {
+                managerProjects.value.sort((a, b) => false ? a['SFdate'] - b['SFdate'] : a['SFdate'].localeCompare(b['SFdate']))
+            }
+            // Legg inn her hvis vi vil ha en "default" sortering
+            return;
+        }
+        projectSorting.value = comparator;
         projects.value.sort(comparator);
     }
 
@@ -268,7 +330,7 @@ export const useProjectsStore = defineStore('projects', () => {
             PEM: PEM,
             comment: comment,
             team: userTeam,
-            teamplate: false
+            template: false
         };
 
         const admin = useCookie('admin');
@@ -426,6 +488,7 @@ export const useProjectsStore = defineStore('projects', () => {
         templateId,
         project,
         projects,
+        managerProjects,
         getProjects,
         getProjectById,
         addProject,
@@ -446,6 +509,9 @@ export const useProjectsStore = defineStore('projects', () => {
         calculateFloat,
         calculatePOFloat,
         clearStore,
-        sortProjects
+        sortProjects,
+        fetchAllProjects,
+        getManagerProjects,
+        projectSorting
     };
 });

@@ -4,13 +4,10 @@ export default defineEventHandler(async event => {
     const body = await readBody(event);
     const { username } = body;
     // Querying the role
-    const result = await connectAndQuery(`SELECT role FROM [db_owner].[validUsers] WHERE username = '${username}'`)
+    const result = await connectAndQuery(`SELECT role, team FROM [db_owner].[validUsers] WHERE username = '${username}'`)
 
 
-    if (result.length > 0) {
-      newRole = result[0]; // Get the first row
-    } else {
-    }
+    newRole = result[0];
 
     // Returning only the first match for the name
     return (newRole)
@@ -20,7 +17,6 @@ export default defineEventHandler(async event => {
     return createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',
-      data: result,
     });
   }
 });

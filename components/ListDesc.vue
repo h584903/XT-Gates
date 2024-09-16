@@ -58,6 +58,8 @@ function sortProjects(field, isNumeric = false) {
     orderBy.value = field;
 }
 
+
+
 function sortByTitle() {
     sortProjects('title');
 }
@@ -124,7 +126,7 @@ function sortByProgress() {
 }
 .commentWrapper {
     margin: auto;
-    text-align: center;
+    text-align: left;
     width: 10%;
     cursor: pointer;
 }

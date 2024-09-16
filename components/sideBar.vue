@@ -1,11 +1,12 @@
 <template>
   <div class="sidebar"> <!-- listen over linker-->
-    <NuxtLink to="/projectList" class="hoverlink font">Dashboard</NuxtLink>
-    <NuxtLink to="/" class="hoverlink font">System</NuxtLink>
-    <NuxtLink to="/Archive" class="hoverlink font">Archive</NuxtLink>
-    <NuxtLink v-if="admin" to="/admin" class="hoverlink font">Admin</NuxtLink>
-    <div class ="font">Projects:</div>
+    <NuxtLink to="/projectList" class="hoverlink font Thin-Line">Dashboard</NuxtLink>
+    <div class ="font Thin-Line">My Projects:</div>
     <LinkList class="font"/> <!--Listen over aktive prosjekter-->
+    <NuxtLink to="/manager" class="hoverlink font Thin-Line">Escalated Projects</NuxtLink>
+    <NuxtLink to="/" class="hoverlink font Thin-Line">System</NuxtLink>
+    <NuxtLink to="/Archive" class="hoverlink font Thin-Line">Archive</NuxtLink>
+    <NuxtLink v-if="admin" to="/admin" class="hoverlink font Thin-Line">Admin</NuxtLink>
   </div>
 </template>
 
@@ -45,6 +46,22 @@ const admin = computed(() => authStore.isAdmin());
 .font{
     font-family: sans-serif;
     font-weight: 300;
+}
+.Thin-Line{
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+  position: relative; 
+  padding: 2px;
+}
+.Thin-Line::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ccc; /* Color of the line */
 }
 
 </style>

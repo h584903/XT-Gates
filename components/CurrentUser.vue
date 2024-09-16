@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label>User:</label>
+    <!-- <label>User:</label> -->
     <button :class="{ admin: isAdmin }" @click="toggleUsernameModal">{{ username }}</button>
 
     <ReusableModal @close="toggleUsernameModal" :modalActive="usernameModalActive">
@@ -16,16 +16,14 @@
       <div>
         <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
         <button @click="toggleUsernameModal">Cancel</button>
-        <button @click="clearUsername">Logout</button>
+        <button @click="clearUsername">Log Out</button>
       </div>
     </ReusableModal>
     <ReusableModal @close="toggleLoginModal" :modalActive="loginModalActive">
-      <div>Enter username:</div>
-      <input type="text" v-model="usernameInput" placeholder="Enter text" />
-      <div>Enter password:</div>
-      <input type="text" v-model="passwordInput" placeholder="Enter text" />
+      <div>Enter admin password:</div>
+      <input type="password" v-model="passwordInput" placeholder="Enter password" />
       <div>
-        <button @click="loginAuthentication">Login</button>
+        <button @click="loginAuthentication">Log In</button>
         <button @click="toggleLoginModal">Cancel</button>
       </div>
     </ReusableModal>
@@ -63,7 +61,9 @@ const usersStore = useUsersStore();
 const teamsStore = useTeamsStore();
 const userRequestsStore = useUserRequestsStore();
 const selectedTeam = ref(null);
-const username = computed(() => authStore.getUsername());
+const username = computed(() => {
+  return authStore.getUsername() === '' ? 'Log In' : authStore.getUsername();
+});
 const usernameInput = ref('');
 const passwordInput = ref('');
 const acceptCookies = ref(false);

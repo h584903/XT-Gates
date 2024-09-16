@@ -1,8 +1,12 @@
 <template>
   <header>
     <div class="wrapper">
+      <NuxtLink to="https://www.technipfmc.com/" target="_blank" rel="noopener">
       <Logo />
+      </NuxtLink>
+      <NuxtLink to="/projectList">
       <AppTitle/> 
+      </NuxtLink>
       <div class="user-controls">
       <TeamDropdown/>
       <CurrentUser />
