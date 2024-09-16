@@ -3,12 +3,12 @@ import { defineStore } from 'pinia';
 import { useCookie } from '#app';
 
 export const useAuthStore = defineStore('auth', () => {
-    const username = ref('---');
+    const username = ref('');
     const invalidUsername = ref(false);
     const userTeam = ref('1');
-    const adminName = ref('---');
+    const adminName = ref('');
     const isNewAdmin = ref(false);
-    const role = ref('---');
+    const role = ref('');
     const token = ref(null);
 
     function getUsername() {
@@ -240,14 +240,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     function isLoggedIn() {
-        return computed(() => username.value !== 'John Doe' && username.value !== '---');
+        return computed(() => username.value !== 'John Doe' && username.value !== '');
     }
 
     function clearUserData() {
-        username.value = '---';
-        adminName.value = '---';
+        username.value = '';
+        adminName.value = '';
         isNewAdmin.value = false;
-        role.value = '---';
+        role.value = '';
     }
 
     function logout() {
