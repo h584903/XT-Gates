@@ -16,6 +16,23 @@ export default defineEventHandler(async (event) => {
         data: 'Failed to retrieve records.',
       });
     }
+    try {
+        progressList = await connectAndQuery(
+            `SELECT p.ID, p.team, g.stage, AVG(t.progress) AS AverageProgress 
+            FROM [db_owner].[projectModel] p 
+            JOIN [db_owner].[gateModel] g ON p.ID = g.prosjektId 
+            JOIN [db_owner].[taskModel] t ON p.ID = t.prosjektID AND g.ID = t.gateID
+            WHERE p.team = 1
+            GROUP BY p.ID, p.team, g.stage;
+        `);
+    } catch (error) {
+      console.log(error)
+      return createError({
+        statusCode: 500,
+        statusMessage: 'Internal Server Error',
+        data: 'Failed to retrieve records.',
+      });
+    }
   
     // Organiserer dataen i prosjektet til et object
     projects.forEach(row => {
@@ -35,27 +52,6 @@ export default defineEventHandler(async (event) => {
           team: row.team,
           template: row.template
         };
-      }
-  
-      // If this row has a gate and we haven't seen this gate yet, initialize it
-      if (row.gateID && !organizedData[IDAsString].gates[row.gateID]) {
-        organizedData[IDAsString].gates[row.gateID] = {
-          gateID: row.gateID,
-          gateTitle: row.gateTitle,
-          tasks: []
-        };
-      }
-  
-      // If this row has a task, add it to the appropriate gate
-      if (row.gateID && row.step) {
-        organizedData[IDAsString].gates[row.gateID].tasks.push({
-          step: row.step,
-          title: row.title,
-          responsiblePerson: row.responsiblePerson,
-          onTimeDate: row.onTimeDate,
-          progress: row.progress,
-          duration: row.duration
-        });
       }
     });
   
