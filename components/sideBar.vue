@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar"> <!-- listen over linker-->
     <NuxtLink to="/projectList" class="hoverlink font Thin-Line">Dashboard</NuxtLink>
-    <div class ="font Thin-Line">My projects:</div>
+    <div class ="font Thin-Line">My Projects:</div>
     <LinkList class="font"/> <!--Listen over aktive prosjekter-->
     <NuxtLink to="/manager" class="hoverlink font Thin-Line">Escalated Projects</NuxtLink>
     <NuxtLink to="/" class="hoverlink font Thin-Line">System</NuxtLink>

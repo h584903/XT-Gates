@@ -16,14 +16,14 @@
       <div>
         <button @click="saveUsername" :disabled="!acceptCookies">Save</button>
         <button @click="toggleUsernameModal">Cancel</button>
-        <button @click="clearUsername">Logout</button>
+        <button @click="clearUsername">Log Out</button>
       </div>
     </ReusableModal>
     <ReusableModal @close="toggleLoginModal" :modalActive="loginModalActive">
       <div>Enter admin password:</div>
       <input type="password" v-model="passwordInput" placeholder="Enter password" />
       <div>
-        <button @click="loginAuthentication">Login</button>
+        <button @click="loginAuthentication">Log In</button>
         <button @click="toggleLoginModal">Cancel</button>
       </div>
     </ReusableModal>
@@ -62,7 +62,7 @@ const teamsStore = useTeamsStore();
 const userRequestsStore = useUserRequestsStore();
 const selectedTeam = ref(null);
 const username = computed(() => {
-  return authStore.getUsername() === '' ? 'log in' : authStore.getUsername();
+  return authStore.getUsername() === '' ? 'Log In' : authStore.getUsername();
 });
 const usernameInput = ref('');
 const passwordInput = ref('');
