@@ -62,7 +62,7 @@ const teamsStore = useTeamsStore();
 const userRequestsStore = useUserRequestsStore();
 const selectedTeam = ref(null);
 const username = computed(() => {
-  return authStore.getUsername() === '' ? 'Login' : authStore.getUsername();
+  return authStore.getUsername() === '' ? 'log in' : authStore.getUsername();
 });
 const usernameInput = ref('');
 const passwordInput = ref('');
