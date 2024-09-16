@@ -18,6 +18,14 @@ export default defineEventHandler(async (event) => {
             DELETE FROM db_owner.user_teams WHERE id = ${id};
         `);
 
+        const result2 = await connectAndQuery(`
+            update [db_owner].[validUsers] set team = 0 where team = ${id};
+        `);
+
+        const result3 = await connectAndQuery(`
+            update [db_owner].[projectModel] set team = 0 where team = ${id};
+        `);
+
 
         return { deleted: true };
     } catch (error) {

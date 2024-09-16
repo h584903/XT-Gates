@@ -10,7 +10,7 @@ const dbConfig = {
             }
         },
         options: {
-            encrypt: runtimeConfig.dbEncrypt == "true",
+            encrypt: true,
             database: runtimeConfig.dbName,
             port: parseInt(runtimeConfig.dbPort as string, 10),
         }
