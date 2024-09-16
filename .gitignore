@@ -5,6 +5,7 @@
 .nitro
 .cache
 dist
+server/utils/dbConfig.ts
 
 # Node dependencies
 node_modules
