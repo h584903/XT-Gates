@@ -30,7 +30,7 @@ JOIN taskModel t ON p.ID = t.prosjektID AND g.ID = t.gateID
 GROUP BY p.ID, g.stage;
 
 
-The select statement
+# The select statement
 SELECT p.ID, p.team, g.stage, AVG(t.progress) AS AverageProgress 
 FROM [db_owner].[projectModel] p 
 JOIN [db_owner].[gateModel] g ON p.ID = g.prosjektId 
