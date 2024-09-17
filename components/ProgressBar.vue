@@ -1,11 +1,19 @@
 <template>
-  <div v-if="hasProgress" class="progress-container">
-    <div class="progress-bar preparation">
-      <div class="filled-bar" :style="{ width: (progressNumber[0] || 0) + '%' }"></div>
+  <div v-if="hasProgress">
+    <!-- Check if it's an array, render two progress bars -->
+    <div v-if="isArray" class="progress-container">
+      <div class="progress-bar preparation">
+        <div class="filled-bar" :style="{ width: (progressNumber[0] || 0) + '%' }"></div>
+      </div>
+
+      <div class="progress-bar delivery">
+        <div class="filled-bar" :style="{ width: (progressNumber[1] || 0) + '%' }"></div>
+      </div>
     </div>
 
-    <div class="progress-bar delivery">
-      <div class="filled-bar" :style="{ width: (progressNumber[1] || 0) + '%' }"></div>
+    <!-- If it's a single value, render one progress bar -->
+    <div v-else class="progress-bar single">
+      <div class="filled-bar" :style="{ width: progressNumber + '%' }"></div>
     </div>
   </div>
 
@@ -18,17 +26,22 @@
 export default {
   props: {
     progressNumber: {
-      type: Array,
+      type: [Array, Number], // Accept either an array or a number
       default: () => [],
     },
   },
-  setup(props) {
-    const hasProgress = props.progressNumber && Array.isArray(props.progressNumber) && props.progressNumber.length > 0;
-
-    return {
-      hasProgress,
-      progressNumber: props.progressNumber,
-    };
+  computed: {
+    // Determine if progressNumber is an array
+    isArray() {
+      return Array.isArray(this.progressNumber);
+    },
+    // Determine if there is progress data
+    hasProgress() {
+      return (
+        (this.isArray && this.progressNumber.length > 0) ||
+        (!this.isArray && this.progressNumber >= 0)
+      );
+    },
   },
 };
 </script>
@@ -36,7 +49,7 @@ export default {
 <style scoped>
 .progress-container {
   display: flex;
-  gap: 20px; /* Adjust the gap between the two bars */
+  gap: 20px; /* Space between the bars */
 }
 
 .progress-bar {
@@ -44,7 +57,7 @@ export default {
   background-color: #e0e0e0;
   height: 20px;
   border-radius: 5px;
-  border: 1px solid #b0b0b0; /* Subtle outline */
+  border: 1px solid #b0b0b0; /* Outline */
   overflow: hidden;
   position: relative;
 }
@@ -54,12 +67,18 @@ export default {
   border-radius: 5px;
 }
 
-/* Separate colors for each bar */
+/* Preparation phase color */
 .preparation .filled-bar {
-  background-color: #76c7c0; /* Color for Preparation Phase */
+  background-color: #76c7c0;
 }
 
+/* Delivery phase color */
 .delivery .filled-bar {
-  background-color: #f4a261; /* Color for Delivery Phase */
+  background-color: #f4a261;
+}
+
+/* Single progress bar color */
+.single .filled-bar {
+  background-color: #76c7c0;
 }
 </style>
