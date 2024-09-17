@@ -88,7 +88,6 @@ ORDER BY p.ID, stage;`);
     }
   });
 
-
   return {
     hello: 'world',
     data: organizedData
