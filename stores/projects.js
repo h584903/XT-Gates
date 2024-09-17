@@ -86,6 +86,8 @@ export const useProjectsStore = defineStore('projects', () => {
         const authStore = useAuthStore();
         const userTeam = authStore.getUserTeam();
 
+        console.log("Fetching projects..")
+
         if (!authStore.isLoggedIn()) {
             return null;
         }
