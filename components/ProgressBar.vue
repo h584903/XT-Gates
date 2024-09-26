@@ -33,6 +33,10 @@ export default {
   computed: {
     // Determine if progressNumber is an array
     isArray() {
+      console.log(this.progressNumber)
+      if (Array.isArray(this.progressNumber) && this.progressNumber.length == 1) {
+        return false;
+      }
       return Array.isArray(this.progressNumber);
     },
     // Determine if there is progress data
