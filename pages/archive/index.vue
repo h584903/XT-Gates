@@ -1,7 +1,7 @@
 <template>
   <div>
     <u>
-      <h1>ARCHIVED PROJECTS</h1>
+      <h1>ARCHIVED PROJECTS - {{ teamName }}</h1>
     </u>
     <div class="list-wrapper">
       <ListDesc />
@@ -27,6 +27,13 @@ import { useProjectsStore } from '@/stores/projects';
 
 const store = useProjectsStore();
 const projects = ref(store.getProjects());
+const authStore = useAuthStore();
+const teamStore = useTeamsStore();
+
+const teamName = computed(() => {
+  const userTeam = authStore.getUserTeam();
+  return teamStore.getTeamName(userTeam) || 'Default';
+});
 
 const currentPage = ref(1);
 const projectsPerPage = 15;
