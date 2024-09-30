@@ -7,6 +7,12 @@
   <template #item="{ element, index }">
     <div :key="element.ID">
       <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" :responsiblePerson="element.responsiblePerson || ''" :plannedDate="element.plannedDate" :daysToEnd="element.daysToEnd"/>
+      
+      <div v-if="index < gates.length - 1 && element.stage === 0 && gates[index + 1].stage === 1">
+        <h2 class="h1">Delivery Phase</h2>  
+        <hr class="solid"/>
+        </div>
+      
       <div v-if="!admin" class="gate-divider cursorDefault"></div>
       <div
         v-else-if="index < gates.length - 1"
@@ -163,6 +169,12 @@ hr.solid {
 .descWrapper {
   width: 92%;
   margin: auto;
+}
+
+.h1 {
+  padding-left: 1%;
+  margin-top: 2%;
+  margin-bottom: 0%;
 }
 
 </style>

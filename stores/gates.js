@@ -7,7 +7,7 @@ export const useGatesStore = defineStore('gates', () => {
     // Vanlig Ref
     const gates = ref([]);
 
-    function calculateDate() {
+    async function calculateDate() {
         const projectStore = useProjectsStore();
         const taskStore = useTasksStore();
 
@@ -65,7 +65,8 @@ export const useGatesStore = defineStore('gates', () => {
                 plannedDate: "1000-07-07",
                 completionDate: "1000-07-07",
                 daysToEnd: 0,
-                progress: gate.progress
+                progress: gate.progress,
+                stage: gate.stage
             }));
 
             setGates(gateArray);
@@ -288,18 +289,17 @@ export const useGatesStore = defineStore('gates', () => {
 
 
     function calculateDaysToEnd(plannedDate) {
-        
         // Parse the plannedDate and normalize to start of the day
         let date = new Date(plannedDate);
         date.setHours(0, 0, 0, 0); // Set to start of the day
-        
+
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Set to start of the day
-    
+
         // Calculate the difference in milliseconds and convert to days
         var differenceInMs = date.getTime() - today.getTime();
         let daysLeft = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
-    
+
         // Add 1 if the target date is in the future
         if (differenceInMs > 0) {
             daysLeft += 1;
