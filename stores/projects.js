@@ -86,6 +86,8 @@ export const useProjectsStore = defineStore('projects', () => {
         const authStore = useAuthStore();
         const userTeam = authStore.getUserTeam();
 
+        console.log("Fetching projects..")
+
         if (!authStore.isLoggedIn()) {
             return null;
         }
@@ -297,7 +299,11 @@ export const useProjectsStore = defineStore('projects', () => {
     }
 
     function getProjectById(projectId) {
-        return projects.value.find(project => project.id === projectId);
+        if (projects.value.find(project => project.id === projectId)) {
+            return projects.value.find(project => project.id === projectId);
+        } else {
+            return managerProjects.value.find(project => project.id === projectId)
+        }
     }
 
     function getSFDate(projectID) {

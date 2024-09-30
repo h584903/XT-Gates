@@ -59,7 +59,7 @@ const filteredProjects = computed(() => {
         const isOnTimeDatePassed = onTimeDate < today;
         const isSfDateMoreThan30DaysAfterPo = (sfDate - poDate) / (1000 * 60 * 60 * 24) > 30;
 
-        return !project.archive && !project.template && progress < 100 &&
+        return !project.archive && !project.template &&
             (isPoDatePassed || isOnTimeDatePassed || isSfDateMoreThan30DaysAfterPo);
     });
 });

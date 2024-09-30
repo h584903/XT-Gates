@@ -105,6 +105,7 @@ projects.value = store.getProjects();
 const modalActive = ref(false);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
+  console.log(projects.value)
 };
 
 const prevPage = () => {
