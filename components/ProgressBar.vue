@@ -73,12 +73,12 @@ export default {
 
 /* Preparation phase color */
 .preparation .filled-bar {
-  background-color: #76c7c0;
+  background-color: #00a3e0;
 }
 
 /* Delivery phase color */
 .delivery .filled-bar {
-  background-color: #f4a261;
+  background-color: #512d6d;
 }
 
 /* Single progress bar color */
