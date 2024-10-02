@@ -85,35 +85,40 @@
       <ReusableModal @close="toggleSettingsModal" :modalActive="settingsModalActive" v-if="admin">
         <h1>Project Settings</h1>
 
-      <!-- Label showing the amount of stages -->
-      <div class="stages-count">
-        <label>Amount of project stages: {{ stages.length + 1 }}</label>
-      </div>
-
-      <div v-if="stages.length != 0" class="form-group">Stage 1 start gate: 1</div>
-
-      <!-- Form for stage gates -->
-      <form @submit.prevent="submitStages">
-        <div class="form-group" v-for="(stage, index) in stages" :key="index">
-          <label :for="'stageStart-' + (index + 2)">
-            Stage {{ index + 2 }} start gate:
-          </label>
-          <input
-            type="number"
-            :id="'stageStart-' + (index + 2)"
-            v-model="stages[index]"
-            min="0"
-            required
-          />
-          <button type="button" @click="removeStage(index)" class="removeButton">-</button>
+        <!-- Label showing the amount of stages -->
+        <div class="stages-count">
+          <label>Amount of project stages: {{ stages.length + 1 }}</label>
         </div>
 
-        <!-- Button to add another stage -->
-        <button type="button" @click="addStage" class="customButton addButton">+</button>
 
-        <!-- Submit button -->
-        <button type="submit" class="customButton submitButton">Submit stages</button>
-      </form>
+        <!-- Hide the form if edit stages is unpressed -->
+        <div v-if="editStages">
+
+          <div v-if="stages.length != 0" class="form-group">Stage 1 start gate: 1</div>
+
+          <!-- Form for stage gates -->
+          <form @submit.prevent="submitStages">
+            <div class="form-group" v-for="(stage, index) in stages" :key="index">
+              <label :for="'stageStart-' + (index + 2)">
+                Stage {{ index + 2 }} start gate:
+              </label>
+              <input type="number" :id="'stageStart-' + (index + 2)" v-model="stages[index]" min="0" required />
+              <button type="button" @click="removeStage(index)" class="removeButton">-</button>
+            </div>
+
+            <!-- Button to add another stage -->
+            <button type="button" @click="addStage" class="customButton addButton">+</button>
+
+            <!-- Submit button -->
+            <button type="submit" class="customButton submitButton">Submit stages</button>
+          </form>
+        </div>
+
+        <div class="button-container">
+        <button v-if="!editStages" @click="toggleEditStages" type="button" class="customButton archiveButton">Edit Stages</button>
+        <button v-else @click="toggleEditStages" type="button" class="customButton">Cancel</button>
+      </div>
+      <div class="separator-line"></div>
 
         <div class="button-container">
           <div v-if="!project.archive">
@@ -152,7 +157,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useProjectsStore } from '@/stores/projects';
 import { useGatesStore } from '@/stores/gates';
 import { useTasksStore } from '@/stores/tasks';
-import { ref, computed, watch, onMounted } from 'vue';
+import { computed, watch, onMounted } from 'vue';
 
 const store = useProjectsStore();
 const gateStore = useGatesStore();
@@ -174,6 +179,7 @@ const float = ref(0);
 const poFloat = ref(0);
 const daysToPO = computed(() => calculateDaysToPO());
 const admin = computed(() => authStore.isAdmin());
+const editStages = ref(false);
 
 const enableEditTitleMode = () => {
   editTitleMode.value = true;
@@ -306,6 +312,10 @@ const toggleModal = () => {
   settingsModalActive.value = false;
   modalActive.value = !modalActive.value;
 };
+
+const toggleEditStages = () => {
+  editStages.value = !editStages.value;
+}
 
 const settingsModalActive = ref(false);
 const toggleSettingsModal = () => {
@@ -600,21 +610,25 @@ h1 {
 
 .addButton {
   margin-top: 10px;
-  background-color: #4caf50; /* Green background */
+  background-color: #4caf50;
+  /* Green background */
   display: block;
 }
 
 .submitButton {
   margin-top: 10px;
-  background-color: #2196f3; /* Blue background */
+  background-color: #2196f3;
+  /* Blue background */
 }
 
 .addButton:hover {
-  background-color: #388e3c; /* Darker green on hover */
+  background-color: #388e3c;
+  /* Darker green on hover */
 }
 
 .submitButton:hover {
-  background-color: #1976d2; /* Darker blue on hover */
+  background-color: #1976d2;
+  /* Darker blue on hover */
 }
 
 .allWrapper {
@@ -623,6 +637,7 @@ h1 {
 
 .stages-count {
   margin-bottom: 10px;
+  margin-top: 10px;
   font-weight: bold;
 }
 
@@ -633,7 +648,8 @@ h1 {
 
 .addButton {
   margin-top: 10px;
-  background-color: #4caf50; /* Green background */
+  background-color: #4caf50;
+  /* Green background */
   color: white;
   padding: 5px 10px;
   border: none;
@@ -643,7 +659,8 @@ h1 {
 
 .removeButton {
   margin-left: 10px;
-  background-color: #f44336; /* Red background */
+  background-color: #f44336;
+  /* Red background */
   color: white;
   padding: 5px 10px;
   border: none;
@@ -652,16 +669,19 @@ h1 {
 }
 
 .addButton:hover {
-  background-color: #388e3c; /* Darker green on hover */
+  background-color: #388e3c;
+  /* Darker green on hover */
 }
 
 .removeButton:hover {
-  background-color: #d32f2f; /* Darker red on hover */
+  background-color: #d32f2f;
+  /* Darker red on hover */
 }
 
 .submitButton {
   margin-top: 15px;
-  background-color: #2196f3; /* Blue background */
+  background-color: #2196f3;
+  /* Blue background */
   color: white;
   padding: 10px 15px;
   border: none;
@@ -670,12 +690,14 @@ h1 {
 }
 
 .submitButton:hover {
-  background-color: #1976d2; /* Darker blue on hover */
+  background-color: #1976d2;
+  /* Darker blue on hover */
 }
 
 .settingsButton {
   margin-top: 10px;
-  background-color: #607d8b; /* Greyish background */
+  background-color: #607d8b;
+  /* Greyish background */
   color: white;
   padding: 10px 15px;
   border: none;
@@ -684,11 +706,12 @@ h1 {
 }
 
 .settingsButton:hover {
-  background-color: #455a64; /* Darker grey on hover */
+  background-color: #455a64;
+  /* Darker grey on hover */
 }
 
 .button-container {
-  margin-top: 20px;
+  margin-top: 0px;
   text-align: right;
 }
 </style>
