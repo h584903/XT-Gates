@@ -13,7 +13,7 @@
           <div class="info-item">
             <label>PO Date:</label>
             <div v-if="!admin">
-              <DateEntry :dateString=project.POdate />
+              <DateEntry :dateString="project.POdate" />
             </div>
             <div v-else-if="editPODateMode">
               <input type="date" v-model="editedPODate" @blur="updatePODate" @keyup.enter="updatePODate"
@@ -21,13 +21,13 @@
               <button @click="cancelEdit">Cancel</button>
             </div>
             <div v-else @click="enableEditPODateMode">
-              <DateEntry :dateString=project.POdate />
+              <DateEntry :dateString="project.POdate" />
             </div>
           </div>
           <div class="info-item">
             <label>Scheduled finish:</label>
             <div v-if="!admin">
-              <DateEntry :dateString=project.SFdate />
+              <DateEntry :dateString="project.SFdate" />
             </div>
             <div v-else-if="editSFDateMode">
               <input type="date" v-model="editedSFDate" @blur="updateSFDate" @keyup.enter="updateSFDate"
@@ -35,7 +35,7 @@
               <button @click="cancelEdit">Cancel</button>
             </div>
             <div v-else @click="enableEditSFDateMode">
-              <DateEntry :dateString=project.SFdate />
+              <DateEntry :dateString="project.SFdate" />
             </div>
           </div>
           <div class="info-item">
@@ -82,16 +82,61 @@
           <button @click="toggleModal" class="cancelButton">No</button>
         </ReusableModal>
       </div>
-      <div class="button-container">
-        <button v-if="admin" @click="toggleModal" type="button" class="customButton deleteColor">Delete project</button>
-        <div v-if="!project.archive">
-          <button v-if="admin" @click="archiveProjectHandler" type="button" class="customButton archiveButton">Archive
+      <ReusableModal @close="toggleSettingsModal" :modalActive="settingsModalActive" v-if="admin">
+        <h1>Project Settings</h1>
+
+      <!-- Label showing the amount of stages -->
+      <div class="stages-count">
+        <label>Amount of project stages: {{ stages.length + 1 }}</label>
+      </div>
+
+      <div v-if="stages.length != 0" class="form-group">Stage 1 start gate: 1</div>
+
+      <!-- Form for stage gates -->
+      <form @submit.prevent="submitStages">
+        <div class="form-group" v-for="(stage, index) in stages" :key="index">
+          <label :for="'stageStart-' + (index + 2)">
+            Stage {{ index + 2 }} start gate:
+          </label>
+          <input
+            type="number"
+            :id="'stageStart-' + (index + 2)"
+            v-model="stages[index]"
+            min="0"
+            required
+          />
+          <button type="button" @click="removeStage(index)" class="removeButton">-</button>
+        </div>
+
+        <!-- Button to add another stage -->
+        <button type="button" @click="addStage" class="customButton addButton">+</button>
+
+        <!-- Submit button -->
+        <button type="submit" class="customButton submitButton">Submit stages</button>
+      </form>
+
+        <div class="button-container">
+          <div v-if="!project.archive">
+            <button v-if="admin" @click="archiveProjectHandler" type="button" class="customButton archiveButton">
+              Archive project
+            </button>
+          </div>
+          <div v-else>
+            <button v-if="admin" @click="archiveProjectHandler" type="button"
+              class="customButton archiveButton">Reactivate project</button>
+          </div>
+          <button v-if="admin" @click="toggleModal" type="button" class="customButton deleteColor">Delete
             project</button>
+          <div class="separator-line"></div>
+          <div class="button-container">
+            <button @click="toggleSettingsModal" class="customButton settingsButton">Close</button>
+          </div>
         </div>
-        <div v-else>
-          <button v-if="admin" @click="archiveProjectHandler" type="button"
-            class="customButton archiveButton">Reactivate project</button>
-        </div>
+      </ReusableModal>
+      <div class="button-container">
+        <button v-if="admin" @click="toggleSettingsModal" type="button" class="customButton settingsButton">
+          Project Settings
+        </button>
       </div>
     </div>
     <div v-else>
@@ -100,9 +145,6 @@
     </div>
   </div>
 </template>
-
-
-
 
 <script setup>
 import ReusableModal from '~/components/ReusableModal.vue';
@@ -136,7 +178,7 @@ const admin = computed(() => authStore.isAdmin());
 const enableEditTitleMode = () => {
   editTitleMode.value = true;
   editedTitle.value = project.value.title;
-}
+};
 
 const updateTitle = async () => {
   if (editedTitle.value)
@@ -148,13 +190,13 @@ const updateTitle = async () => {
     } finally {
       editTitleMode.value = false;
     }
-}
+};
 
 const enableEditPODateMode = () => {
   editPODateMode.value = true;
   editSFDateMode.value = false;
   editPEM_Mode.value = false;
-}
+};
 
 function updatePODate() {
   try {
@@ -170,7 +212,7 @@ const enableEditSFDateMode = () => {
   editSFDateMode.value = true;
   editPODateMode.value = false;
   editPEM_Mode.value = false;
-}
+};
 
 function updateSFDate() {
   try {
@@ -187,7 +229,7 @@ const enableEditPEM_Mode = () => {
   editPEM_Mode.value = true;
   editPODateMode.value = false;
   editSFDateMode.value = false;
-}
+};
 
 function updatePEM() {
   try {
@@ -237,25 +279,55 @@ onMounted(async () => {
   await updateFloat();
 });
 
+// Stage management
+const stages = ref([]);
+
+
+// Function to add a new stage
+const addStage = () => {
+  stages.value.push(0); // Adds a stage with a default value of 0
+};
+
+// Function to remove a stage
+const removeStage = (index) => {
+  if (stages.value.length > 0) {
+    stages.value.splice(index, 1); // Removes the stage at the specified index
+  }
+};
+
+// Submit form logic
+const submitStages = () => {
+  console.log('Submitted stages:', stages.value);
+  // Further submission handling can be added here
+};
+
 const modalActive = ref(false);
 const toggleModal = () => {
+  settingsModalActive.value = false;
   modalActive.value = !modalActive.value;
-}
+};
 
-const deleteProjectHandler = () => {
-  store.deleteProject(project.value.id);
-  toggleModal();
-  router.push('/projectlist');
-}
+const settingsModalActive = ref(false);
+const toggleSettingsModal = () => {
+  settingsModalActive.value = !settingsModalActive.value;
+};
 
-const archiveProjectHandler = async () => {
+function deleteProjectHandler() {
   try {
-    await store.archiveProject(project.value.id);
+    store.deleteProject(project.value.id);
+    router.push('/projectList');
+  } catch (error) {
+    console.error('Failed to delete project:', error);
+  }
+}
+
+function archiveProjectHandler() {
+  try {
+    store.archiveProject(project.value.id);
   } catch (error) {
     console.error('Failed to archive the project:', error);
   }
 }
-
 const displayedPEM = computed(() => {
   if (!project.value || !project.value.PEM || !project.value.PEM.trim()) {
     return "No PEM";
@@ -354,6 +426,7 @@ h1 {
   position: relative;
   width: 100%;
 }
+
 .title-wrapper.edit-mode {
   border: 2px solid #007bff;
   padding: 4px;
@@ -375,9 +448,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
-  /* Reduced gap */
   padding: 8px;
-  /* Reduced padding */
   background-color: #f9f9f9;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -388,19 +459,11 @@ h1 {
   flex-direction: column;
   align-items: flex-start;
   font-size: 0.9rem;
-  /* Reduced font size */
 }
 
 .info-item label {
   font-weight: bold;
   font-size: 0.85rem;
-  /* Reduced label font size */
-}
-
-.info-item div,
-.info-item span {
-  margin-top: 3px;
-  /* Reduced margin */
 }
 
 .negative-float {
@@ -417,73 +480,215 @@ h1 {
   justify-content: flex-end;
 }
 
+/* Sleek, Uniform Button Styles */
 .customButton {
-  margin: 8px;
-  /* Reduced margin */
-  padding: 8px 16px;
-  /* Reduced padding */
-  border: none;
-  border-radius: 5px;
+  margin: 0px 0;
+  padding: 6px 12px;
+  border: 1px solid #009688;
+  /* Turquoise border */
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
+  background-color: #4db6ac;
+  /* Light turquoise */
   color: #fff;
-  font-size: 0.9rem;
-  /* Reduced font size */
+  /* White text */
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s;
 }
 
-.deleteColor {
-  background-color: rgb(255, 140, 140);
+.customButton:hover {
+  background-color: #26a69a;
+  /* Darker turquoise on hover */
+  color: #fff;
 }
 
-.deleteButton {
-  margin: 8px;
-  /* Reduced margin */
-  padding: 8px 16px;
-  /* Reduced padding */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #000000;
-  background-color: #ffdada;
-  font-size: 0.9rem;
-  /* Reduced font size */
+.customButton:active {
+  transform: scale(0.98);
+  background-color: #00796b;
+  /* Dark turquoise on active */
 }
 
-.archiveButton {
-  background-color: #4caf50;
-}
-
+/* Stacked Modal Button Styles */
+.deleteColor,
+.archiveButton,
 .cancelButton {
-  margin: 8px;
-  /* Reduced margin */
-  padding: 16px 32px;
-  /* Reduced padding */
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+  border-color: #009688;
+  /* Turquoise border */
+  background-color: #4db6ac;
+  /* Light turquoise */
   color: #fff;
-  background-color: #00a2ff;
-  font-size: 0.9rem;
-  /* Reduced font size */
+  /* White text */
+}
+
+.deleteColor:hover,
+.archiveButton:hover,
+.cancelButton:hover {
+  background-color: #26a69a;
+  /* Darker turquoise on hover */
+}
+
+/* Settings button styles */
+.settingsButton {
+  border-color: #009688;
+  /* Turquoise border */
+  background-color: #4db6ac;
+  /* Light turquoise */
+  color: #fff;
+  /* White text */
+}
+
+.settingsButton:hover {
+  background-color: #26a69a;
+  /* Darker turquoise on hover */
+}
+
+/* Stacked Buttons inside Modal */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.button-container button {
+  margin-top: 10px;
+  width: auto;
+}
+
+/* Archive Button Styles */
+.archiveButton {
+  border-color: #ccc;
+  /* Grey border */
+  background-color: #f0f0f0;
+  /* Grey background */
+  color: #333;
+  /* Dark text */
+}
+
+.archiveButton:hover {
+  background-color: #e0e0e0;
+  /* Darker grey on hover */
+}
+
+/* Delete Button Styles */
+.deleteColor {
+  border-color: #d9534f;
+  /* Red border */
+  background-color: #f44336;
+  /* Slight red background */
+  color: #fff;
+  /* White text */
+}
+
+/* Separator line between the buttons */
+.separator-line {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  /* Light grey separator */
+  margin: 15px 0;
+  /* Adds space above and below the line */
+}
+
+/* Hover state for delete button */
+.deleteColor:hover {
+  background-color: #d32f2f;
+  /* Darker red on hover */
+}
+
+
+.addButton {
+  margin-top: 10px;
+  background-color: #4caf50; /* Green background */
+  display: block;
+}
+
+.submitButton {
+  margin-top: 10px;
+  background-color: #2196f3; /* Blue background */
+}
+
+.addButton:hover {
+  background-color: #388e3c; /* Darker green on hover */
+}
+
+.submitButton:hover {
+  background-color: #1976d2; /* Darker blue on hover */
+}
+
+.allWrapper {
+  padding: 20px;
+}
+
+.stages-count {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.addButton {
+  margin-top: 10px;
+  background-color: #4caf50; /* Green background */
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.removeButton {
+  margin-left: 10px;
+  background-color: #f44336; /* Red background */
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.addButton:hover {
+  background-color: #388e3c; /* Darker green on hover */
+}
+
+.removeButton:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}
+
+.submitButton {
+  margin-top: 15px;
+  background-color: #2196f3; /* Blue background */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.submitButton:hover {
+  background-color: #1976d2; /* Darker blue on hover */
+}
+
+.settingsButton {
+  margin-top: 10px;
+  background-color: #607d8b; /* Greyish background */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.settingsButton:hover {
+  background-color: #455a64; /* Darker grey on hover */
 }
 
 .button-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-  /* Reduced margin */
-}
-
-textarea {
-  width: 100%;
-  min-height: 70px;
-  /* Reduced height */
-  resize: vertical;
-  padding: 6px;
-  /* Reduced padding */
-  font-size: 0.9rem;
-  /* Reduced font size */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  margin-top: 20px;
+  text-align: right;
 }
 </style>
