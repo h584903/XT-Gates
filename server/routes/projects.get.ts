@@ -19,13 +19,14 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    progressList = await connectAndQuery(
-      `SELECT p.ID, g.stage, AVG(t.progress) AS AverageProgress 
-FROM [db_owner].[projectModel] p 
-JOIN [db_owner].[gateModel] g ON p.ID = g.prosjektId 
-JOIN [db_owner].[taskModel] t ON p.ID = t.prosjektID AND g.ID = t.gateID
-GROUP BY p.ID, g.stage
-ORDER BY p.ID, stage;`);
+    progressList = await connectAndQuery(`
+      SELECT p.ID, g.stage, AVG(t.progress) AS AverageProgress 
+      FROM [db_owner].[projectModel] p 
+      JOIN [db_owner].[gateModel] g ON p.ID = g.prosjektId 
+      JOIN [db_owner].[taskModel] t ON p.ID = t.prosjektID AND g.ID = t.gateID
+      GROUP BY p.ID, g.stage
+      ORDER BY p.ID, stage;
+    `);
   } catch (error) {
     console.log(error)
     return createError({
@@ -78,7 +79,7 @@ ORDER BY p.ID, stage;`);
     }
   });
 
-  
+
   // Add stage-based progress to each project
   progressList.forEach(progressRow => {
     const IDAsString = String(progressRow.ID);

@@ -3,6 +3,7 @@ export default defineEventHandler(async (event) => {
 
   let projects;
   let progressList;
+  let stageList;
   let organizedData = {};
 
   try {
@@ -18,14 +19,30 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    progressList = await connectAndQuery(
-      `SELECT p.ID, p.team, g.stage, AVG(t.progress) AS AverageProgress 
-FROM [db_owner].[projectModel] p 
-JOIN [db_owner].[gateModel] g ON p.ID = g.prosjektId 
-JOIN [db_owner].[taskModel] t ON p.ID = t.prosjektID AND g.ID = t.gateID
-WHERE p.team = ${team}
-GROUP BY p.ID, p.team, g.stage
-ORDER BY p.ID, stage;`);
+    progressList = await connectAndQuery(`
+      SELECT p.ID, p.team, g.stage, AVG(t.progress) AS AverageProgress 
+      FROM [db_owner].[projectModel] p 
+      JOIN [db_owner].[gateModel] g ON p.ID = g.prosjektId 
+      JOIN [db_owner].[taskModel] t ON p.ID = t.prosjektID AND g.ID = t.gateID
+      WHERE p.team = ${team}
+      GROUP BY p.ID, p.team, g.stage
+      ORDER BY p.ID, stage;
+  `);
+  } catch (error) {
+    console.log(error)
+    return createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      data: 'Failed to retrieve records.',
+    });
+  }
+  try {
+    stageList = await connectAndQuery(`
+      SELECT ID, divider
+      FROM dbo.gatedivider AS gd
+      JOIN db_owner.projectModel AS pm ON gd.prosjektID = pm.ID
+      WHERE pm.team = ${team};
+  `);
   } catch (error) {
     console.log(error)
     return createError({
@@ -44,6 +61,7 @@ ORDER BY p.ID, stage;`);
         ID: IDAsString,
         title: row.title,
         progress: [], // Initialize progress as an array to store stage-based progress
+        dividers: [], // Initialize progress as an array to store stage-based progress
         onTimeDate: row.onTimeDate,
         PEM: row.PEM,
         comment: row.COMMENT,
@@ -55,27 +73,6 @@ ORDER BY p.ID, stage;`);
         template: row.template
       };
     }
-
-    // If this row has a gate and we haven't seen this gate yet, initialize it
-    if (row.gateID && !organizedData[IDAsString].gates[row.gateID]) {
-      organizedData[IDAsString].gates[row.gateID] = {
-        gateID: row.gateID,
-        gateTitle: row.gateTitle,
-        tasks: []
-      };
-    }
-
-    // If this row has a task, add it to the appropriate gate
-    if (row.gateID && row.step) {
-      organizedData[IDAsString].gates[row.gateID].tasks.push({
-        step: row.step,
-        title: row.title,
-        responsiblePerson: row.responsiblePerson,
-        onTimeDate: row.onTimeDate,
-        progress: row.progress,
-        duration: row.duration
-      });
-    }
   });
 
   // Add stage-based progress to each project
@@ -84,6 +81,14 @@ ORDER BY p.ID, stage;`);
     if (organizedData[IDAsString]) {
       organizedData[IDAsString].progress.push(
         progressRow.AverageProgress
+      );
+    }
+  });
+  stageList.forEach(stageRow => {
+    const IDAsString = String(stageRow.ID);
+    if (organizedData[IDAsString]) {
+      organizedData[IDAsString].dividers.push(
+        stageRow.divider
       );
     }
   });

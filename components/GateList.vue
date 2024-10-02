@@ -6,12 +6,13 @@
   <draggable class="gatelist" v-model="gates" @end="onEndDrag" group="gates" item-key="ID" handle=".handle" animation="300"> 
   <template #item="{ element, index }">
     <div :key="element.ID">
+      <div v-if="dividers.includes(element.gateNR)" class="divider gate-divider"></div>
       <GateEntry :gateID="element.ID" :gateNR="element.gateNR" :title="element.title" :projectId="props.projectId" :completionDate="element.completionDate" :responsiblePerson="element.responsiblePerson || ''" :plannedDate="element.plannedDate" :daysToEnd="element.daysToEnd"/>
       <div v-if="!admin" class="gate-divider cursorDefault"></div>
       <div
         v-else-if="index < gates.length - 1"
         @click="addGateBetween(element.gateNR)"
-        class="gate-divider cursorCopy">
+        class="gate-divider cursorCopy"
       </div>
     </div>
   </template>
@@ -52,7 +53,9 @@
 
   const gateStore = useGatesStore();
   const authStore = useAuthStore();
+  const projectStore = useProjectsStore();
 
+  let dividers = projectStore.getDividers(props.projectId);
   const computedGates = computed(() => gateStore.getProjectGates(props.projectId));
   const gates = ref([]); // lager en non-reactive copy
   const admin = computed(() => authStore.isAdmin());
@@ -119,8 +122,18 @@
   right: 0;
   height: 8px;
   background-color: transparent;
+  position: relative;
 }
 
+.divider {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-color: red;
+}
 .gate-empty {
   left: 0;
   right: 0;
