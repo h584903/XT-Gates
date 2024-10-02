@@ -65,7 +65,8 @@ export const useGatesStore = defineStore('gates', () => {
                 plannedDate: "1000-07-07",
                 completionDate: "1000-07-07",
                 daysToEnd: 0,
-                progress: gate.progress
+                progress: gate.progress,
+                stage: gate.stage
             }));
 
             setGates(gateArray);

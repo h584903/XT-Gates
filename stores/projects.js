@@ -101,6 +101,7 @@ export const useProjectsStore = defineStore('projects', () => {
                 id: project.ID,
                 title: project.title,
                 progress: project.progress,
+                dividers: project.dividers,
                 onTimeDate: project.onTimeDate,
                 PEM: project.PEM,
                 comment: project.comment,
@@ -252,6 +253,14 @@ export const useProjectsStore = defineStore('projects', () => {
 
     function getTemplate() {
         return templateId.value;
+    }
+
+    function getDividers(projectID) {
+
+        let index = projects.value.findIndex(project => project.id === projectID);
+        console.log("this is the index" + index);
+        const dividers = projects.value[index].dividers;
+        return dividers;
     }
 
     const filteredProjects = computed(() => {
@@ -518,6 +527,7 @@ export const useProjectsStore = defineStore('projects', () => {
         sortProjects,
         fetchAllProjects,
         getManagerProjects,
+        getDividers,
         projectSorting
     };
 });
